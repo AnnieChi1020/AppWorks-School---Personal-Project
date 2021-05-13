@@ -3,7 +3,7 @@ import React from "react";
 // import { increment, decrement } from "./actions";
 
 import Header from "./Components/Header.js";
-import CreateEvent from "./Pages/HomePage/CreateEvent.js";
+import CreateEvent from "./Pages/CreateEventPage/CreateEvent.js";
 import EventDetail from "./Pages/EventDetailPage/EventDetailPage.js";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
 
@@ -17,7 +17,9 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        <Route exact path="/" component={CreateEvent} />
+        <Route exact path="/"  />
+        <Route exact path="/createEvent" component={CreateEvent} />
+
         <Route exact path="/events/:id" component={EventDetail} />
         <Route exact path="/profile" component={ProfilePage} />
         {/* <h1>Counter {counter}</h1>

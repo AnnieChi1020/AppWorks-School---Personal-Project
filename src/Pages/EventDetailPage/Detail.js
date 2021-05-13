@@ -82,9 +82,6 @@ function EventDetail() {
       <EventText>開始時間 | {event.startTime}</EventText>
       <EventText>結束時間 | {event.endTime}</EventText>
       <EventText>活動地址 | {event.address}</EventText>
-
-      {/* <EventText>{event.startTime}</EventText>
-      <EventText>{event.endTime}</EventText> */}
     </Wrapper>
   );
 }
