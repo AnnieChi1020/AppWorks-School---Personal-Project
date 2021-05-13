@@ -57,3 +57,23 @@ export const getEventInfo = (eventId) => {
     return data;
   });
 };
+
+export const getMyEvents = (hosterId) => {
+  const db = firebase.firestore();
+  let events = [];
+  db.collection("events")
+    .where("hosterId", "==", `${hosterId}`)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        events.push(doc.data());
+        console.log(doc.id, " => ", doc.data());
+        console.log(events);
+      });
+      return events;
+    })
+    .catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
+};

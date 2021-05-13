@@ -4,7 +4,8 @@ import React from "react";
 
 import Header from "./Components/Header.js";
 import CreateEvent from "./Pages/HomePage/CreateEvent.js";
-import EventDetail from "./Pages/EventDetailPage/EventDetail.js";
+import EventDetail from "./Pages/EventDetailPage/EventDetailPage.js";
+import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -18,6 +19,7 @@ function App() {
         <Header />
         <Route exact path="/" component={CreateEvent} />
         <Route exact path="/events/:id" component={EventDetail} />
+        <Route exact path="/profile" component={ProfilePage} />
         {/* <h1>Counter {counter}</h1>
       <button onClick={() => dispatch(increment(5))}>+</button>
       <button onClick={() => dispatch(decrement(5))}>-</button>

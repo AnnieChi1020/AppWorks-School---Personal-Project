@@ -14,35 +14,77 @@ const Wrapper = styled.div`
   border: solid 1px #979797;
 `;
 
-const EventName = styled.h2`
+const EventText = styled.h2`
   font-size: 16px;
+  margin: 5px 0;
+`;
+
+const EventImage = styled.img`
+  width: 200px;
 `;
 
 function EventDetail() {
   let { id } = useParams();
   let eventId = id;
 
-  let [event, setEvent] = useState({});
+  let [event, setEvent] = useState({
+    id: "",
+    image: "",
+    title: "",
+    content: "",
+    address: "",
+    location: {},
+    startTime: "",
+    endTime: "",
+  });
 
   useEffect(() => {
     async function getEventDetail() {
       const data = await getEventInfo(eventId);
-      const eventInfo = {
+      const startDate = data.startTime.toDate().toLocaleDateString();
+      const startTime = data.startTime.toDate().toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const endDate = data.endTime.toDate().toLocaleDateString();
+      const endTime = data.endTime.toDate().toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      setEvent({
+        ...event,
         id: data.eventId,
+        image: data.eventCoverImage,
         title: data.eventTitle,
+        content: data.eventContent,
         address: data.eventAddress,
-      };
-      setEvent(eventInfo);
+        location: data.eventLocation,
+        startTime: `${startDate} ${startTime}`,
+        endTime: `${endDate} ${endTime}`,
+      });
     }
     getEventDetail();
-    console.log(event);
   }, []);
+
+  useEffect(() => {
+    console.log(event);
+  }, [event]);
 
   return (
     <Wrapper>
-      <EventName>{event.id}</EventName>
-      <EventName>{event.title}</EventName>
-      <EventName>{event.address}</EventName>
+      <EventImage src={event.image}></EventImage>
+      <EventText>{event.id}</EventText>
+      <EventText>活動名稱 | {event.title}</EventText>
+      <EventText>活動內容 | {event.content}</EventText>
+      <EventText>開始時間 | {event.startTime}</EventText>
+      <EventText>結束時間 | {event.endTime}</EventText>
+      <EventText>活動地址 | {event.address}</EventText>
+
+      {/* <EventText>{event.startTime}</EventText>
+      <EventText>{event.endTime}</EventText> */}
     </Wrapper>
   );
 }
