@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
-import firebase from "firebase/app";
-import "firebase/storage";
-import "firebase/firestore";
-
 import "react-datepicker/dist/react-datepicker.css";
+
+import {
+  createNewDoc,
+  postEventDetailtoDoc,
+  getImageURL,
+  createNewCollection,
+} from "../../utils/firebase.js";
 
 import React, { useEffect, useState } from "react";
 
@@ -87,6 +90,8 @@ const constructMinuteArray = () => {
 };
 
 function CreateEvent() {
+  // const initEvnetInput = {eventName:"",};
+  // const [eventInput, setEventInput] = useState(initEvnetInput);
   const [eventName, setEventName] = useState("");
   const [eventContent, setEventContent] = useState("");
   const [startDate, setStartDate] = useState(new Date());
@@ -99,41 +104,11 @@ function CreateEvent() {
   const [address, setAddress] = useState("");
   const [geopoint, setGeopoint] = useState("");
   const [geoAddress, setGeoAddress] = useState("");
-  // const [photo, setPhoto] = useState(null);
+  const [file, setFile] = useState(null);
 
   const hourArray = constructHourArray();
   const minuteArray = constructMinuteArray();
   const cityArray = ["台北市", "桃園市"];
-
-  // const uploadImage = async () => {
-  //   if (!photo) return;
-  //   let storageRef = firebase.storage().ref(photo.name);
-  //   return storageRef.put(photo).on(
-  //     "state_changed",
-  //     function () {
-  //       console.log("上傳中");
-  //     },
-  //     function () {
-  //       console.log("上傳失敗");
-  //     },
-  //     async function completed() {
-  //       const imageUrl = await getImageUrl(photo.name);
-  //       console.log(imageUrl);
-  //       return imageUrl;
-  //     }
-  //   );
-  // };
-
-  // const getImageUrl = (name) => {
-  //   const storage = firebase.storage();
-  //   return storage
-  //     .ref(name)
-  //     .getDownloadURL()
-  //     .then((url) => {
-  //       console.log(url);
-  //       return url;
-  //     });
-  // };
 
   const getGeopoint = (city, address) => {
     fetch(
@@ -150,14 +125,14 @@ function CreateEvent() {
     getGeopoint(city, address);
   }, [city, address]);
 
-  const createEventDetails = (id) => {
+  const createEventDetails = (id, imageURL) => {
     return {
       eventId: id,
       eventTitle: eventName,
       eventContent: eventContent,
       eventLocation: geopoint,
       eventAddress: geoAddress,
-      eventCoverImage: "",
+      eventCoverImage: imageURL,
       startTime: new Date(
         startDate.getUTCFullYear(),
         startDate.getUTCMonth(),
@@ -179,20 +154,13 @@ function CreateEvent() {
     };
   };
 
-  const uploadEvent = () => {
-    const db = firebase.firestore();
-    console.log(db);
-    let newEventRef = db.collection("events").doc();
-    newEventRef
-      .set(createEventDetails(newEventRef.id))
-      .then(() => {
-        console.log("Document successfully written!");
-        console.log(createEventDetails(newEventRef.id));
-      })
-      .catch((error) => {
-        console.error("Error writing document: ", error);
-      });
-  };
+  async function handelClickSubmit() {
+    const imageUrl = await getImageURL(file);
+    const newEventRef = createNewDoc();
+    const eventDetail = createEventDetails(newEventRef.id, imageUrl);
+    const eventId = await postEventDetailtoDoc(newEventRef, eventDetail);
+    console.log(eventId);
+  }
 
   return (
     <Wrapper>
@@ -273,12 +241,9 @@ function CreateEvent() {
       </Field>
       <Field>
         <FieldName>封面圖片</FieldName>
-        <input
-          type="file"
-          // onChange={(e) => setPhoto(e.target.files[0])}
-        />
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
       </Field>
-      <SubmitButton onClick={uploadEvent}>創建活動</SubmitButton>
+      <SubmitButton onClick={handelClickSubmit}>創建活動</SubmitButton>
     </Wrapper>
   );
 }

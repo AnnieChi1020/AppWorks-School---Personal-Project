@@ -2,8 +2,10 @@ import React from "react";
 // import { useSelector, useDispatch } from "react-redux";
 // import { increment, decrement } from "./actions";
 
-import Header from "./Header.js";
-import CreateEvent from "./CreateEvent.js";
+import Header from "./Components/Header.js";
+import CreateEvent from "./Pages/HomePage/CreateEvent.js";
+import EventDetail from "./Pages/EventDetailPage/EventDetail.js";
+
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 function App() {
@@ -15,7 +17,7 @@ function App() {
       <div className="App">
         <Header />
         <Route exact path="/" component={CreateEvent} />
-        <Route exact path="/opportunities/:id" />
+        <Route exact path="/events/:id" component={EventDetail} />
         {/* <h1>Counter {counter}</h1>
       <button onClick={() => dispatch(increment(5))}>+</button>
       <button onClick={() => dispatch(decrement(5))}>-</button>
