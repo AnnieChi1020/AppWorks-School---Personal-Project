@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getUserList, getEventInfo } from "../../utils/firebase.js";
+import {
+  getUserList,
+  getEventInfo,
+  getCurrentStatus,
+  updateNewStatus,
+} from "../../utils/firebase.js";
 import { useHistory, useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -74,6 +79,7 @@ function ParticipantList() {
   const eventId = id;
 
   const [participants, setParticipants] = useState([]);
+
   const getParticipantsData = async () => {
     const newParticipants = await getUserList(eventId, 1);
     let participantsArray = [];
@@ -119,6 +125,13 @@ function ParticipantList() {
     getEventDetail();
   }, []);
 
+  const handleAttendClick = async (eventId, userId) => {
+    let currentStatus = await getCurrentStatus(eventId, userId);
+    console.log(currentStatus);
+    currentStatus.participantInfo.participantAttended = true;
+    updateNewStatus(eventId, userId, currentStatus);
+  };
+
   return (
     <Wrapper>
       <Participants>
@@ -134,7 +147,14 @@ function ParticipantList() {
               <ParticipantText>{participant.participantPhone}</ParticipantText>
               <ParticipantText>{participant.participantEmail}</ParticipantText>
             </ParticipantInfo>
-            <Button>出席確認</Button>
+            <Button
+              onClick={(e) => {
+                handleAttendClick(eventId, participant.participantId);
+                e.target.textContent = "已確認出席";
+              }}
+            >
+              出席確認
+            </Button>
           </Participant>
         ))}
       </Participants>

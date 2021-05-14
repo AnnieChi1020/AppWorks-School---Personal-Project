@@ -159,3 +159,5 @@ export const updateNewStatus = (eventId, userId, updateInfo) => {
       console.error("Error updating document: ", error);
     });
 };
+
+
