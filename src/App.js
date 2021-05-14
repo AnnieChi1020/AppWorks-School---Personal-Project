@@ -6,6 +6,8 @@ import Header from "./Components/Header.js";
 import CreateEvent from "./Pages/CreateEventPage/CreateEvent.js";
 import EventDetail from "./Pages/EventDetailPage/EventDetailPage.js";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
+import EventsPage from "./Pages/EventsPage/EventsPage.js";
+import ManageParticipantPage from "./Pages/ManageParticipantsPage/ManageParticipantPage.js";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -17,11 +19,17 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        <Route exact path="/"  />
+        <Route exact path="/" />
         <Route exact path="/createEvent" component={CreateEvent} />
-
+        <Route exact path="/events" component={EventsPage} />
         <Route exact path="/events/:id" component={EventDetail} />
         <Route exact path="/profile" component={ProfilePage} />
+        <Route
+          exact
+          path="/profile/manage-participants/:id"
+          component={ManageParticipantPage}
+        />
+
         {/* <h1>Counter {counter}</h1>
       <button onClick={() => dispatch(increment(5))}>+</button>
       <button onClick={() => dispatch(decrement(5))}>-</button>

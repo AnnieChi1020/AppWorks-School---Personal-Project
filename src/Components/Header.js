@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 const Wrapper = styled.header`
   height: 35px;
-  width: 100vw;
   padding: 0 30px;
   background-color: #c2c2c2;
 `;

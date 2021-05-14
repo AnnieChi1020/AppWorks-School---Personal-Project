@@ -52,7 +52,7 @@ const SubmitButton = styled.button`
 function EventSignUp() {
   const { id } = useParams();
 
-  const participantId = "U0001";
+  const participantId = "U0004";
   const eventId = id;
 
   const [signUpInput, setSignUpInput] = useState({
@@ -68,7 +68,7 @@ function EventSignUp() {
 
   const handelClickSubmit = () => {
     console.log(signUpInput);
-    postParticipantInfo(eventId, signUpInput);
+    postParticipantInfo(eventId, participantId, signUpInput);
   };
 
   return (

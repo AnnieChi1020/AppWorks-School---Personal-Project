@@ -27,7 +27,7 @@ function EventDetail() {
   let { id } = useParams();
   let eventId = id;
 
-  let [event, setEvent] = useState({
+  const [event, setEvent] = useState({
     id: "",
     image: "",
     title: "",
