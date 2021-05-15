@@ -5,7 +5,7 @@ import {
   getEventInfo,
   getCurrentStatus,
   updateNewStatus,
-} from "../../utils/firebase.js";
+} from "../../../../utils/firebase.js";
 import { useHistory, useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   margin: 0;
 `;
 
-const Participants = styled.div`
+const Applications = styled.div`
   width: 90%;
   margin: 0 auto;
 `;
@@ -27,7 +27,7 @@ const Title = styled.div`
   margin-top: 10px;
 `;
 
-const Participant = styled.div`
+const Application = styled.div`
   width: 100%;
   margin-top: 10px;
   padding: 5px 0;
@@ -54,7 +54,7 @@ const EventText = styled.div`
   line-height: 20px;
 `;
 
-const ParticipantInfo = styled.div`
+const ApplicantInfo = styled.div`
   width: 50%;
   font-size: 14px;
   line-height: 20px;
@@ -63,34 +63,35 @@ const ParticipantInfo = styled.div`
   flex-direction: column;
 `;
 
-const ParticipantText = styled.div`
+const ApplicantText = styled.div`
   font-size: 12px;
   line-height: 20px;
 `;
 
 const Button = styled.button`
   height: 30px;
+  width: 80px;
   line-height: 20px;
   margin: 0 5px;
 `;
 
-function ParticipantList() {
+function WaitingList() {
   let { id } = useParams();
   const eventId = id;
 
-  const [participants, setParticipants] = useState([]);
+  const [applicants, setApplicants] = useState([]);
 
-  const getParticipantsData = async () => {
-    const newParticipants = await getUserList(eventId, 1);
-    let participantsArray = [];
-    newParticipants.map((e) => {
-      participantsArray.push(e.participantInfo);
+  const getApplicantsData = async () => {
+    let applicantsArray = [];
+    const newApplicants = await getUserList(eventId, 0);
+    newApplicants.map((applicant) => {
+      applicantsArray.push(applicant.participantInfo);
     });
-    setParticipants([...participantsArray]);
+    setApplicants(applicantsArray);
   };
 
   useEffect(() => {
-    getParticipantsData();
+    getApplicantsData();
   }, []);
 
   const [event, setEvent] = useState({
@@ -125,41 +126,54 @@ function ParticipantList() {
     getEventDetail();
   }, []);
 
-  const handleAttendClick = async (eventId, userId) => {
+  const handleConfirmClick = async (eventId, userId) => {
     let currentStatus = await getCurrentStatus(eventId, userId);
-    console.log(currentStatus);
-    currentStatus.participantInfo.participantAttended = true;
+    currentStatus.participantInfo.participantStatus = 1;
+    updateNewStatus(eventId, userId, currentStatus);
+  };
+
+  const handleRejectClick = async (eventId, userId) => {
+    let currentStatus = await getCurrentStatus(eventId, userId);
+    currentStatus.participantInfo.participantStatus = 2;
     updateNewStatus(eventId, userId, currentStatus);
   };
 
   return (
     <Wrapper>
-      <Participants>
-        <Title>活動參加名單</Title>
+      <Applications>
+        <Title>志工申請</Title>
 
-        {participants.map((participant, index) => (
-          <Participant key={index}>
+        {applicants.map((applicant, index) => (
+          <Application key={index}>
             <EventInfo>
               <EventText>{event.startTime}</EventText>
             </EventInfo>
-            <ParticipantInfo>
-              <ParticipantText>{participant.participantName}</ParticipantText>
-              <ParticipantText>{participant.participantPhone}</ParticipantText>
-              <ParticipantText>{participant.participantEmail}</ParticipantText>
-            </ParticipantInfo>
+            <ApplicantInfo>
+              <ApplicantText>{applicant.participantName}</ApplicantText>
+              <ApplicantText>{applicant.participantPhone}</ApplicantText>
+              <ApplicantText>{applicant.participantEmail}</ApplicantText>
+            </ApplicantInfo>
             <Button
               onClick={(e) => {
-                handleAttendClick(eventId, participant.participantId);
-                e.target.textContent = "已確認出席";
+                handleConfirmClick(eventId, applicant.participantId);
+                e.target.textContent = "已確認";
               }}
             >
-              出席確認
+              確認報名
             </Button>
-          </Participant>
+            <Button
+              onClick={(e) => {
+                handleRejectClick(eventId, applicant.participantId);
+                e.target.textContent = "已拒絕";
+              }}
+            >
+              拒絕報名
+            </Button>
+          </Application>
         ))}
-      </Participants>
+      </Applications>
     </Wrapper>
   );
 }
 
-export default ParticipantList;
+export default WaitingList;

@@ -5,7 +5,7 @@ import {
   getEventInfo,
   getCurrentStatus,
   updateNewStatus,
-} from "../../utils/firebase.js";
+} from "../../../../utils/firebase.js";
 import { useHistory, useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   margin: 0;
 `;
 
-const Applications = styled.div`
+const Participants = styled.div`
   width: 90%;
   margin: 0 auto;
 `;
@@ -27,7 +27,7 @@ const Title = styled.div`
   margin-top: 10px;
 `;
 
-const Application = styled.div`
+const Participant = styled.div`
   width: 100%;
   margin-top: 10px;
   padding: 5px 0;
@@ -54,7 +54,7 @@ const EventText = styled.div`
   line-height: 20px;
 `;
 
-const ApplicantInfo = styled.div`
+const ParticipantInfo = styled.div`
   width: 50%;
   font-size: 14px;
   line-height: 20px;
@@ -63,34 +63,35 @@ const ApplicantInfo = styled.div`
   flex-direction: column;
 `;
 
-const ApplicantText = styled.div`
+const ParticipantText = styled.div`
   font-size: 12px;
   line-height: 20px;
 `;
 
 const Button = styled.button`
   height: 30px;
+  width: 80px;
   line-height: 20px;
   margin: 0 5px;
 `;
 
-function WaitingList() {
+function ParticipantList() {
   let { id } = useParams();
   const eventId = id;
 
-  const [applicants, setApplicants] = useState([]);
+  const [participants, setParticipants] = useState([]);
 
-  const getApplicantsData = async () => {
-    let applicantsArray = [];
-    const newApplicants = await getUserList(eventId, 0);
-    newApplicants.map((applicant) => {
-      applicantsArray.push(applicant.participantInfo);
+  const getParticipantsData = async () => {
+    const newParticipants = await getUserList(eventId, 1);
+    let participantsArray = [];
+    newParticipants.map((e) => {
+      participantsArray.push(e.participantInfo);
     });
-    setApplicants(applicantsArray);
+    setParticipants([...participantsArray]);
   };
 
   useEffect(() => {
-    getApplicantsData();
+    getParticipantsData();
   }, []);
 
   const [event, setEvent] = useState({
@@ -125,40 +126,41 @@ function WaitingList() {
     getEventDetail();
   }, []);
 
-  const handleConfirmClick = async (eventId, userId) => {
+  const handleAttendClick = async (eventId, userId) => {
     let currentStatus = await getCurrentStatus(eventId, userId);
-    currentStatus.participantInfo.participantStatus = 1;
+    console.log(currentStatus);
+    currentStatus.participantInfo.participantAttended = true;
     updateNewStatus(eventId, userId, currentStatus);
   };
 
   return (
     <Wrapper>
-      <Applications>
-        <Title>志工申請</Title>
+      <Participants>
+        <Title>活動參加名單</Title>
 
-        {applicants.map((applicant, index) => (
-          <Application key={index}>
+        {participants.map((participant, index) => (
+          <Participant key={index}>
             <EventInfo>
               <EventText>{event.startTime}</EventText>
             </EventInfo>
-            <ApplicantInfo>
-              <ApplicantText>{applicant.participantName}</ApplicantText>
-              <ApplicantText>{applicant.participantPhone}</ApplicantText>
-              <ApplicantText>{applicant.participantEmail}</ApplicantText>
-            </ApplicantInfo>
+            <ParticipantInfo>
+              <ParticipantText>{participant.participantName}</ParticipantText>
+              <ParticipantText>{participant.participantPhone}</ParticipantText>
+              <ParticipantText>{participant.participantEmail}</ParticipantText>
+            </ParticipantInfo>
             <Button
               onClick={(e) => {
-                handleConfirmClick(eventId, applicant.participantId);
-                e.target.textContent = "已確認";
+                handleAttendClick(eventId, participant.participantId);
+                e.target.textContent = "已確認出席";
               }}
             >
-              確認報名
+              出席確認
             </Button>
-          </Application>
+          </Participant>
         ))}
-      </Applications>
+      </Participants>
     </Wrapper>
   );
 }
 
-export default WaitingList;
+export default ParticipantList;

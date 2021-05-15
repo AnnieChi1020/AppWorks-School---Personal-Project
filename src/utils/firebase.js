@@ -80,18 +80,19 @@ export const getEvents = () => {
     });
 };
 
-export const getHosterEvents = (hosterId) => {
+export const getHosterEvents = (hosterId, eventStatus) => {
   const db = firebase.firestore();
   let events = [];
   return db
     .collection("events")
     .where("hosterId", "==", `${hosterId}`)
+    .where("eventStatus", "==", eventStatus)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         events.push(doc.data());
+        console.log(doc.data());
       });
-      console.log(events);
       return events;
     })
     .catch((error) => {
@@ -160,4 +161,41 @@ export const updateNewStatus = (eventId, userId, updateInfo) => {
     });
 };
 
+export const getUserProfile = (id) => {
+  const db = firebase.firestore();
+  const userRef = db.collection("users").doc(id);
+  return userRef
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        console.log(doc.data());
+        return doc.data();
+      } else {
+        console.log("No such document!");
+      }
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
+    });
+};
 
+export const getUserEvents = (userId, status) => {
+  const db = firebase.firestore();
+  let events = [];
+  const userRef = db
+    .collectionGroup("participants")
+    .where("participantInfo.participantId", "==", userId)
+    .where("participantInfo.participantStatus", "==", status);
+  return userRef
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        events.push(doc.data().participantInfo.eventId);
+      });
+      return events;
+    })
+    .catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
+};

@@ -7,7 +7,7 @@ import CreateEvent from "./Pages/CreateEventPage/CreateEvent.js";
 import EventDetail from "./Pages/EventDetailPage/EventDetailPage.js";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
 import EventsPage from "./Pages/EventsPage/EventsPage.js";
-import ManageParticipantPage from "./Pages/ManageParticipantsPage/ManageParticipantPage.js";
+import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage/ManageParticipantPage.js";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 

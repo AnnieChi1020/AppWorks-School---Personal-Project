@@ -5,15 +5,17 @@ import { useHistory, useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 90%;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
   margin: 0 auto;
+  margin-top: 20px;
   padding: 10px 0;
 `;
 
 const Event = styled.div`
-  width: 33%;
-  padding: 5px;
+  width: 100%;
+  margin-bottom: 10px;
 `;
 
 const EventImage = styled.img`

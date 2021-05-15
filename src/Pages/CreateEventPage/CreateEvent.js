@@ -108,7 +108,23 @@ function CreateEvent() {
 
   const hourArray = constructHourArray();
   const minuteArray = constructMinuteArray();
-  const cityArray = ["台北市", "桃園市"];
+  const cityArray = [
+    "台北市",
+    "新北市",
+    "桃園市",
+    "新竹縣",
+    "苗栗縣",
+    "台中市",
+    "彰化縣",
+    "雲林縣",
+    "嘉義縣",
+    "台南市",
+    "高雄市",
+    "屏東縣",
+    "宜蘭縣",
+    "花蓮縣",
+    "台東縣",
+  ];
 
   const getGeopoint = (city, address) => {
     fetch(
@@ -149,6 +165,7 @@ function CreateEvent() {
         endMinute,
         0
       ),
+      eventStatus: 0,
       hosterId: "H0001",
       resultImage: "",
     };
