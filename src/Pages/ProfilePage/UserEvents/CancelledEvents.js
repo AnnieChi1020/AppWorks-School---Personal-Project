@@ -45,10 +45,15 @@ const EventTime = styled.div`
   margin-top: 5px;
 `;
 
-// const Button = styled.button`
-//   padding: 3px 5px;
-//   margin: 0 5px;
-// `;
+const NoEvent = styled.div`
+  width: 90%;
+  margin: 0 auto;
+  padding: 10px 0;
+  font-size: 16px;
+  font-height: 24px;
+  margin-top: 20px;
+  text-align: center;
+`;
 
 function UserCompletedEvents() {
   const userId = "RQwkmO7Byk5YsOGfvp8D";
@@ -90,9 +95,12 @@ function UserCompletedEvents() {
   };
 
   if (events.length === 0) {
-    return null;
+    return (
+      <Wrapper>
+        <NoEvent>沒有活動喔</NoEvent>
+      </Wrapper>
+    );
   }
-
   return (
     <Wrapper className="applying-events">
       {events[0].map((event, index) => (
