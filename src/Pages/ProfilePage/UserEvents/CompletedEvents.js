@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getUserEvents, getEventInfo } from "../../../utils/firebase.js";
+import {
+  getUserEvents,
+  getEventInfo,
+  getCurrentStatus,
+} from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -64,15 +68,29 @@ function UserCompletedEvents() {
     let eventInfoArray = [];
     await eventIdArray.map(async (id) => {
       const event = await getEventInfo(id);
-      eventInfoArray.push(event);
-      setEvents([eventInfoArray]);
+      const currentStatus = await getCurrentStatus(id, userId);
+      const eventInfo = {
+        id: event.eventId,
+        image: event.eventCoverImage,
+        title: event.eventTitle,
+        startTime: reformatTimestamp(event.startTime),
+        endTime: reformatTimestamp(event.endTime),
+        address: event.eventAddress,
+        userStatus: currentStatus.participantInfo.participantStatus,
+        attend: currentStatus.participantInfo.participantAttended,
+      };
+      eventInfoArray.push(eventInfo);
+      setEvents([...eventInfoArray]);
     });
-    return eventInfoArray;
   };
 
   useEffect(() => {
     getApplyingEventsInfo();
   }, []);
+
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
@@ -95,16 +113,17 @@ function UserCompletedEvents() {
 
   return (
     <Wrapper className="applying-events">
-      {events[0].map((event, index) => (
+      {events.map((event, index) => (
         <Event key={index}>
-          <EventImage src={event.eventCoverImage} />
+          <EventImage src={event.image} />
           <EventDetail>
-            <EventTitle>{event.eventTitle}</EventTitle>
-            <EventTime>{`${reformatTimestamp(
-              event.startTime
-            )} ~ ${reformatTimestamp(event.endTime)}`}</EventTime>
+            <EventTitle>{event.title}</EventTitle>
+            <EventTime>{event.startTime}</EventTime>
+            <EventTime>{event.endTime}</EventTime>
           </EventDetail>
-          <Button>評價活動</Button>
+          {console.log(event.attend)}
+          {event.attend === true && <Button>評價活動</Button>}
+          {event.attend === false && <Button>待確認出席</Button>}
         </Event>
       ))}
     </Wrapper>
