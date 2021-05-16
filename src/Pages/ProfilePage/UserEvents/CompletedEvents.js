@@ -107,6 +107,11 @@ function UserCompletedEvents() {
     return reformatedTime;
   };
 
+  let history = useHistory();
+  const handleCommentClick = (id) => {
+    history.push(`profile/comments/${id}`);
+  };
+
   if (events.length === 0) {
     return null;
   }
@@ -122,7 +127,11 @@ function UserCompletedEvents() {
             <EventTime>{event.endTime}</EventTime>
           </EventDetail>
           {console.log(event.attend)}
-          {event.attend === true && <Button>評價活動</Button>}
+          {event.attend === true && (
+            <Button onClick={() => handleCommentClick(event.id)}>
+              評價活動
+            </Button>
+          )}
           {event.attend === false && <Button>待確認出席</Button>}
         </Event>
       ))}

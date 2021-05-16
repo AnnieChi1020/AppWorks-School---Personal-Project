@@ -29,6 +29,11 @@ function App() {
           path="/profile/manage-participants/:id"
           component={ManageParticipantPage}
         />
+        <Route
+          exact
+          path="/profile/comments/:id"
+          // component={EventComments}
+        />
 
         {/* <h1>Counter {counter}</h1>
       <button onClick={() => dispatch(increment(5))}>+</button>
