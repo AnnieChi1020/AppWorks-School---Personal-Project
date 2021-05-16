@@ -5,23 +5,25 @@ import { useHistory, useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 90%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
   margin: 0 auto;
   margin-top: 20px;
   padding: 10px 0;
 `;
 
 const Event = styled.div`
-  width: 100%;
-  margin-bottom: 20px;
+  height: 30vh;
+  flex-grow: 1;
+  margin: 5px;
+  position: relative;
 `;
 
 const EventImage = styled.img`
-  width: 100%;
-  height: 20vw;
+  max-height: 100%;
+  min-width: 100%;
   object-fit: cover;
+  vertical-align: bottom;
 `;
 
 const EventTime = styled.div`
@@ -31,19 +33,31 @@ const EventTime = styled.div`
 
 const EventTitle = styled.div`
   font-size: 16px;
-  margin-top: 5px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: white;
+  padding: 5px 10px;
+  background-color: #b3b3b35e;
 `;
 
-function Events() {
+function PastEvents() {
   const [events, setEvents] = useState([]);
-  const getAllEvents = async () => {
-    const newEvents = await getEvents(0);
+  const getPastEvents = async () => {
+    const newEvents = await getEvents(1);
+    let eventsArray = [];
     newEvents.map((event) => {
-      event.startTime = reformatTimestamp(event.startTime);
-      event.endTime = reformatTimestamp(event.endTime);
-      console.log(event.startTime);
+      const pastEvent = {
+        id: event.eventId,
+        image: event.eventCoverImage,
+        title: event.eventTitle,
+        startTime: reformatTimestamp(event.startTime),
+        endTime: reformatTimestamp(event.endTime),
+      };
+      eventsArray.push(pastEvent);
+      console.log(pastEvent);
     });
-    setEvents(newEvents);
+    setEvents(eventsArray);
   };
 
   const getDay = (day) => {
@@ -62,25 +76,29 @@ function Events() {
   };
 
   useEffect(() => {
-    getAllEvents();
+    getPastEvents();
   }, []);
+
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
   let history = useHistory();
   const handleEventClick = (id) => {
-    history.push(`/events/${id}`);
+    history.push(`/past-events/${id}`);
   };
 
   return (
     <Wrapper>
-      {events.map((event, eventId) => (
-        <Event key={eventId} onClick={() => handleEventClick(event.eventId)}>
-          <EventImage src={event.eventCoverImage} />
-          <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
-          <EventTitle>{event.eventTitle}</EventTitle>
+      {events.map((event, index) => (
+        <Event key={index}>
+          <EventImage src={event.image}></EventImage>
+          {/* <EventTitle>{event.startTime}</EventTitle> */}
+          <EventTitle>{event.title}</EventTitle>
         </Event>
       ))}
     </Wrapper>
   );
 }
 
-export default Events;
+export default PastEvents;

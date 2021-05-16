@@ -63,11 +63,12 @@ export const getEventInfo = (eventId) => {
   });
 };
 
-export const getEvents = () => {
+export const getEvents = (status) => {
   const db = firebase.firestore();
   let events = [];
   return db
     .collection("events")
+    .where("eventStatus", "==", status)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -77,6 +78,20 @@ export const getEvents = () => {
     })
     .catch((error) => {
       console.log("Error getting documents: ", error);
+    });
+};
+
+export const updateEvent = (eventId, updateInfo) => {
+  const db = firebase.firestore();
+  const eventRef = db.collection("events").doc(eventId);
+  return eventRef
+    .update(updateInfo)
+    .then(() => {
+      console.log("Document successfully updated!");
+    })
+    .catch((error) => {
+      // The document probably doesn't exist.
+      console.error("Error updating document: ", error);
     });
 };
 

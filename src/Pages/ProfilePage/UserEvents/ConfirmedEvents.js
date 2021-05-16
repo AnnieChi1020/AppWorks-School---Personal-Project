@@ -79,9 +79,14 @@ function UserConfirmedEvents() {
     let eventInfoArray = [];
     await eventIdArray.map(async (id) => {
       const event = await getEventInfo(id);
-      eventInfoArray.push(event);
+      const startT = event.startTime.seconds * 1000;
+      const currentT = new Date().getTime();
+      if (startT > currentT) {
+        eventInfoArray.push(event);
+      }
       setEvents([eventInfoArray]);
     });
+
     return eventInfoArray;
   };
 
@@ -110,6 +115,11 @@ function UserConfirmedEvents() {
     updateNewStatus(eventId, userId, currentStatus);
   };
 
+  let history = useHistory();
+  const handleCommentClick = (id) => {
+    history.push(`profile/comments/${id}`);
+  };
+
   if (events.length === 0) {
     return (
       <Wrapper>
@@ -125,9 +135,8 @@ function UserConfirmedEvents() {
           <EventImage src={event.eventCoverImage} />
           <EventDetail>
             <EventTitle>{event.eventTitle}</EventTitle>
-            <EventTime>{`${reformatTimestamp(
-              event.startTime
-            )} ~ ${reformatTimestamp(event.endTime)}`}</EventTime>
+            <EventTime>{reformatTimestamp(event.startTime)}</EventTime>
+            <EventTime>{reformatTimestamp(event.endTime)}</EventTime>
           </EventDetail>
           <Button
             onClick={(e) => {
@@ -137,6 +146,17 @@ function UserConfirmedEvents() {
           >
             取消報名
           </Button>
+          {console.log(event)}
+          {event.participantAttended === true && !event.participantRating && (
+            <Button onClick={() => handleCommentClick(event.id)}>
+              評價活動
+            </Button>
+          )}
+          {event.participantAttended === true && event.participantRating && (
+            <Button>已評價活動</Button>
+          )}
+
+          {event.participantAttended === false && <Button>待確認出席</Button>}
         </Event>
       ))}
     </Wrapper>

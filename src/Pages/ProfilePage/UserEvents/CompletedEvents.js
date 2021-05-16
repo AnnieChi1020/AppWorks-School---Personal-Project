@@ -69,7 +69,7 @@ function UserCompletedEvents() {
   const [events, setEvents] = useState([]);
 
   const getApplyingEventsId = async () => {
-    const applyingEvents = await getUserEvents(userId, 2);
+    const applyingEvents = await getUserEvents(userId, 1);
     return applyingEvents;
   };
 
@@ -78,19 +78,35 @@ function UserCompletedEvents() {
     let eventInfoArray = [];
     await eventIdArray.map(async (id) => {
       const event = await getEventInfo(id);
+      const startT = event.startTime.seconds * 1000;
+      const currentT = new Date().getTime();
       const currentStatus = await getCurrentStatus(id, userId);
-      const eventInfo = {
-        id: event.eventId,
-        image: event.eventCoverImage,
-        title: event.eventTitle,
-        startTime: reformatTimestamp(event.startTime),
-        endTime: reformatTimestamp(event.endTime),
-        address: event.eventAddress,
-        userStatus: currentStatus.participantInfo.participantStatus,
-        attend: currentStatus.participantInfo.participantAttended,
-        rating: currentStatus.participantInfo.participantRating,
-      };
-      eventInfoArray.push(eventInfo);
+      if (startT <= currentT) {
+        const eventInfo = {
+          id: event.eventId,
+          image: event.eventCoverImage,
+          title: event.eventTitle,
+          startTime: reformatTimestamp(event.startTime),
+          endTime: reformatTimestamp(event.endTime),
+          address: event.eventAddress,
+          userStatus: currentStatus.participantInfo.participantStatus,
+          attend: currentStatus.participantInfo.participantAttended,
+          rating: currentStatus.participantInfo.participantRating,
+        };
+        eventInfoArray.push(eventInfo);
+      }
+      // const eventInfo = {
+      //   id: event.eventId,
+      //   image: event.eventCoverImage,
+      //   title: event.eventTitle,
+      //   startTime: reformatTimestamp(event.startTime),
+      //   endTime: reformatTimestamp(event.endTime),
+      //   address: event.eventAddress,
+      //   userStatus: currentStatus.participantInfo.participantStatus,
+      //   attend: currentStatus.participantInfo.participantAttended,
+      //   rating: currentStatus.participantInfo.participantRating,
+      // };
+      // eventInfoArray.push(eventInfo);
       setEvents([...eventInfoArray]);
     });
   };
