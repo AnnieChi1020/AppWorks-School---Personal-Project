@@ -61,7 +61,9 @@ function ClosedEvents() {
   const handleParticipantClick = (id) => {
     history.push(`profile/manage-participants/${id}`);
   };
-
+  const handleResultClick = (id) => {
+    history.push(`profile/event-result/${id}`);
+  };
   return (
     <Wrapper>
       {events.map((event, index) => (
@@ -73,6 +75,9 @@ function ClosedEvents() {
           {/* <Button>編輯活動</Button> */}
           <Button onClick={() => handleParticipantClick(event.eventId)}>
             管理參加者
+          </Button>
+          <Button onClick={() => handleResultClick(event.eventId)}>
+            分享活動成果
           </Button>
           {/* <Button onClick={() => handleParticipantClick(event.eventId)}>
             取消活動

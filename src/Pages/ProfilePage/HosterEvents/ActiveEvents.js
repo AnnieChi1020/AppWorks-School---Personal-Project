@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getHosterEvents } from "../../../utils/firebase.js";
+import {
+  getHosterEvents,
+  getEventInfo,
+  updateEvent,
+} from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -67,6 +71,13 @@ function ActiveEvents() {
     history.push(`profile/manage-participants/${id}`);
   };
 
+  const handleCancelClick = async (id) => {
+    const eventData = await getEventInfo(id);
+    eventData.eventStatus = 9;
+    updateEvent(id, eventData);
+    console.log(eventData);
+  };
+
   return (
     <Wrapper>
       {events.map((event, index) => (
@@ -79,7 +90,7 @@ function ActiveEvents() {
           <Button onClick={() => handleParticipantClick(event.eventId)}>
             管理參加者
           </Button>
-          <Button onClick={() => handleParticipantClick(event.eventId)}>
+          <Button onClick={() => handleCancelClick(event.eventId)}>
             取消活動
           </Button>
         </Event>

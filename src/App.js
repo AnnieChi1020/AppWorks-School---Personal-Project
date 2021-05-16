@@ -10,6 +10,7 @@ import EventsPage from "./Pages/EventsPage/EventsPage.js";
 import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage/ManageParticipantPage.js";
 import EventComments from "./Pages/ProfilePage/UserEvents/CommentsPage/CommentsPage.js";
 import PastEvents from "./Pages/PastEventsPage/PastEventsPage.js";
+import EventResult from "./Pages/ProfilePage/HosterEvents/EventResultPage/EventResultPage.js";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -31,6 +32,7 @@ function App() {
           path="/profile/manage-participants/:id"
           component={ManageParticipantPage}
         />
+        <Route exact path="/profile/event-result/:id" component={EventResult} />
         <Route exact path="/profile/comments/:id" component={EventComments} />
         <Route exact path="/past-events" component={PastEvents} />
 
