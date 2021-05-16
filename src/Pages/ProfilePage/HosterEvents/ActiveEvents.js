@@ -58,6 +58,10 @@ function ActiveEvents() {
     getHosterEventsData();
   }, []);
 
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
+
   let history = useHistory();
   const handleParticipantClick = (id) => {
     history.push(`profile/manage-participants/${id}`);

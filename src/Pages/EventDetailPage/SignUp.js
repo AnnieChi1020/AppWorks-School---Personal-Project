@@ -52,7 +52,7 @@ const SubmitButton = styled.button`
 function EventSignUp() {
   const { id } = useParams();
 
-  const participantId = "U0001";
+  const participantId = "RQwkmO7Byk5YsOGfvp8D";
   const eventId = id;
 
   const [signUpInput, setSignUpInput] = useState({
