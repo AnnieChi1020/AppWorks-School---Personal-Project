@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getUserEvents, getEventInfo } from "../../../utils/firebase.js";
+import {
+  getUserEvents,
+  getEventInfo,
+  getCurrentStatus,
+  updateNewStatus,
+} from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -70,6 +75,12 @@ function UserApplyingEvents() {
     return eventInfoArray;
   };
 
+  const handleCancelClick = async (eventId, userId) => {
+    let currentStatus = await getCurrentStatus(eventId, userId);
+    currentStatus.participantInfo.participantStatus = 9;
+    updateNewStatus(eventId, userId, currentStatus);
+  };
+
   useEffect(() => {
     getApplyingEventsInfo();
   }, []);
@@ -104,7 +115,14 @@ function UserApplyingEvents() {
               event.startTime
             )} ~ ${reformatTimestamp(event.endTime)}`}</EventTime>
           </EventDetail>
-          <Button>取消報名</Button>
+          <Button
+            onClick={(e) => {
+              handleCancelClick(event.eventId, userId);
+              e.target.textContent = "已取消";
+            }}
+          >
+            取消報名
+          </Button>
         </Event>
       ))}
     </Wrapper>
