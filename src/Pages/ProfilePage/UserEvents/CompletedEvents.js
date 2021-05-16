@@ -78,6 +78,7 @@ function UserCompletedEvents() {
         address: event.eventAddress,
         userStatus: currentStatus.participantInfo.participantStatus,
         attend: currentStatus.participantInfo.participantAttended,
+        rating: currentStatus.participantInfo.participantRating,
       };
       eventInfoArray.push(eventInfo);
       setEvents([...eventInfoArray]);
@@ -127,11 +128,13 @@ function UserCompletedEvents() {
             <EventTime>{event.endTime}</EventTime>
           </EventDetail>
           {console.log(event.attend)}
-          {event.attend === true && (
+          {event.attend === true && !event.rating && (
             <Button onClick={() => handleCommentClick(event.id)}>
               評價活動
             </Button>
           )}
+          {event.attend === true && event.rating && <Button>已評價活動</Button>}
+
           {event.attend === false && <Button>待確認出席</Button>}
         </Event>
       ))}

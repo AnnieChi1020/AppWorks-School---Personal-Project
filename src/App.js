@@ -8,6 +8,7 @@ import EventDetail from "./Pages/EventDetailPage/EventDetailPage.js";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
 import EventsPage from "./Pages/EventsPage/EventsPage.js";
 import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage/ManageParticipantPage.js";
+import EventComments from "./Pages/ProfilePage/UserEvents/CommentsPage/CommentsPage.js";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -29,11 +30,7 @@ function App() {
           path="/profile/manage-participants/:id"
           component={ManageParticipantPage}
         />
-        <Route
-          exact
-          path="/profile/comments/:id"
-          // component={EventComments}
-        />
+        <Route exact path="/profile/comments/:id" component={EventComments} />
 
         {/* <h1>Counter {counter}</h1>
       <button onClick={() => dispatch(increment(5))}>+</button>
