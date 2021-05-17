@@ -167,7 +167,7 @@ function CreateEvent() {
       ),
       eventStatus: 0,
       hosterId: "H0001",
-      resultImage: "",
+      resultImage: [],
       resultContent: "",
     };
   };

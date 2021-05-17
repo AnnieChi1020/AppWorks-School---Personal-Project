@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getEvents } from "../../utils/firebase.js";
+import { getEventInfo, getEvents, getUserList } from "../../utils/firebase.js";
 import { useHistory, useParams } from "react-router-dom";
+import ReactStars from "react-rating-stars-component";
 
 const Wrapper = styled.div`
-  width: 90%;
+  width: 80%;
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
@@ -13,7 +14,7 @@ const Wrapper = styled.div`
 `;
 
 const Event = styled.div`
-  height: 30vh;
+  height: 25vh;
   flex-grow: 1;
   margin: 5px;
   position: relative;
@@ -41,8 +42,67 @@ const EventTitle = styled.div`
   background-color: #b3b3b35e;
 `;
 
+const PastEvent = styled.div`
+  width: 100%;
+  border-radius: 8px;
+  border: solid 1px #979797;
+  padding: 20px 20px 50px 20px;
+  margin-bottom: 20px;
+`;
+
+const PastEventTitle = styled.div`
+  font-size: 20px;
+  line-height: 30px;
+  margin-top: 10px;
+`;
+
+const PastEventImages = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const PastEventImage = styled.img`
+  height: 15vh;
+  flex-grow: 1;
+  margin: 5px;
+  position: relative;
+  object-fit: cover;
+  vertical-align: bottom;
+`;
+
+const PastEventText = styled.div`
+  font-size: 14px;
+  line-height: 18px;
+  margin-top: 5px;
+`;
+
+const UserFeedbacks = styled.div`
+  margin-top: 20px;
+  padding: 5px 0;
+`;
+
+const UseImage = styled.img`
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+`;
+
+const UserFeedback = styled.div`
+  margin-right: 10px;
+`;
+
+const UserComment = styled.div`
+  font-size: 14px;
+  line-height: 18px;
+`;
+
 function PastEvents() {
   const [events, setEvents] = useState([]);
+  // const [viewEvent, setViewEvent] = useState("");
+  const [eventResult, setEventResult] = useState("");
+  const [userFeedback, setUserFeedback] = useState([]);
+
   const getPastEvents = async () => {
     const newEvents = await getEvents(1);
     let eventsArray = [];
@@ -80,24 +140,84 @@ function PastEvents() {
   }, []);
 
   useEffect(() => {
-    console.log(events);
-  }, [events]);
+    console.log(eventResult);
+  }, [eventResult]);
 
   let history = useHistory();
   const handleEventClick = (id) => {
-    history.push(`/past-events/${id}`);
+    // setViewEvent(id);
+    getPastEventInfo(id);
+    getUserFeedbacks(id);
+    // history.push(`/past-events/${id}`);
+  };
+
+  const getPastEventInfo = async (id) => {
+    const eventInfo = await getEventInfo(id);
+    setEventResult(eventInfo);
+    console.log(eventInfo);
+  };
+
+  const getUserFeedbacks = async (id) => {
+    const userData = await getUserList(id, 1);
+    let currentFeedback = [];
+    userData.map((e) => {
+      currentFeedback.push(e.participantInfo);
+    });
+    setUserFeedback(currentFeedback);
+    console.log(currentFeedback);
+    console.log(userData);
   };
 
   return (
-    <Wrapper>
-      {events.map((event, index) => (
-        <Event key={index}>
-          <EventImage src={event.image}></EventImage>
-          {/* <EventTitle>{event.startTime}</EventTitle> */}
-          <EventTitle>{event.title}</EventTitle>
-        </Event>
-      ))}
-    </Wrapper>
+    <div>
+      <Wrapper>
+        {events.map((event, index) => (
+          <Event key={index}>
+            <EventImage
+              src={event.image}
+              onClick={() => handleEventClick(event.id)}
+            ></EventImage>
+            {/* <EventTitle>{event.startTime}</EventTitle> */}
+            <EventTitle>{event.title}</EventTitle>
+          </Event>
+        ))}
+      </Wrapper>
+      <Wrapper>
+        {eventResult && (
+          <PastEvent>
+            <PastEventImages>
+              {eventResult.resultImage.map((image, index) => (
+                <PastEventImage src={image} />
+              ))}
+            </PastEventImages>
+            <PastEventTitle>{eventResult.eventTitle}</PastEventTitle>
+            <PastEventText>
+              {`活動時間 | ${reformatTimestamp(
+                eventResult.startTime
+              )} ~ ${reformatTimestamp(eventResult.endTime)}`}
+            </PastEventText>
+            <PastEventText>{`活動成果 | ${eventResult.resultContent}`}</PastEventText>
+            <UserFeedbacks>
+              {userFeedback.map((feedback, index) => (
+                <UserFeedback>
+                  <UseImage
+                    src={`https://image.slidesharecdn.com/random-120815092541-phpapp02/95/cute-cat-1-728.jpg?cb=1345022928`}
+                  />
+                  <ReactStars
+                    count={5}
+                    edit={false}
+                    value={feedback.participantRating}
+                    size={24}
+                    activeColor="#ffd700"
+                  />
+                  <UserComment>{feedback.participantComment}</UserComment>
+                </UserFeedback>
+              ))}
+            </UserFeedbacks>
+          </PastEvent>
+        )}
+      </Wrapper>
+    </div>
   );
 }
 
