@@ -5,12 +5,15 @@ import { useHistory, useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 90%;
+  margin: 0 auto;
+`;
+
+const Events = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 10px;
   margin: 0 auto;
-  margin-top: 20px;
-  padding: 10px 0;
+  padding: 20px 0;
 `;
 
 const Event = styled.div`
@@ -34,8 +37,32 @@ const EventTitle = styled.div`
   margin-top: 5px;
 `;
 
-function Events() {
+const Tags = styled.div`
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+`;
+
+const Tag = styled.div`
+  font-size: 16px;
+  line-height: 20px;
+  padding: 5px 15px;
+  border: solid 1px #979797;
+  border-radius: 20px;
+  margin-right: 5px;
+`;
+
+function AllEvents() {
   const [events, setEvents] = useState([]);
+  const [tags, setTags] = useState([
+    { name: "社會福利", id: "socialWelfare", select: false },
+    { name: "文化教育", id: "cultureEducation", select: false },
+    { name: "環境保護", id: "environment", select: false },
+    { name: "生態保護", id: "conservation", select: false },
+  ]);
+
   const getAllEvents = async () => {
     const newEvents = await getEvents(0);
     newEvents.map((event) => {
@@ -72,15 +99,22 @@ function Events() {
 
   return (
     <Wrapper>
-      {events.map((event, eventId) => (
-        <Event key={eventId} onClick={() => handleEventClick(event.eventId)}>
-          <EventImage src={event.eventCoverImage} />
-          <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
-          <EventTitle>{event.eventTitle}</EventTitle>
-        </Event>
-      ))}
+      <Tags>
+        {tags.map((tag, index) => (
+          <Tag>{tag.name}</Tag>
+        ))}
+      </Tags>
+      <Events>
+        {events.map((event, eventId) => (
+          <Event key={eventId} onClick={() => handleEventClick(event.eventId)}>
+            <EventImage src={event.eventCoverImage} />
+            <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
+            <EventTitle>{event.eventTitle}</EventTitle>
+          </Event>
+        ))}
+      </Events>
     </Wrapper>
   );
 }
 
-export default Events;
+export default AllEvents;
