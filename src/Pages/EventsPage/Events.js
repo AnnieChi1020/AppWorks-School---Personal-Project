@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getEvents } from "../../utils/firebase.js";
+import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
 import { useHistory, useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -54,6 +54,17 @@ const Tag = styled.div`
   margin-right: 5px;
 `;
 
+const TagSelected = styled.div`
+  font-size: 16px;
+  line-height: 20px;
+  padding: 5px 15px;
+  border: solid 1px #979797;
+  border-radius: 20px;
+  margin-right: 5px;
+  background: #656565;
+  color: white;
+`;
+
 function AllEvents() {
   const [events, setEvents] = useState([]);
   const [tags, setTags] = useState([
@@ -97,12 +108,65 @@ function AllEvents() {
     history.push(`/events/${id}`);
   };
 
+  const handleTagClick = async (tag) => {
+    const selectedTag = tag.target.id;
+    console.log(selectedTag);
+    setTags(
+      tags.map((tag) =>
+        tag.id === selectedTag && tag.select === false
+          ? { ...tag, select: true }
+          : tag.id === selectedTag && tag.select === true
+          ? { ...tag, select: false }
+          : { ...tag, select: false }
+      )
+    );
+  };
+
+  const getEventsWithTagData = async () => {
+    let tagExist = false;
+    let selectedTag;
+    let eventData;
+    tags.forEach(async (tag) => {
+      if (tag.select === true) {
+        selectedTag = tag.id;
+        tagExist = true;
+      }
+      if (tagExist) {
+        eventData = await getEventsWithTag(selectedTag);
+        eventData.map((event) => {
+          event.startTime = reformatTimestamp(event.startTime);
+          event.endTime = reformatTimestamp(event.endTime);
+          console.log(event.startTime);
+        });
+        setEvents(eventData);
+      } else {
+        // eventData = await getEvents(0);
+        // setEvents(eventData);
+      }
+    });
+
+    return;
+  };
+
+  useEffect(() => {
+    console.log(tags);
+    getEventsWithTagData();
+  }, [tags]);
+
   return (
     <Wrapper>
       <Tags>
-        {tags.map((tag, index) => (
-          <Tag>{tag.name}</Tag>
-        ))}
+        {tags.map((tag, index) =>
+          tag.select === true ? (
+            <TagSelected onClick={(e) => handleTagClick(e)} id={tag.id}>
+              {tag.name}
+            </TagSelected>
+          ) : (
+            <Tag onClick={(e) => handleTagClick(e)} id={tag.id}>
+              {tag.name}
+            </Tag>
+          )
+        )}
       </Tags>
       <Events>
         {events.map((event, eventId) => (

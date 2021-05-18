@@ -213,3 +213,24 @@ export const getUserEvents = (userId, status) => {
       console.log("Error getting documents: ", error);
     });
 };
+
+export const getEventsWithTag = (tag) => {
+  const db = firebase.firestore();
+  let events = [];
+  const eventRef = db
+    .collection("events")
+    .where("eventTags", "array-contains", tag)
+    .where("eventStatus", "==", 0);
+  return eventRef
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        events.push(doc.data());
+      });
+      return events;
+    })
+    .catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
+};
