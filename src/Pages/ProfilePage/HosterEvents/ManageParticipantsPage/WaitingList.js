@@ -6,7 +6,7 @@ import {
   getCurrentStatus,
   updateNewStatus,
 } from "../../../../utils/firebase.js";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -78,12 +78,14 @@ const Button = styled.button`
 function WaitingList() {
   let { id } = useParams();
   const eventId = id;
+  console.log(eventId);
 
   const [applicants, setApplicants] = useState([]);
 
   const getApplicantsData = async () => {
     let applicantsArray = [];
     const newApplicants = await getUserList(eventId, 0);
+    console.log(newApplicants);
     newApplicants.map((applicant) => {
       applicantsArray.push(applicant.participantInfo);
     });

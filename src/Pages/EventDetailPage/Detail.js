@@ -41,6 +41,12 @@ function EventDetail() {
   useEffect(() => {
     async function getEventDetail() {
       const data = await getEventInfo(eventId);
+      // data.eventAddress.address_components.forEach((e) => {
+      //   if (e.types.includes("administrative_area_level_1")) {
+      //     console.log(e.long_name);
+      //   }
+      // });
+      console.log(data.eventAddress);
       const startDate = data.startTime.toDate().toLocaleDateString();
       const startTime = data.startTime.toDate().toLocaleTimeString("en-US", {
         hour12: false,
@@ -60,7 +66,7 @@ function EventDetail() {
         image: data.eventCoverImage,
         title: data.eventTitle,
         content: data.eventContent,
-        address: data.eventAddress,
+        // address: data.eventAddress,
         location: data.eventLocation,
         startTime: `${startDate} ${startTime}`,
         endTime: `${endDate} ${endTime}`,
@@ -76,7 +82,7 @@ function EventDetail() {
   return (
     <Wrapper>
       <EventImage src={event.image}></EventImage>
-      <EventText>{event.id}</EventText>
+      {/* <EventText>{event.id}</EventText> */}
       <EventText>活動名稱 | {event.title}</EventText>
       <EventText>活動內容 | {event.content}</EventText>
       <EventText>開始時間 | {event.startTime}</EventText>

@@ -1,10 +1,12 @@
 import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
+import "firebase/auth";
 
 firebase.initializeApp({
   apiKey: "AIzaSyB3u52FblPOqzBp4GUIASlMLohB5NcyLqs",
   authDomain: "volunteer-c29d0.firebaseapp.com",
+  databaseURL: "https://volunteer-c29d0.firebaseio.com",
   projectId: "volunteer-c29d0",
   storageBucket: "volunteer-c29d0.appspot.com",
   messagingSenderId: "564139543350",
@@ -20,16 +22,16 @@ export const createNewDoc = () => {
 };
 
 export const postEventDetailtoDoc = (newEventRef, eventDetail) => {
-  newEventRef
+  return newEventRef
     .set(eventDetail)
     .then(() => {
       console.log("Document successfully written!");
       console.log(eventDetail);
+      return newEventRef.id;
     })
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
-  return newEventRef.id;
 };
 
 export const postParticipantInfo = (
@@ -63,11 +65,12 @@ export const getEventInfo = (eventId) => {
   });
 };
 
-export const getEvents = () => {
+export const getEvents = (status) => {
   const db = firebase.firestore();
   let events = [];
   return db
     .collection("events")
+    .where("eventStatus", "==", status)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -77,6 +80,20 @@ export const getEvents = () => {
     })
     .catch((error) => {
       console.log("Error getting documents: ", error);
+    });
+};
+
+export const updateEvent = (eventId, updateInfo) => {
+  const db = firebase.firestore();
+  const eventRef = db.collection("events").doc(eventId);
+  return eventRef
+    .update(updateInfo)
+    .then(() => {
+      console.log("Document successfully updated!");
+    })
+    .catch((error) => {
+      // The document probably doesn't exist.
+      console.error("Error updating document: ", error);
     });
 };
 
@@ -168,7 +185,6 @@ export const getUserProfile = (id) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        console.log(doc.data());
         return doc.data();
       } else {
         console.log("No such document!");
@@ -197,5 +213,73 @@ export const getUserEvents = (userId, status) => {
     })
     .catch((error) => {
       console.log("Error getting documents: ", error);
+    });
+};
+
+export const getEventsWithTag = (tag) => {
+  const db = firebase.firestore();
+  let events = [];
+  const eventRef = db
+    .collection("events")
+    .where("eventTags", "array-contains", tag)
+    .where("eventStatus", "==", 0);
+  return eventRef
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        events.push(doc.data());
+      });
+      return events;
+    })
+    .catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
+};
+
+export const createUser = (email, password) => {
+  return firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      let user = userCredential.user;
+      return user.uid;
+    })
+    .catch((error) => {
+      let errorCode = error.code;
+      let errorMessage = error.message;
+      console.log(errorCode);
+      return errorCode;
+    });
+};
+
+export const userLogin = (email, password) => {
+  return firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      return user.uid;
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+      return errorCode;
+    });
+};
+
+export const createNewUser = (userId, userData) => {
+  const db = firebase.firestore();
+  let newUserRef = db.collection("users").doc(userId);
+  return newUserRef
+    .set(userData)
+    .then(() => {
+      console.log("Document successfully written!");
+      console.log(userData);
+      return;
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
     });
 };

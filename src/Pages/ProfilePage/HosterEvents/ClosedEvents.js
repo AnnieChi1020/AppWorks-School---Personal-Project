@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getHosterEvents } from "../../../utils/firebase.js";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -39,10 +39,10 @@ const EventTitle = styled.div`
   font-height: 20px;
 `;
 
-// const Button = styled.button`
-//   padding: 3px 5px;
-//   margin: 0 5px;
-// `;
+const Button = styled.button`
+  padding: 3px 5px;
+  margin: 0 5px;
+`;
 
 function ClosedEvents() {
   const hosterId = "szKr1hWragbubtIilQnV";
@@ -57,11 +57,13 @@ function ClosedEvents() {
     getHosterEventsData();
   }, []);
 
-  // let history = useHistory();
-  // const handleParticipantClick = (id) => {
-  //   history.push(`profile/manage-participants/${id}`);
-  // };
-
+  let history = useHistory();
+  const handleParticipantClick = (id) => {
+    history.push(`profile/manage-participants/${id}`);
+  };
+  const handleResultClick = (id) => {
+    history.push(`profile/event-result/${id}`);
+  };
   return (
     <Wrapper>
       {events.map((event, index) => (
@@ -70,11 +72,14 @@ function ClosedEvents() {
           <EventDetail>
             <EventTitle>{event.eventTitle}</EventTitle>
           </EventDetail>
-          {/* <Button>編輯活動</Button>
+          {/* <Button>編輯活動</Button> */}
           <Button onClick={() => handleParticipantClick(event.eventId)}>
             管理參加者
           </Button>
-          <Button onClick={() => handleParticipantClick(event.eventId)}>
+          <Button onClick={() => handleResultClick(event.eventId)}>
+            分享活動成果
+          </Button>
+          {/* <Button onClick={() => handleParticipantClick(event.eventId)}>
             取消活動
           </Button> */}
         </Event>

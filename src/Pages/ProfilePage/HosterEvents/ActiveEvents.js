@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getHosterEvents } from "../../../utils/firebase.js";
+import {
+  getHosterEvents,
+  getEventInfo,
+  updateEvent,
+  getUserList,
+  updateNewStatus,
+} from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -58,9 +64,37 @@ function ActiveEvents() {
     getHosterEventsData();
   }, []);
 
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
+
   let history = useHistory();
   const handleParticipantClick = (id) => {
     history.push(`profile/manage-participants/${id}`);
+  };
+
+  const handleEditClick = async (id) => {
+    history.push(`profile/edit-event/${id}`);
+  };
+
+  const handleCancelClick = async (id) => {
+    const eventData = await getEventInfo(id);
+    eventData.eventStatus = 9;
+    updateEvent(id, eventData);
+    const applyingUserData = await getUserList(id, 0);
+    const confirmedUserData = await getUserList(id, 1);
+    applyingUserData.map((user) => {
+      user.participantInfo.participantStatus = 9;
+      updateNewStatus(id, user.participantInfo.participantId, user);
+      return true;
+    });
+    confirmedUserData.map((user) => {
+      user.participantInfo.participantStatus = 9;
+      updateNewStatus(id, user.participantInfo.participantId, user);
+      return true;
+    });
+    console.log(applyingUserData);
+    console.log(eventData);
   };
 
   return (
@@ -71,11 +105,13 @@ function ActiveEvents() {
           <EventDetail>
             <EventTitle>{event.eventTitle}</EventTitle>
           </EventDetail>
-          <Button>編輯活動</Button>
+          <Button onClick={() => handleEditClick(event.eventId)}>
+            編輯活動
+          </Button>
           <Button onClick={() => handleParticipantClick(event.eventId)}>
             管理參加者
           </Button>
-          <Button onClick={() => handleParticipantClick(event.eventId)}>
+          <Button onClick={() => handleCancelClick(event.eventId)}>
             取消活動
           </Button>
         </Event>

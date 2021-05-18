@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 // import { getHosterEvents } from "../../../utils/firebase.js";
 // import { useHistory } from "react-router-dom";
