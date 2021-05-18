@@ -52,7 +52,7 @@ const SubmitButton = styled.button`
 function EventSignUp() {
   const { id } = useParams();
 
-  const participantId = "RQwkmO7Byk5YsOGfvp8D";
+  const participantId = "9xRjcIJWdYWT4zIKs1oG";
   const eventId = id;
 
   const [signUpInput, setSignUpInput] = useState({
@@ -64,11 +64,16 @@ function EventSignUp() {
     participantStatus: 0,
     participantAttended: false,
     participantComment: "",
+    participantRating: 0,
+    
   });
 
-  const handelClickSubmit = () => {
+  const handelClickSubmit = async () => {
     console.log(signUpInput);
-    postParticipantInfo(eventId, participantId, signUpInput);
+    await postParticipantInfo(eventId, participantId, signUpInput);
+    alert("已送出報名資訊");
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((e) => (e.value = ""));
   };
 
   return (

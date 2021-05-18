@@ -20,16 +20,16 @@ export const createNewDoc = () => {
 };
 
 export const postEventDetailtoDoc = (newEventRef, eventDetail) => {
-  newEventRef
+  return newEventRef
     .set(eventDetail)
     .then(() => {
       console.log("Document successfully written!");
       console.log(eventDetail);
+      return newEventRef.id;
     })
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
-  return newEventRef.id;
 };
 
 export const postParticipantInfo = (

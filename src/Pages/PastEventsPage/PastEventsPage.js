@@ -86,10 +86,14 @@ const UseImage = styled.img`
   width: 60px;
   object-fit: cover;
   border-radius: 50%;
+  margin-right: 20px;
 `;
 
 const UserFeedback = styled.div`
-  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
 `;
 
 const UserComment = styled.div`
@@ -159,9 +163,12 @@ function PastEvents() {
 
   const getUserFeedbacks = async (id) => {
     const userData = await getUserList(id, 1);
+    console.log(userData);
     let currentFeedback = [];
     userData.map((e) => {
-      currentFeedback.push(e.participantInfo);
+      if (e.participantInfo.participantRating !== 0) {
+        currentFeedback.push(e.participantInfo);
+      }
     });
     setUserFeedback(currentFeedback);
     console.log(currentFeedback);
@@ -200,17 +207,22 @@ function PastEvents() {
             <UserFeedbacks>
               {userFeedback.map((feedback, index) => (
                 <UserFeedback>
-                  <UseImage
-                    src={`https://image.slidesharecdn.com/random-120815092541-phpapp02/95/cute-cat-1-728.jpg?cb=1345022928`}
-                  />
-                  <ReactStars
-                    count={5}
-                    edit={false}
-                    value={feedback.participantRating}
-                    size={24}
-                    activeColor="#ffd700"
-                  />
-                  <UserComment>{feedback.participantComment}</UserComment>
+                  <div>
+                    <UseImage
+                      src={`https://image.slidesharecdn.com/random-120815092541-phpapp02/95/cute-cat-1-728.jpg?cb=1345022928`}
+                    />
+                    <UserComment>{feedback.participantName}</UserComment>
+                  </div>
+                  <div>
+                    <ReactStars
+                      count={5}
+                      edit={false}
+                      value={feedback.participantRating}
+                      size={24}
+                      activeColor="#ffd700"
+                    />
+                    <UserComment>{feedback.participantComment}</UserComment>
+                  </div>
                 </UserFeedback>
               ))}
             </UserFeedbacks>

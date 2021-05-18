@@ -4,6 +4,8 @@ import {
   getHosterEvents,
   getEventInfo,
   updateEvent,
+  getUserList,
+  updateNewStatus,
 } from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 
@@ -71,10 +73,25 @@ function ActiveEvents() {
     history.push(`profile/manage-participants/${id}`);
   };
 
+  const handleEditClick = async (id) => {
+    history.push(`profile/edit-event/${id}`);
+  };
+
   const handleCancelClick = async (id) => {
     const eventData = await getEventInfo(id);
     eventData.eventStatus = 9;
     updateEvent(id, eventData);
+    const applyingUserData = await getUserList(id, 0);
+    const confirmedUserData = await getUserList(id, 1);
+    applyingUserData.map((user) => {
+      user.participantInfo.participantStatus = 9;
+      updateNewStatus(id, user.participantInfo.participantId, user);
+    });
+    confirmedUserData.map((user) => {
+      user.participantInfo.participantStatus = 9;
+      updateNewStatus(id, user.participantInfo.participantId, user);
+    });
+    console.log(applyingUserData);
     console.log(eventData);
   };
 
@@ -86,7 +103,9 @@ function ActiveEvents() {
           <EventDetail>
             <EventTitle>{event.eventTitle}</EventTitle>
           </EventDetail>
-          <Button>編輯活動</Button>
+          <Button onClick={() => handleEditClick(event.eventId)}>
+            編輯活動
+          </Button>
           <Button onClick={() => handleParticipantClick(event.eventId)}>
             管理參加者
           </Button>

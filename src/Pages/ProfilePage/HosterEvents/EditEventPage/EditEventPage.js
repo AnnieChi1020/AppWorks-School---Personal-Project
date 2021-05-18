@@ -1,16 +1,15 @@
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useHistory } from "react-router-dom";
-import { GoogleApiWrapper } from "google-maps-react";
-// import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
+import { useParams } from "react-router-dom";
 
 import {
   createNewDoc,
   postEventDetailtoDoc,
   getImageURL,
   createNewCollection,
-} from "../../utils/firebase.js";
+  getEventInfo,
+} from "../../../../utils/firebase.js";
 
 import React, { useEffect, useState } from "react";
 
@@ -67,30 +66,6 @@ const SubmitButton = styled.button`
   height: 30px;
   margin-top: 20px;
 `;
-const Map = styled.div`
-  height: 30vh;
-  width: 40vh;
-`;
-
-const Option = styled.div`
-  line-height: 14px;
-  font-size: 14px;
-  padding: 5px 13px;
-  border: solid 1px #979797;
-  border-radius: 20px;
-  margin-right: 5px;
-`;
-
-const OptionSelected = styled.div`
-  line-height: 14px;
-  font-size: 14px;
-  padding: 5px 13px;
-  border: solid 1px #979797;
-  border-radius: 20px;
-  margin-right: 5px;
-  background-color: #636363;
-  color: white;
-`;
 
 const constructHourArray = () => {
   let hourArray = [];
@@ -116,9 +91,38 @@ const constructMinuteArray = () => {
   return minuteArray;
 };
 
-function CreateEvent() {
+function EditEvent() {
+  let { id } = useParams();
+  const eventId = id;
+  console.log(eventId);
   // const initEvnetInput = {eventName:"",};
   // const [eventInput, setEventInput] = useState(initEvnetInput);
+
+  const [eventInfo, setEventInfo] = useState({});
+
+  const getCurrentEventData = async (id) => {
+    console.log(id);
+    const currentEventData = await getEventInfo(id);
+    // currentEventData.startTime = currentEventData.startTime.toDate().toString();
+    const startT = currentEventData.startTime.toDate().toString();
+    console.log(startT);
+    console.log(currentEventData);
+    // currentEventData.startTime = startT;
+    console.log(currentEventData.startTime.toDate().toString());
+    setEventInfo(currentEventData);
+    return currentEventData;
+  };
+
+  useEffect(() => {
+    console.log(eventInfo);
+  }, [eventInfo]);
+
+  useEffect(() => {
+    getCurrentEventData(eventId);
+    // console.log(event);
+    // setEventInfo(...eventInfo, title: event.)
+  }, []);
+
   const [eventName, setEventName] = useState("");
   const [eventContent, setEventContent] = useState("");
   const [startDate, setStartDate] = useState(new Date());
@@ -132,13 +136,6 @@ function CreateEvent() {
   const [geopoint, setGeopoint] = useState("");
   const [geoAddress, setGeoAddress] = useState("");
   const [file, setFile] = useState(null);
-
-  const [tags, setTags] = useState([
-    { name: "社會福利", id: "socialWelfare", select: false },
-    { name: "文化教育", id: "cultureEducation", select: false },
-    { name: "環境保護", id: "environment", select: false },
-    { name: "生態保護", id: "conservation", select: false },
-  ]);
 
   const hourArray = constructHourArray();
   const minuteArray = constructMinuteArray();
@@ -166,9 +163,8 @@ function CreateEvent() {
     )
       .then((res) => res.json())
       .then((result) => {
-        console.log(result.results[0]);
-        // setGeopoint(result.results[0].geometry.location);
-        setGeoAddress(result.results[0]);
+        setGeopoint(result.results[0].geometry.location);
+        setGeoAddress(result.results[0].formatted_address);
       });
   };
 
@@ -176,85 +172,54 @@ function CreateEvent() {
     getGeopoint(city, address);
   }, [city, address]);
 
-  const createEventDetails = (id, imageURL) => {
-    return {
-      eventId: id,
-      eventTitle: eventName,
-      eventContent: eventContent,
-      // eventLocation: geopoint,
-      eventAddress: geoAddress,
-      eventCoverImage: imageURL,
-      startTime: new Date(
-        startDate.getUTCFullYear(),
-        startDate.getUTCMonth(),
-        startDate.getUTCDate(),
-        startHour,
-        startMinute,
-        0
-      ),
-      endTime: new Date(
-        endDate.getUTCFullYear(),
-        endDate.getUTCMonth(),
-        endDate.getUTCDate(),
-        endHour,
-        endMinute,
-        0
-      ),
-      eventStatus: 0,
-      eventTags: getSelectedTags(tags),
-      hosterId: "szKr1hWragbubtIilQnV",
-      resultImage: [],
-      resultContent: "",
-    };
-  };
+  // const createEventDetails = (id, imageURL) => {
+  //   return {
+  //     eventId: id,
+  //     eventTitle: eventName,
+  //     eventContent: eventContent,
+  //     eventLocation: geopoint,
+  //     eventAddress: geoAddress,
+  //     eventCoverImage: imageURL,
+  //     startTime: new Date(
+  //       startDate.getUTCFullYear(),
+  //       startDate.getUTCMonth(),
+  //       startDate.getUTCDate(),
+  //       startHour,
+  //       startMinute,
+  //       0
+  //     ),
+  //     endTime: new Date(
+  //       endDate.getUTCFullYear(),
+  //       endDate.getUTCMonth(),
+  //       endDate.getUTCDate(),
+  //       endHour,
+  //       endMinute,
+  //       0
+  //     ),
+  //     eventStatus: 0,
+  //     hosterId: "H0001",
+  //     resultImage: [],
+  //     resultContent: "",
+  //   };
+  // };
 
-  let history = useHistory();
   async function handelClickSubmit() {
-    const imageUrl = await getImageURL(file);
-    const newEventRef = createNewDoc();
-    const eventDetail = createEventDetails(newEventRef.id, imageUrl);
-    console.log(eventDetail);
-    const eventId = await postEventDetailtoDoc(newEventRef, eventDetail);
-    alert("已創建志工活動");
-    history.go(0);
+    // const imageUrl = await getImageURL(file);
+    // const newEventRef = createNewDoc();
+    // const eventDetail = createEventDetails(newEventRef.id, imageUrl);
+    // const eventId = await postEventDetailtoDoc(newEventRef, eventDetail);
     console.log(eventId);
   }
-
-  const handleTagClick = (tag) => {
-    let selectedId = tag.target.id;
-    setTags(
-      tags.map((tag) =>
-        tag.id === selectedId && tag.select === false
-          ? { ...tag, select: true }
-          : tag.id === selectedId && tag.select === true
-          ? { ...tag, select: false }
-          : tag
-      )
-    );
-  };
-
-  const getSelectedTags = (tags) => {
-    let selectedTags = [];
-    tags.forEach((tag) => {
-      tag.select === true ? selectedTags.push(tag.id) : console.log("none");
-    });
-    return selectedTags;
-  };
-
-  // let map;
-  // const initMap = () => {
-  //   map = new google.maps.Map(document.getElementById("map"), {
-  //     center: { lat: 40.689104, lng: -74.044599 },
-  //     zoom: 16,
-  //   });
-  // };
 
   return (
     <Wrapper>
       <Field>
         <FieldName>活動名稱</FieldName>
         <FieldInput>
-          <TextInput onChange={(e) => setEventName(e.target.value)}></TextInput>
+          <TextInput
+            onChange={(e) => setEventName(e.target.value)}
+            defaultValue={eventInfo.eventTitle}
+          ></TextInput>
         </FieldInput>
       </Field>
       <Field>
@@ -262,6 +227,7 @@ function CreateEvent() {
         <FieldInput>
           <TextInput
             onChange={(e) => setEventContent(e.target.value)}
+            defaultValue={eventInfo.eventContent}
           ></TextInput>
         </FieldInput>
       </Field>
@@ -269,7 +235,11 @@ function CreateEvent() {
         <FieldName>開始時間</FieldName>
         <DatePicker
           selected={startDate}
-          onChange={(date) => setStartDate(date)}
+          // defaultValue={eventInfo.startTime.toDate().toString()}
+          onChange={(date) => {
+            setStartDate(date);
+            console.log(date);
+          }}
           dateFormat="yyyy/MM/dd (EEE)"
           showYearDropdown
           scrollableMonthYearDropdown
@@ -323,35 +293,19 @@ function CreateEvent() {
           ))}
         </SelectInput>
         <FieldInput>
-          <TextInput onChange={(e) => setAddress(e.target.value)}></TextInput>
+          <TextInput
+            onChange={(e) => setAddress(e.target.value)}
+            defaultValue={eventInfo.eventAddress}
+          ></TextInput>
         </FieldInput>
-      </Field>
-      <Map></Map>
-      <Field>
-        <FieldName>活動類型</FieldName>
-        {tags.map((tag, index) =>
-          tag.select === true ? (
-            <OptionSelected
-              id={tag.id}
-              key={index}
-              onClick={(e) => handleTagClick(e)}
-            >
-              {tag.name}
-            </OptionSelected>
-          ) : (
-            <Option id={tag.id} key={index} onClick={(e) => handleTagClick(e)}>
-              {tag.name}
-            </Option>
-          )
-        )}
       </Field>
       <Field>
         <FieldName>封面圖片</FieldName>
         <input type="file" onChange={(e) => setFile(e.target.files[0])} />
       </Field>
-      <SubmitButton onClick={handelClickSubmit}>創建活動</SubmitButton>
+      <SubmitButton onClick={handelClickSubmit}>更新活動</SubmitButton>
     </Wrapper>
   );
 }
 
-export default CreateEvent;
+export default EditEvent;

@@ -157,12 +157,14 @@ function UserCompletedEvents() {
             <EventTime>{event.endTime}</EventTime>
           </EventDetail>
           {console.log(event.attend)}
-          {event.attend === true && !event.rating && (
+          {event.attend === true && event.rating === 0 && (
             <Button onClick={() => handleCommentClick(event.id)}>
               評價活動
             </Button>
           )}
-          {event.attend === true && event.rating && <Button>已評價活動</Button>}
+          {event.attend === true && event.rating !== 0 && (
+            <Button>已評價活動</Button>
+          )}
 
           {event.attend === false && <Button>待確認出席</Button>}
         </Event>

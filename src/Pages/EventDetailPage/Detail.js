@@ -76,7 +76,7 @@ function EventDetail() {
   return (
     <Wrapper>
       <EventImage src={event.image}></EventImage>
-      <EventText>{event.id}</EventText>
+      {/* <EventText>{event.id}</EventText> */}
       <EventText>活動名稱 | {event.title}</EventText>
       <EventText>活動內容 | {event.content}</EventText>
       <EventText>開始時間 | {event.startTime}</EventText>
