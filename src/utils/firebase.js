@@ -1,10 +1,12 @@
 import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
+import "firebase/auth";
 
 firebase.initializeApp({
   apiKey: "AIzaSyB3u52FblPOqzBp4GUIASlMLohB5NcyLqs",
   authDomain: "volunteer-c29d0.firebaseapp.com",
+  databaseURL: "https://volunteer-c29d0.firebaseio.com",
   projectId: "volunteer-c29d0",
   storageBucket: "volunteer-c29d0.appspot.com",
   messagingSenderId: "564139543350",
@@ -232,5 +234,52 @@ export const getEventsWithTag = (tag) => {
     })
     .catch((error) => {
       console.log("Error getting documents: ", error);
+    });
+};
+
+export const createUser = (email, password) => {
+  return firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      let user = userCredential.user;
+      return user.uid;
+    })
+    .catch((error) => {
+      let errorCode = error.code;
+      let errorMessage = error.message;
+      console.log(errorCode);
+      return errorCode;
+    });
+};
+
+export const userLogin = (email, password) => {
+  return firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      return user.uid;
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+      return errorCode;
+    });
+};
+
+export const createNewUser = (userId, userData) => {
+  const db = firebase.firestore();
+  let newUserRef = db.collection("users").doc(userId);
+  return newUserRef
+    .set(userData)
+    .then(() => {
+      console.log("Document successfully written!");
+      console.log(userData);
+      return;
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
     });
 };

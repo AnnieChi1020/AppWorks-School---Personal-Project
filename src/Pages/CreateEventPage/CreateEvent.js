@@ -2,14 +2,13 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useHistory } from "react-router-dom";
-import { GoogleApiWrapper } from "google-maps-react";
+// import { GoogleApiWrapper } from "google-maps-react";
 // import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 
 import {
   createNewDoc,
   postEventDetailtoDoc,
   getImageURL,
-  createNewCollection,
 } from "../../utils/firebase.js";
 
 import React, { useEffect, useState } from "react";
@@ -129,7 +128,7 @@ function CreateEvent() {
   const [endMinute, setEndMinute] = useState("00");
   const [city, setCity] = useState("台北市");
   const [address, setAddress] = useState("");
-  const [geopoint, setGeopoint] = useState("");
+  // const [geopoint, setGeopoint] = useState("");
   const [geoAddress, setGeoAddress] = useState("");
   const [file, setFile] = useState(null);
 

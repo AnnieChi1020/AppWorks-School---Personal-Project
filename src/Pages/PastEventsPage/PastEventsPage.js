@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEventInfo, getEvents, getUserList } from "../../utils/firebase.js";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 
 const Wrapper = styled.div`
@@ -27,10 +27,10 @@ const EventImage = styled.img`
   vertical-align: bottom;
 `;
 
-const EventTime = styled.div`
-  font-size: 12px;
-  margin-top: 5px;
-`;
+// const EventTime = styled.div`
+//   font-size: 12px;
+//   margin-top: 5px;
+// `;
 
 const EventTitle = styled.div`
   font-size: 16px;
@@ -120,6 +120,7 @@ function PastEvents() {
       };
       eventsArray.push(pastEvent);
       console.log(pastEvent);
+      return true;
     });
     setEvents(eventsArray);
   };

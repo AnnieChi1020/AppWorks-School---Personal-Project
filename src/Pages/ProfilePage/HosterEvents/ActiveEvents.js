@@ -86,10 +86,12 @@ function ActiveEvents() {
     applyingUserData.map((user) => {
       user.participantInfo.participantStatus = 9;
       updateNewStatus(id, user.participantInfo.participantId, user);
+      return true;
     });
     confirmedUserData.map((user) => {
       user.participantInfo.participantStatus = 9;
       updateNewStatus(id, user.participantInfo.participantId, user);
+      return true;
     });
     console.log(applyingUserData);
     console.log(eventData);

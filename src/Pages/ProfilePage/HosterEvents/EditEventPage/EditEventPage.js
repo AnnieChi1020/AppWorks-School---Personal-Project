@@ -4,10 +4,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from "react-router-dom";
 
 import {
-  createNewDoc,
-  postEventDetailtoDoc,
-  getImageURL,
-  createNewCollection,
+  // createNewDoc,
+  // postEventDetailtoDoc,
+  // getImageURL,
+  // createNewCollection,
   getEventInfo,
 } from "../../../../utils/firebase.js";
 

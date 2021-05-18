@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -65,6 +65,24 @@ const TagSelected = styled.div`
   color: white;
 `;
 
+const EventTags = styled.div`
+  width: 100%;
+  margin: 10px 0 10px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+`;
+
+const EventTag = styled.div`
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0 8px;
+  border: solid 1px #979797;
+  border-radius: 20px;
+  margin-right: 5px;
+  color: #4f4f4f;
+`;
+
 function AllEvents() {
   const [events, setEvents] = useState([]);
   const [tags, setTags] = useState([
@@ -79,7 +97,8 @@ function AllEvents() {
     newEvents.map((event) => {
       event.startTime = reformatTimestamp(event.startTime);
       event.endTime = reformatTimestamp(event.endTime);
-      console.log(event.startTime);
+      event.eventAddress = getAdministrativeArea(event);
+      return true;
     });
     setEvents(newEvents);
   };
@@ -110,7 +129,6 @@ function AllEvents() {
 
   const handleTagClick = async (tag) => {
     const selectedTag = tag.target.id;
-    console.log(selectedTag);
     setTags(
       tags.map((tag) =>
         tag.id === selectedTag && tag.select === false
@@ -133,10 +151,13 @@ function AllEvents() {
       }
       if (tagExist) {
         eventData = await getEventsWithTag(selectedTag);
+
         eventData.map((event) => {
           event.startTime = reformatTimestamp(event.startTime);
           event.endTime = reformatTimestamp(event.endTime);
-          console.log(event.startTime);
+          event.eventAddress = getAdministrativeArea(event);
+          // console.log(getAdministrativeArea(event));
+          return true;
         });
         setEvents(eventData);
       } else {
@@ -144,25 +165,53 @@ function AllEvents() {
         // setEvents(eventData);
       }
     });
-
     return;
   };
 
+  const getAdministrativeArea = (event) => {
+    let area;
+    event.eventAddress.address_components.forEach((e) => {
+      if (e.types.includes("administrative_area_level_1")) {
+        area = e.long_name;
+      }
+    });
+    return area;
+  };
+
   useEffect(() => {
-    console.log(tags);
     getEventsWithTagData();
   }, [tags]);
+
+  const getTagName = (tagId) => {
+    let name;
+    const array = [
+      { name: "社會福利", id: "socialWelfare" },
+      { name: "文化教育", id: "cultureEducation" },
+      { name: "環境保護", id: "environment" },
+      { name: "生態保護", id: "conservation" },
+    ];
+    array.forEach((e) => {
+      if (tagId === e.id) {
+        name = e.name;
+      }
+    });
+    return name;
+  };
 
   return (
     <Wrapper>
       <Tags>
         {tags.map((tag, index) =>
           tag.select === true ? (
-            <TagSelected onClick={(e) => handleTagClick(e)} id={tag.id}>
+            <TagSelected
+              onClick={(e) => handleTagClick(e)}
+              id={tag.id}
+              key={index}
+            >
               {tag.name}
             </TagSelected>
           ) : (
-            <Tag onClick={(e) => handleTagClick(e)} id={tag.id}>
+            <Tag onClick={(e) => handleTagClick(e)} id={tag.id} key={index}>
               {tag.name}
             </Tag>
           )
@@ -172,7 +221,13 @@ function AllEvents() {
         {events.map((event, eventId) => (
           <Event key={eventId} onClick={() => handleEventClick(event.eventId)}>
             <EventImage src={event.eventCoverImage} />
-            <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
+            <EventTags>
+              {event.eventTags.map((tag, index) => (
+                <EventTag key={index}>{getTagName(tag)}</EventTag>
+              ))}
+              <EventTag>{event.eventAddress}</EventTag>
+            </EventTags>
+            <EventTime>{`${event.startTime} - ${event.endTime}`}</EventTime>
             <EventTitle>{event.eventTitle}</EventTitle>
           </Event>
         ))}

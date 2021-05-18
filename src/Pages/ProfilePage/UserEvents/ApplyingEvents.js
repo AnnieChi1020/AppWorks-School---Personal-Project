@@ -6,7 +6,7 @@ import {
   getCurrentStatus,
   updateNewStatus,
 } from "../../../utils/firebase.js";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
