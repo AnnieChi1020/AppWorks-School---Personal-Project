@@ -2,6 +2,7 @@ import styled from "styled-components";
 import React, { useState } from "react";
 import { getEvents, updateEvent } from "../utils/firebase.js";
 import Login from "./Login.js";
+import logo from "../_images/logo.png";
 
 // import { useHistory } from "react-router-dom";
 // import { useSelector, useDispatch } from "react-redux";
@@ -13,12 +14,18 @@ const Wrapper = styled.header`
 
 const HeaderContent = styled.div`
   width: 100%;
+  height: 50px;
   align-items: center;
-  background-color: #c2c2c2;
+  background-color: white;
+  box-shadow: 0 0 1rem rgb(0 0 0 / 15%);
+  position: fixed;
+  top: 0;
+  z-index: 5;
 `;
 
 const NavContent = styled.div`
   width: 90%;
+  height: 100%;
   margin: 0 auto;
   align-items: center;
   display: flex;
@@ -29,14 +36,27 @@ const NavContent = styled.div`
 const NavItems = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 const NavItem = styled.a`
-  color: white;
+  color: black;
   font-size: 16px;
   line-height: 20px;
-  padding: 10px 10px;
+  padding: 5px 0px;
+  margin-right: 20px;
   text-decoration: none;
+  &:hover {
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    color: #1190cb;
+    border-bottom: 2px solid #1190cb;
+  }
+`;
+
+const Img = styled.img`
+  height: 30px;
 `;
 
 function Header() {
@@ -65,13 +85,18 @@ function Header() {
   return (
     <Wrapper>
       <HeaderContent>
-        <NavContent>
-          <NavItem href="/">Volunteer</NavItem>
+        <NavContent className="container-md">
+          <NavItems>
+            <Img src={logo} />
+          </NavItems>
           <NavItems>
             <NavItem href="/events">我要當志工</NavItem>
             <NavItem href="/createEvent">招募志工</NavItem>
             <NavItem href="/past-events">活動成果</NavItem>
             <NavItem onClick={() => handleLoginClick()}>個人頁</NavItem>
+          </NavItems>
+          <NavItems>
+            <NavItem href="/events">我要當志工</NavItem>
           </NavItems>
         </NavContent>
       </HeaderContent>

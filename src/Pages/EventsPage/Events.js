@@ -2,6 +2,16 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  DropdownButton,
+  Dropdown,
+  Alert,
+} from "react-bootstrap";
+import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -16,25 +26,27 @@ const Events = styled.div`
   padding: 20px 0;
 `;
 
-const Event = styled.div`
-  width: 100%;
-  margin-bottom: 20px;
-`;
+// const Event = styled.div`
+//   width: 100%;
+//   margin-bottom: 20px;
+// `;
 
-const EventImage = styled.img`
-  width: 100%;
-  height: 20vw;
-  object-fit: cover;
-`;
+// const EventImage = styled.img`
+//   width: 100%;
+//   height: 20vw;
+//   object-fit: cover;
+// `;
 
 const EventTime = styled.div`
   font-size: 12px;
+  line-height: 16px;
   margin-top: 5px;
 `;
 
 const EventTitle = styled.div`
-  font-size: 16px;
+  font-size: 20px;
   margin-top: 5px;
+  margin-bottom: 10px;
 `;
 
 const Tags = styled.div`
@@ -52,6 +64,7 @@ const Tag = styled.div`
   border: solid 1px #979797;
   border-radius: 20px;
   margin-right: 5px;
+  cursor: pointer;
 `;
 
 const TagSelected = styled.div`
@@ -63,6 +76,7 @@ const TagSelected = styled.div`
   margin-right: 5px;
   background: #656565;
   color: white;
+  cursor: pointer;
 `;
 
 const EventTags = styled.div`
@@ -82,6 +96,14 @@ const EventTag = styled.div`
   margin-right: 5px;
   color: #4f4f4f;
 `;
+
+const styles = {
+  cardImage: {
+    objectFit: "cover",
+    width: "100%",
+    height: "150px",
+  },
+};
 
 function AllEvents() {
   const [events, setEvents] = useState([]);
@@ -200,38 +222,84 @@ function AllEvents() {
 
   return (
     <Wrapper>
-      <Tags>
-        {tags.map((tag, index) =>
-          tag.select === true ? (
-            <TagSelected
-              onClick={(e) => handleTagClick(e)}
-              id={tag.id}
-              key={index}
+      <div className="px-1 mb-2 container-md">
+        <Tags>
+          {tags.map((tag, index) =>
+            tag.select === true ? (
+              <TagSelected
+                onClick={(e) => handleTagClick(e)}
+                id={tag.id}
+                key={index}
+              >
+                {tag.name}
+              </TagSelected>
+            ) : (
+              <Tag onClick={(e) => handleTagClick(e)} id={tag.id} key={index}>
+                {tag.name}
+              </Tag>
+            )
+          )}
+
+          {/* <DropdownButton id="dropdown-basic-button" title="Dropdown button">
+          <Dropdown.Item>台北市</Dropdown.Item>
+          <Dropdown.Item>桃園市</Dropdown.Item>
+          <Dropdown.Item>新北市</Dropdown.Item>
+        </DropdownButton> */}
+        </Tags>
+      </div>
+      <div className="mb-5 container-md">
+        <Row className="mr-n3 d-flex">
+          {events.map((event, index) => (
+            <Col
+              className="col-12 col-sm-6 col-lg-4 px-2 py-3"
+              style={styles.cardCol}
             >
-              {tag.name}
-            </TagSelected>
-          ) : (
-            <Tag onClick={(e) => handleTagClick(e)} id={tag.id} key={index}>
-              {tag.name}
-            </Tag>
-          )
-        )}
-      </Tags>
-      <Events>
-        {events.map((event, eventId) => (
-          <Event key={eventId} onClick={() => handleEventClick(event.eventId)}>
-            <EventImage src={event.eventCoverImage} />
-            <EventTags>
-              {event.eventTags.map((tag, index) => (
-                <EventTag key={index}>{getTagName(tag)}</EventTag>
-              ))}
-              <EventTag>{event.eventAddress}</EventTag>
-            </EventTags>
-            <EventTime>{`${event.startTime} - ${event.endTime}`}</EventTime>
-            <EventTitle>{event.eventTitle}</EventTitle>
-          </Event>
-        ))}
-      </Events>
+              <Card
+                key={index}
+                className="shadow-sm rounded bg-white"
+                onClick={() => handleEventClick(event.eventId)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="bg-image hover-overlay hover-zoom">
+                  <Card.Img
+                    variant="top"
+                    src={event.eventCoverImage}
+                    style={styles.cardImage}
+                  ></Card.Img>
+                </div>
+                <Card.Body className="py-2 px-3">
+                  <EventTags>
+                    {event.eventTags.map((tag, index) => (
+                      <EventTag key={index}>{getTagName(tag)}</EventTag>
+                    ))}
+                    <EventTag>{event.eventAddress}</EventTag>
+                  </EventTags>
+                  <EventTime>{`${event.startTime} - ${event.endTime}`}</EventTime>
+                  <EventTitle>{event.eventTitle}</EventTitle>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+        {/* <Events>
+          {events.map((event, eventId) => (
+            <Event
+              key={eventId}
+              onClick={() => handleEventClick(event.eventId)}
+            >
+              <EventImage src={event.eventCoverImage} />
+              <EventTags>
+                {event.eventTags.map((tag, index) => (
+                  <EventTag key={index}>{getTagName(tag)}</EventTag>
+                ))}
+                <EventTag>{event.eventAddress}</EventTag>
+              </EventTags>
+              <EventTime>{`${event.startTime} - ${event.endTime}`}</EventTime>
+              <EventTitle>{event.eventTitle}</EventTitle>
+            </Event>
+          ))}
+        </Events> */}
+      </div>
     </Wrapper>
   );
 }
