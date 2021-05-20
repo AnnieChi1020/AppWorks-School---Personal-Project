@@ -2,7 +2,7 @@ import styled from "styled-components";
 // import React, { useEffect, useState } from "react";
 // import { getEvents } from "../../utils/firebase.js";
 // import { useHistory, useParams } from "react-router-dom";
-import banner from "../../_images/banner.png";
+import banner from "../../images/banner.png";
 
 const Wrapper = styled.div`
   width: 100%;

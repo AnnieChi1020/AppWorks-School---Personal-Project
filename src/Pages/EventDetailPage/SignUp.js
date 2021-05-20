@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { postParticipantInfo } from "../../utils/firebase.js";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
-  width: 70%;
+  width: 100%;
   display: flex;
   margin: 0 auto;
-  margin-top: 20px;
   flex-direction: column;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: solid 1px #979797;
 `;
 
 const Field = styled.div`
@@ -30,7 +28,7 @@ const FieldName = styled.label`
 `;
 
 const FieldInput = styled.div`
-  width: 300px;
+  width: calc(100% - 110px);
   display: flex;
   align-items: center;
 `;
@@ -44,36 +42,62 @@ const TextInput = styled.input`
 `;
 
 const SubmitButton = styled.button`
-  width: 80px;
-  height: 30px;
-  margin-top: 20px;
+  width: 120px;
+  background-color: #0e6cd0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 5px 10px;
+  margin: 0 auto;
+  margin-top: 30px;
 `;
 
 function EventSignUp() {
   const { id } = useParams();
-
-  const participantId = "9xRjcIJWdYWT4zIKs1oG";
   const eventId = id;
+  const userId = useSelector((state) => state.isLogged.userId);
+  const dispatch = useDispatch();
 
-  const [signUpInput, setSignUpInput] = useState({
-    eventId: eventId,
-    participantId: participantId,
-    participantName: "",
-    participantPhone: "",
-    participantEmail: "",
-    participantStatus: 0,
-    participantAttended: false,
-    participantComment: "",
-    participantRating: 0,
-  });
+  // const participantId = "9xRjcIJWdYWT4zIKs1oG";
+  // const eventId = id;
 
-  const handelClickSubmit = async () => {
-    console.log(signUpInput);
-    await postParticipantInfo(eventId, participantId, signUpInput);
-    alert("已送出報名資訊");
-    const inputs = document.querySelectorAll("input");
-    inputs.forEach((e) => (e.value = ""));
+  // const [signUpInput, setSignUpInput] = useState({
+  //   eventId: eventId,
+  //   participantId: participantId,
+  //   participantName: "",
+  //   participantPhone: "",
+  //   participantEmail: "",
+  //   participantStatus: 0,
+  //   participantAttended: false,
+  //   participantComment: "",
+  //   participantRating: 0,
+  // });
+
+  const handleNameChange = (e) => {
+    dispatch({ type: "ADD_NAME", data: e });
   };
+
+  const handlePhoneChange = (e) => {
+    dispatch({ type: "ADD_PHONE", data: e });
+  };
+
+  const handleEmailChange = (e) => {
+    dispatch({ type: "ADD_EMAIL", data: e });
+  };
+
+  useEffect(() => {
+    dispatch({ type: "ADD_USERID", data: userId });
+    dispatch({ type: "ADD_EVENTID", data: eventId });
+  }, []);
+
+  // const handelClickSubmit = async () => {
+  //   console.log(signUpInput);
+  //   await postParticipantInfo(eventId, participantId, signUpInput);
+  //   alert("已送出報名資訊");
+  //   const inputs = document.querySelectorAll("input");
+  //   inputs.forEach((e) => (e.value = ""));
+  // };
 
   return (
     <Wrapper>
@@ -81,12 +105,7 @@ function EventSignUp() {
         <FieldName>參加者姓名</FieldName>
         <FieldInput>
           <TextInput
-            onChange={(e) =>
-              setSignUpInput({
-                ...signUpInput,
-                participantName: e.target.value,
-              })
-            }
+            onChange={(e) => handleNameChange(e.target.value)}
           ></TextInput>
         </FieldInput>
       </Field>
@@ -94,12 +113,7 @@ function EventSignUp() {
         <FieldName>連絡電話</FieldName>
         <FieldInput>
           <TextInput
-            onChange={(e) =>
-              setSignUpInput({
-                ...signUpInput,
-                participantPhone: e.target.value,
-              })
-            }
+            onChange={(e) => handlePhoneChange(e.target.value)}
           ></TextInput>
         </FieldInput>
       </Field>
@@ -107,16 +121,10 @@ function EventSignUp() {
         <FieldName>Email</FieldName>
         <FieldInput>
           <TextInput
-            onChange={(e) =>
-              setSignUpInput({
-                ...signUpInput,
-                participantEmail: e.target.value,
-              })
-            }
+            onChange={(e) => handleEmailChange(e.target.value)}
           ></TextInput>
         </FieldInput>
       </Field>
-      <SubmitButton onClick={handelClickSubmit}>送出報名</SubmitButton>
     </Wrapper>
   );
 }

@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
 import { createUser, userLogin, createNewUser } from "../utils/firebase.js";
+import { Modal } from "react-bootstrap";
 
 const Wrapper = styled.div`
   width: 50%;
@@ -109,6 +110,8 @@ function Login() {
     phone: "",
     address: "",
   });
+  const dispatch = useDispatch();
+  const logStatus = useSelector((state) => state.isLogged);
 
   const constructUserData = (userId) => {
     let userData = {
@@ -178,6 +181,8 @@ function Login() {
         ? (userData = constructUserData(userId))
         : (userData = constructHosterData(userId));
       await createNewUser(userId, userData);
+      dispatch({ type: "SIGN_IN", data: true });
+      dispatch({ type: "GET_USERID", data: userId });
       alert("已註冊成功");
     }
     console.log(signupMessage);
@@ -185,17 +190,17 @@ function Login() {
 
   const handleLoginButton = async () => {
     const loginMessage = await userLogin(signupInfo.email, signupInfo.password);
-    loginMessage === "auth/user-not-found"
-      ? alert("尚未註冊喔")
-      : loginMessage === "auth/wrong-password"
-      ? alert("密碼有誤喔")
-      : alert("已登入");
-    console.log(loginMessage);
+    if (loginMessage === "auth/user-not-found") {
+      alert("尚未註冊喔");
+    } else if (loginMessage === "auth/wrong-password") {
+      alert("密碼有誤喔");
+    } else {
+      const userId = loginMessage;
+      dispatch({ type: "SIGN_IN", data: true });
+      dispatch({ type: "GET_USERID", data: userId });
+      alert("已登入");
+    }
   };
-
-  useEffect(() => {
-    console.log(signupInfo);
-  }, [signupInfo]);
 
   return (
     <Wrapper>
