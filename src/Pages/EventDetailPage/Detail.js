@@ -1,17 +1,38 @@
 import React, { useEffect, useState } from "react";
+import { Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { getEventInfo } from "../../utils/firebase.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 
 const Wrapper = styled.div`
-  width: 70%;
-  display: flex;
+  width: 90%;
   margin: 0 auto;
+`;
+
+const EventImage = styled.img`
+  width: 100%;
+  height: 25vw;
+  object-fit: cover;
+`;
+
+const SubtitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  align-items: center;
+`;
+
+const Subtitle = styled.div`
+  font-size: 1rem;
+`;
+
+const EventTitle = styled.h2`
+  font-size: 24px;
+  line-height: 28px;
   margin-top: 20px;
-  flex-direction: column;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: solid 1px #979797;
+  font-weight: 600;
 `;
 
 const EventText = styled.h2`
@@ -19,9 +40,24 @@ const EventText = styled.h2`
   margin: 5px 0;
 `;
 
-const EventImage = styled.img`
-  width: 200px;
-`;
+const styles = {
+  eventDiv: {
+    flexDirection: "column",
+  },
+  subtitleIcon: {
+    textAlign: "left",
+    width: "25px",
+    marginRight: "5px",
+    color: "#6c757d",
+    display: "flex",
+    justifyContent: "flex-start",
+  },
+  flexbox: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+  },
+};
 
 function EventDetail() {
   let { id } = useParams();
@@ -81,13 +117,29 @@ function EventDetail() {
 
   return (
     <Wrapper>
-      <EventImage src={event.image}></EventImage>
-      {/* <EventText>{event.id}</EventText> */}
-      <EventText>活動名稱 | {event.title}</EventText>
-      <EventText>活動內容 | {event.content}</EventText>
-      <EventText>開始時間 | {event.startTime}</EventText>
-      <EventText>結束時間 | {event.endTime}</EventText>
-      <EventText>活動地址 | {event.address}</EventText>
+      <div className="px-1 mb-2 container-md d-flex " style={styles.eventDiv}>
+        <EventImage src={event.image}></EventImage>
+        {/* <EventText>{event.id}</EventText> */}
+        <EventTitle>{event.title}</EventTitle>
+        <SubtitleContainer>
+          <div style={styles.flexbox}>
+            <FontAwesomeIcon icon={faClock} style={styles.subtitleIcon} />
+          </div>
+          <div>
+            <Subtitle>活動時間</Subtitle>
+            <EventText>
+              {event.startTime} - {event.endTime}
+            </EventText>
+          </div>
+        </SubtitleContainer>
+        <SubtitleContainer>
+          <FontAwesomeIcon icon={faMapMarker} style={styles.subtitleIcon} />
+          <div>
+            <Subtitle>活動地址</Subtitle> <EventText>{event.address}</EventText>
+          </div>
+        </SubtitleContainer>
+        <EventText>活動內容 | {event.content}</EventText>
+      </div>
     </Wrapper>
   );
 }

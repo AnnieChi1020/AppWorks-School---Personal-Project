@@ -2,7 +2,7 @@ import styled from "styled-components";
 // import React, { useEffect, useState } from "react";
 // import { getEvents } from "../../utils/firebase.js";
 // import { useHistory, useParams } from "react-router-dom";
-import banner from "../../images/banner.png";
+import banner from "../../_images/banner.png";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -36,12 +36,12 @@ const BannerContent = styled.div`
 function HomePage() {
   return (
     <Wrapper>
-      <BannerDiv>
+      {/* <BannerDiv>
         <BannerContent></BannerContent>
         <BannerImage>
           <Image src={banner} />
         </BannerImage>
-      </BannerDiv>
+      </BannerDiv> */}
     </Wrapper>
   );
 }

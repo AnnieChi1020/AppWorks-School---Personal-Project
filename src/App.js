@@ -2,7 +2,7 @@ import React from "react";
 // import { useSelector, useDispatch } from "react-redux";
 // import { increment, decrement } from "./actions";
 
-import Header from "./Components/Header.js";
+import Header from "./_components/Header.js";
 import HomePage from "./Pages/HomePage/HomePage.js";
 import CreateEvent from "./Pages/CreateEventPage/CreateEvent.js";
 import EventDetail from "./Pages/EventDetailPage/EventDetailPage.js";
