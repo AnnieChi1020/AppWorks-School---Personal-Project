@@ -36,12 +36,12 @@ const BannerContent = styled.div`
 function HomePage() {
   return (
     <Wrapper>
-      <BannerDiv>
+      {/* <BannerDiv>
         <BannerContent></BannerContent>
         <BannerImage>
           <Image src={banner} />
         </BannerImage>
-      </BannerDiv>
+      </BannerDiv> */}
     </Wrapper>
   );
 }

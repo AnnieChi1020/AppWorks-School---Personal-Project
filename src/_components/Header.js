@@ -44,7 +44,7 @@ const NavItem = styled.a`
   font-size: 16px;
   line-height: 20px;
   padding: 5px 0px;
-  margin-right: 20px;
+  margin-right: 30px;
   text-decoration: none;
   &:hover {
     text-decoration: none;
@@ -93,11 +93,11 @@ function Header() {
             <NavItem href="/events">我要當志工</NavItem>
             <NavItem href="/createEvent">招募志工</NavItem>
             <NavItem href="/past-events">活動成果</NavItem>
-            <NavItem onClick={() => handleLoginClick()}>個人頁</NavItem>
+            <NavItem onClick={() => handleLoginClick()}>登入 / 註冊</NavItem>
           </NavItems>
-          <NavItems>
+          {/* <NavItems>
             <NavItem href="/events">我要當志工</NavItem>
-          </NavItems>
+          </NavItems> */}
         </NavContent>
       </HeaderContent>
       {click ? <Login></Login> : console.log("close")}

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
@@ -98,6 +98,7 @@ const EventTag = styled.div`
 `;
 
 const styles = {
+  dropdownButton: {},
   cardImage: {
     objectFit: "cover",
     width: "100%",
@@ -113,6 +114,23 @@ function AllEvents() {
     { name: "環境保護", id: "environment", select: false },
     { name: "生態保護", id: "conservation", select: false },
   ]);
+  const cityArray = [
+    "台北市",
+    "新北市",
+    "桃園市",
+    "新竹縣",
+    "苗栗縣",
+    "台中市",
+    "彰化縣",
+    "雲林縣",
+    "嘉義縣",
+    "台南市",
+    "高雄市",
+    "屏東縣",
+    "宜蘭縣",
+    "花蓮縣",
+    "台東縣",
+  ];
 
   const getAllEvents = async () => {
     const newEvents = await getEvents(0);
@@ -222,7 +240,7 @@ function AllEvents() {
 
   return (
     <Wrapper>
-      <div className="px-1 mb-2 container-md">
+      <div className="px-1 mb-2 container-md d-flex">
         <Tags>
           {tags.map((tag, index) =>
             tag.select === true ? (
@@ -239,13 +257,16 @@ function AllEvents() {
               </Tag>
             )
           )}
-
-          {/* <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-          <Dropdown.Item>台北市</Dropdown.Item>
-          <Dropdown.Item>桃園市</Dropdown.Item>
-          <Dropdown.Item>新北市</Dropdown.Item>
-        </DropdownButton> */}
         </Tags>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title="找尋所在地的活動"
+          style={styles.dropdownButton}
+        >
+          {cityArray.map((city, index) => (
+            <Dropdown.Item>{city}</Dropdown.Item>
+          ))}
+        </DropdownButton>
       </div>
       <div className="mb-5 container-md">
         <Row className="mr-n3 d-flex">
@@ -281,24 +302,6 @@ function AllEvents() {
             </Col>
           ))}
         </Row>
-        {/* <Events>
-          {events.map((event, eventId) => (
-            <Event
-              key={eventId}
-              onClick={() => handleEventClick(event.eventId)}
-            >
-              <EventImage src={event.eventCoverImage} />
-              <EventTags>
-                {event.eventTags.map((tag, index) => (
-                  <EventTag key={index}>{getTagName(tag)}</EventTag>
-                ))}
-                <EventTag>{event.eventAddress}</EventTag>
-              </EventTags>
-              <EventTime>{`${event.startTime} - ${event.endTime}`}</EventTime>
-              <EventTitle>{event.eventTitle}</EventTitle>
-            </Event>
-          ))}
-        </Events> */}
       </div>
     </Wrapper>
   );
