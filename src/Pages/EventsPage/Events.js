@@ -2,51 +2,21 @@ import styled, { withTheme } from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  DropdownButton,
-  Dropdown,
-  Alert,
-} from "react-bootstrap";
+import { Col, Card, DropdownButton, Dropdown } from "react-bootstrap";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
-const Wrapper = styled.div`
-  width: 90%;
+const Container = styled.div`
+  width: 100%;
   margin: 0 auto;
 `;
 
-const Events = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 10px;
+const FilterContainer = styled.div`
+  width: 100%;
   margin: 0 auto;
-  padding: 20px 0;
-`;
-
-// const Event = styled.div`
-//   width: 100%;
-//   margin-bottom: 20px;
-// `;
-
-// const EventImage = styled.img`
-//   width: 100%;
-//   height: 20vw;
-//   object-fit: cover;
-// `;
-
-const EventTime = styled.div`
-  font-size: 12px;
-  line-height: 16px;
-  margin-top: 5px;
-`;
-
-const EventTitle = styled.div`
-  font-size: 20px;
-  margin-top: 5px;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Tags = styled.div`
@@ -79,7 +49,32 @@ const TagSelected = styled.div`
   cursor: pointer;
 `;
 
-const EventTags = styled.div`
+const Events = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  margin: 0 auto;
+  padding: 20px 0;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+// const Event = styled.div`
+//   width: 100%;
+//   margin-bottom: 20px;
+// `;
+
+// const EventImage = styled.img`
+//   width: 100%;
+//   height: 20vw;
+//   object-fit: cover;
+// `;
+
+const EventTagContianer = styled.div`
   width: 100%;
   margin: 10px 0 10px 0;
   display: flex;
@@ -95,10 +90,29 @@ const EventTag = styled.div`
   border-radius: 20px;
   margin-right: 5px;
   color: #4f4f4f;
+  @media (max-width: 1024px) {
+    font-size: 12px;
+  }
+`;
+
+const EventTime = styled.div`
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 5px;
+`;
+
+const EventTitle = styled.div`
+  font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: #3e3e3e;
+  font-weight: 600;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const styles = {
-  dropdownButton: {},
   cardImage: {
     objectFit: "cover",
     width: "100%",
@@ -154,7 +168,7 @@ function AllEvents() {
     const date = timestamp.toDate().getDate();
     const day = getDay(timestamp.toDate().getDay());
     const time = timestamp.toDate().toTimeString().slice(0, 5);
-    const reformatedTime = `${year}-${month}-${date}(${day}) ${time}`;
+    const reformatedTime = `${year}-${month}-${date} (${day})`;
     return reformatedTime;
   };
 
@@ -239,8 +253,8 @@ function AllEvents() {
   };
 
   return (
-    <Wrapper>
-      <div className="px-1 mb-2 container-md d-flex">
+    <Container>
+      <FilterContainer>
         <Tags>
           {tags.map((tag, index) =>
             tag.select === true ? (
@@ -264,46 +278,40 @@ function AllEvents() {
           style={styles.dropdownButton}
         >
           {cityArray.map((city, index) => (
-            <Dropdown.Item>{city}</Dropdown.Item>
+            <Dropdown.Item key={index}>{city}</Dropdown.Item>
           ))}
         </DropdownButton>
-      </div>
-      <div className="mb-5 container-md">
-        <Row className="mr-n3 d-flex">
-          {events.map((event, index) => (
-            <Col
-              className="col-12 col-sm-6 col-lg-4 px-2 py-3"
-              style={styles.cardCol}
+      </FilterContainer>
+      <Events>
+        {events.map((event, index) => (
+          <Col className="p-0" style={styles.cardCol} key={index}>
+            <Card
+              className="shadow-sm rounded bg-white"
+              onClick={() => handleEventClick(event.eventId)}
+              style={{ cursor: "pointer" }}
             >
-              <Card
-                key={index}
-                className="shadow-sm rounded bg-white"
-                onClick={() => handleEventClick(event.eventId)}
-                style={{ cursor: "pointer" }}
-              >
-                <div className="bg-image hover-overlay hover-zoom">
-                  <Card.Img
-                    variant="top"
-                    src={event.eventCoverImage}
-                    style={styles.cardImage}
-                  ></Card.Img>
-                </div>
-                <Card.Body className="py-2 px-3">
-                  <EventTags>
-                    {event.eventTags.map((tag, index) => (
-                      <EventTag key={index}>{getTagName(tag)}</EventTag>
-                    ))}
-                    <EventTag>{event.eventAddress}</EventTag>
-                  </EventTags>
-                  <EventTime>{`${event.startTime} - ${event.endTime}`}</EventTime>
-                  <EventTitle>{event.eventTitle}</EventTitle>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </div>
-    </Wrapper>
+              <div className="bg-image hover-overlay hover-zoom">
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                ></Card.Img>
+              </div>
+              <Card.Body className="py-2 px-3">
+                <EventTagContianer>
+                  {event.eventTags.map((tag, index) => (
+                    <EventTag key={index}>{getTagName(tag)}</EventTag>
+                  ))}
+                  <EventTag>{event.eventAddress}</EventTag>
+                </EventTagContianer>
+                <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
+                <EventTitle>{event.eventTitle}</EventTitle>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Events>
+    </Container>
   );
 }
 

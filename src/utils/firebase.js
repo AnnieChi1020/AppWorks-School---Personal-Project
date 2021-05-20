@@ -283,3 +283,12 @@ export const createNewUser = (userId, userData) => {
       console.error("Error writing document: ", error);
     });
 };
+
+// export const checkAuthStatus = async () => {
+//   let user = await firebase.auth().currentUser;
+//   if (user) {
+//     return user;
+//   } else {
+//     console.log("nooooooooooo");
+//   }
+// };

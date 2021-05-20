@@ -2,10 +2,10 @@ import styled from "styled-components";
 import React, { useState } from "react";
 import { getEvents, updateEvent } from "../utils/firebase.js";
 import Login from "./Login.js";
-import logo from "../_images/logo.png";
-
-// import { useHistory } from "react-router-dom";
-// import { useSelector, useDispatch } from "react-redux";
+import logo from "../images/logo.png";
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import isLoggedReducer from "../Redux/reducers/isLogged.js";
 
 const Wrapper = styled.header`
   width: 100%;
@@ -59,9 +59,17 @@ const Img = styled.img`
   height: 30px;
 `;
 
+const styles = {
+  link: {
+    color: "black",
+    textDecoration: "none",
+  },
+};
+
 function Header() {
   const [click, setClick] = useState(false);
-  // const [isLogin, setIsLogin] = useState(false);
+  const isLogged = useSelector((state) => state.isLogged.isLogged);
+  console.log(isLogged);
 
   const updatePassedEvent = async () => {
     const activeEvents = await getEvents(0);
@@ -87,17 +95,36 @@ function Header() {
       <HeaderContent>
         <NavContent className="container-md">
           <NavItems>
-            <Img src={logo} />
+            <Link to="/">
+              <Img src={logo} />
+            </Link>
           </NavItems>
           <NavItems>
-            <NavItem href="/events">我要當志工</NavItem>
-            <NavItem href="/createEvent">招募志工</NavItem>
-            <NavItem href="/past-events">活動成果</NavItem>
-            <NavItem onClick={() => handleLoginClick()}>登入 / 註冊</NavItem>
+            <NavItem>
+              <Link to="/events" style={styles.link}>
+                我要當志工
+              </Link>
+            </NavItem>
+            <NavItem>
+              <Link to="/createEvent" style={styles.link}>
+                招募志工
+              </Link>
+            </NavItem>
+            <NavItem>
+              <Link to="/past-events" style={styles.link}>
+                活動成果
+              </Link>
+            </NavItem>
+            {isLogged === true ? (
+              <NavItem>
+                <Link to="/profile" style={styles.link}>
+                  我的活動
+                </Link>
+              </NavItem>
+            ) : (
+              <NavItem onClick={() => handleLoginClick()}>登入 / 註冊</NavItem>
+            )}
           </NavItems>
-          {/* <NavItems>
-            <NavItem href="/events">我要當志工</NavItem>
-          </NavItems> */}
         </NavContent>
       </HeaderContent>
       {click ? <Login></Login> : console.log("close")}

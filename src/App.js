@@ -1,13 +1,15 @@
 import React from "react";
-// import { useSelector, useDispatch } from "react-redux";
+// import { checkAuthStatus } from "./utils/firebase.js";
+
+import { useSelector, useDispatch } from "react-redux";
 // import { increment, decrement } from "./actions";
 
-import Header from "./_components/Header.js";
+import Header from "./components/Header.js";
 import HomePage from "./Pages/HomePage/HomePage.js";
-import CreateEvent from "./Pages/CreateEventPage/CreateEvent.js";
-import EventDetail from "./Pages/EventDetailPage/EventDetailPage.js";
+import CreateEvent from "./Pages/CreateEventPage/index.js";
+import EventDetail from "./Pages/EventDetailPage/index.js";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
-import EventsPage from "./Pages/EventsPage/EventsPage.js";
+import EventsPage from "./Pages/EventsPage/index.js";
 import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage/ManageParticipantPage.js";
 import EventComments from "./Pages/ProfilePage/UserEvents/CommentsPage/CommentsPage.js";
 import PastEvents from "./Pages/PastEventsPage/PastEventsPage.js";
@@ -17,9 +19,16 @@ import EditEvent from "./Pages/ProfilePage/HosterEvents/EditEventPage/EditEventP
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 function App() {
+  // const getLoginStatus = async () => {
+  //   const data = await checkAuthStatus();
+  //   console.log(data);
+  // };
+  // getLoginStatus();
+
   // const counter = useSelector((state) => state.counter);
-  // const isLogged = useSelector((state) => state.isLogged);
+  const isLogged = useSelector((state) => state.isLogged);
   // const dispatch = useDispatch();
+
   return (
     <Router>
       <div className="App">
