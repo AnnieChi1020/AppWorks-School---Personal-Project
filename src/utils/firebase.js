@@ -237,6 +237,28 @@ export const getEventsWithTag = (tag) => {
     });
 };
 
+export const getEventsByArea = (city) => {
+  console.log(city);
+  const db = firebase.firestore();
+  let events = [];
+  const eventRef = db
+    .collection("events")
+    .where("eventAddress.address_components[4].long_name", "==", city)
+    .where("eventStatus", "==", 0);
+  return eventRef
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        events.push(doc.data());
+      });
+      return events;
+    })
+    .catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
+};
+
 export const createUser = (email, password) => {
   return firebase
     .auth()

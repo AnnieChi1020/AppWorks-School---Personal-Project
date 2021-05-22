@@ -21,7 +21,7 @@ const FilterContainer = styled.div`
 
 const Tags = styled.div`
   width: 100%;
-  margin-top: 20px;
+  margin-top: 0px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -123,10 +123,10 @@ const styles = {
 function AllEvents() {
   const [events, setEvents] = useState([]);
   const [tags, setTags] = useState([
-    { name: "社會福利", id: "socialWelfare", select: false },
-    { name: "文化教育", id: "cultureEducation", select: false },
-    { name: "環境保護", id: "environment", select: false },
-    { name: "生態保護", id: "conservation", select: false },
+    { name: "社會福利", id: "社會福利", select: false },
+    { name: "文化教育", id: "文化教育", select: false },
+    { name: "環境保護", id: "環境保護", select: false },
+    { name: "生態保護", id: "生態保護", select: false },
   ]);
   const cityArray = [
     "台北市",
@@ -167,7 +167,7 @@ function AllEvents() {
     const month = timestamp.toDate().getMonth() + 1;
     const date = timestamp.toDate().getDate();
     const day = getDay(timestamp.toDate().getDay());
-    const time = timestamp.toDate().toTimeString().slice(0, 5);
+    // const time = timestamp.toDate().toTimeString().slice(0, 5);
     const reformatedTime = `${year}-${month}-${date} (${day})`;
     return reformatedTime;
   };
@@ -205,7 +205,6 @@ function AllEvents() {
       }
       if (tagExist) {
         eventData = await getEventsWithTag(selectedTag);
-
         eventData.map((event) => {
           event.startTime = reformatTimestamp(event.startTime);
           event.endTime = reformatTimestamp(event.endTime);
@@ -236,20 +235,34 @@ function AllEvents() {
     getEventsWithTagData();
   }, [tags]);
 
-  const getTagName = (tagId) => {
-    let name;
-    const array = [
-      { name: "社會福利", id: "socialWelfare" },
-      { name: "文化教育", id: "cultureEducation" },
-      { name: "環境保護", id: "environment" },
-      { name: "生態保護", id: "conservation" },
-    ];
-    array.forEach((e) => {
-      if (tagId === e.id) {
-        name = e.name;
+  // const getTagName = (tagId) => {
+  //   let name;
+  //   const array = [
+  //     { name: "社會福利", id: "socialWelfare" },
+  //     { name: "文化教育", id: "cultureEducation" },
+  //     { name: "環境保護", id: "environment" },
+  //     { name: "生態保護", id: "conservation" },
+  //   ];
+  //   array.forEach((e) => {
+  //     if (tagId === e.id) {
+  //       name = e.name;
+  //     }
+  //   });
+  //   return name;
+  // };
+
+  const handleAreaChange = async (city) => {
+    let eventArray = [];
+    const events = await getEvents(0);
+    events.forEach((event) => {
+      if (event.eventAddress.formatted_address.match(city)) {
+        event.startTime = reformatTimestamp(event.startTime);
+        event.endTime = reformatTimestamp(event.endTime);
+        event.eventAddress = getAdministrativeArea(event);
+        eventArray.push(event);
       }
     });
-    return name;
+    setEvents(eventArray);
   };
 
   return (
@@ -273,12 +286,18 @@ function AllEvents() {
           )}
         </Tags>
         <DropdownButton
+          variant="secondary"
           id="dropdown-basic-button"
           title="找尋所在地的活動"
-          style={styles.dropdownButton}
         >
           {cityArray.map((city, index) => (
-            <Dropdown.Item key={index}>{city}</Dropdown.Item>
+            <Dropdown.Item
+              key={index}
+              eventKey={city}
+              onSelect={handleAreaChange}
+            >
+              {city}
+            </Dropdown.Item>
           ))}
         </DropdownButton>
       </FilterContainer>
@@ -300,7 +319,7 @@ function AllEvents() {
               <Card.Body className="py-2 px-3">
                 <EventTagContianer>
                   {event.eventTags.map((tag, index) => (
-                    <EventTag key={index}>{getTagName(tag)}</EventTag>
+                    <EventTag key={index}>{tag}</EventTag>
                   ))}
                   <EventTag>{event.eventAddress}</EventTag>
                 </EventTagContianer>
