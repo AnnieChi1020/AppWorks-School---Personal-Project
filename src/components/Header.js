@@ -5,7 +5,6 @@ import Login from "./Login.js";
 import logo from "../images/logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import isLoggedReducer from "../Redux/reducers/isLogged.js";
 
 const Wrapper = styled.header`
   width: 100%;
@@ -69,6 +68,7 @@ const styles = {
 function Header() {
   const [click, setClick] = useState(false);
   const isLogged = useSelector((state) => state.isLogged.isLogged);
+  const userRole = useSelector((state) => state.isLogged.userRole);
   console.log(isLogged);
 
   const updatePassedEvent = async () => {

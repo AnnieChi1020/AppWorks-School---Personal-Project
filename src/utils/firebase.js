@@ -306,11 +306,11 @@ export const createNewUser = (userId, userData) => {
     });
 };
 
-// export const checkAuthStatus = async () => {
-//   let user = await firebase.auth().currentUser;
-//   if (user) {
-//     return user;
-//   } else {
-//     console.log("nooooooooooo");
-//   }
-// };
+export const getCurrentUser = () => {
+  let user = firebase.auth().currentUser;
+  if (user) {
+    return true;
+  } else {
+    return false;
+  }
+};

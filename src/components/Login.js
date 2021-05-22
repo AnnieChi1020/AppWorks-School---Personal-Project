@@ -1,106 +1,89 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createUser, userLogin, createNewUser } from "../utils/firebase.js";
-import { Modal } from "react-bootstrap";
+import {
+  createUser,
+  userLogin,
+  createNewUser,
+  getCurrentUser,
+  getUserProfile,
+} from "../utils/firebase.js";
+import { Modal, Form } from "react-bootstrap";
 
 const Wrapper = styled.div`
   width: 50%;
   margin: 0 auto;
 `;
 
-const LoginDialogue = styled.div`
-  width: 40%;
-  height: 500px;
-  margin: 0 auto;
-  // border: 1px solid #979797;
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-  background-color: #f3f3f3;
-  position: fixed;
-  top: 15%;
-  left: 30%;
-  z-index: 2;
-  padding: 20px 0;
+const Header = styled.div`
+  width: 100%;
+  font-size: 20px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
 `;
 
-const LoginContent = styled.div`
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
+const HeaderActive = styled.div`
+  width: 100%;
+  font-size: 20px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #1190cb;
+  color: #1190cb;
+  font-weight: 600;
 `;
 
-const LoginHeaders = styled.div`
+const ButtonContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: row;
 `;
 
-const LoginHeader = styled.div`
-  width: 100%;
-  font-size: 20px;
-  text-align: center;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #979797;
-`;
-
-const Mask = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgb(0, 0, 0, 0.5);
-  z-index: 1;
-`;
-
-const Field = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-`;
-
-const FieldInput = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-`;
-
-const TextInput = styled.input`
-  width: 100%;
-  height: 30px;
-  border-radius: 8px;
-  border: solid 1px #979797;
-  padding: 0 10px;
-`;
-
-const SwitchIdentity = styled.div`
-  width: 100%;
-  font-size: 14px;
-  line-height: 20px;
-  margin: 0 auto;
-  text-align: center;
-  margin-top: 20px;
-  color: #4072d7;
-  text-decoration: underline;
-`;
-
-const Button = styled.button`
+const SwitchButton = styled.button`
   width: 100%;
   height: 30px;
   margin-top: 20px;
+  margin: 20px 5px 0 10px;
   border-radius: 8px;
-  border: solid 1px #979797;
+  border: solid 1px #dee2e6;
   padding: 0 10px;
-  background-color: #979797;
 `;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  height: 30px;
+  margin-top: 20px;
+  margin: 20px 10px 0 5px;
+  border-radius: 8px;
+  border: solid 1px #dee2e6;
+  padding: 0 10px;
+  background-color: #1190cb;
+  color: white;
+`;
+
+const styles = {
+  modal: {
+    marginTop: "30px",
+  },
+  modalHeader: {
+    justifyContent: "space-evenly",
+    border: "none",
+  },
+  modalTitle: {
+    paddingBottom: "5px",
+  },
+  modalFooter: {
+    border: "none",
+  },
+};
 
 function Login() {
+  const [show, setShow] = useState(true);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const [action, setAction] = useState("login");
   const [identity, setIdentity] = useState("user");
   const [signupInfo, setSignupInfo] = useState({
@@ -131,37 +114,25 @@ function Login() {
       role: 1,
       orgEmail: signupInfo.email,
       orgName: signupInfo.name,
-      orgContact: "",
+      orgContact: signupInfo.phone,
       orgPhoto: "",
     };
     console.log(hosterData);
     return hosterData;
   };
 
-  const handleActionClick = (button) => {
-    setAction(button.target.id);
-    console.log(action);
+  const handleActionChange = (e) => {
+    setAction(e.target.id);
+    console.log(e.target.id);
   };
 
-  const handleNameChange = (e) => {
-    setSignupInfo({ ...signupInfo, name: e.target.value });
+  const handleInputChange = (e) => {
+    setSignupInfo({ ...signupInfo, [e.target.id]: e.target.value });
   };
 
-  const handleEmailChange = (e) => {
-    setSignupInfo({ ...signupInfo, email: e.target.value });
-  };
-
-  const handlePasswordChange = (e) => {
-    setSignupInfo({ ...signupInfo, password: e.target.value });
-  };
-
-  const handlePhoneChange = (e) => {
-    setSignupInfo({ ...signupInfo, phone: e.target.value });
-  };
-
-  const handleAddressChange = (e) => {
-    setSignupInfo({ ...signupInfo, address: e.target.value });
-  };
+  useEffect(() => {
+    console.log(signupInfo);
+  }, [signupInfo]);
 
   const handleIdentityChange = (e) => {
     setIdentity(e.target.id);
@@ -195,99 +166,175 @@ function Login() {
     } else if (loginMessage === "auth/wrong-password") {
       alert("密碼有誤喔");
     } else {
-      const userId = loginMessage;
-      dispatch({ type: "SIGN_IN", data: true });
-      dispatch({ type: "GET_USERID", data: userId });
-      alert("已登入");
+      const currentUser = await getCurrentUser();
+      if (currentUser) {
+        const userId = loginMessage;
+        console.log(userId);
+        const userData = await getUserProfile(userId);
+        if (identity === "user" && userData.role === 0) {
+          dispatch({ type: "SIGN_IN", data: true });
+          dispatch({ type: "GET_USERID", data: userId });
+          dispatch({ type: "GET_USERROLE", data: 0 });
+          alert("已登入");
+        } else if (identity === "organization" && userData.role === 1) {
+          dispatch({ type: "SIGN_IN", data: true });
+          dispatch({ type: "GET_USERID", data: userId });
+          dispatch({ type: "GET_USERROLE", data: 1 });
+          alert("已登入");
+        } else if (identity === "user") {
+          alert("請以機構身分登入");
+        } else {
+          alert("請以志工身分登入");
+        }
+      }
     }
   };
 
   return (
     <Wrapper>
-      <LoginDialogue>
-        <LoginContent>
-          <LoginHeaders>
-            <LoginHeader id={"login"} onClick={(e) => handleActionClick(e)}>
-              登入
-            </LoginHeader>
-            <LoginHeader id={"signup"} onClick={(e) => handleActionClick(e)}>
-              註冊
-            </LoginHeader>
-          </LoginHeaders>
-          <Field>
-            {action === "signup" ? (
-              identity === "user" ? (
-                <FieldInput>
-                  <TextInput
-                    placeholder="姓名"
-                    onChange={handleNameChange}
-                  ></TextInput>
-                </FieldInput>
-              ) : (
-                <FieldInput>
-                  <TextInput
-                    placeholder="機構名稱"
-                    onChange={handleNameChange}
-                  ></TextInput>
-                </FieldInput>
-              )
-            ) : (
-              <div></div>
-            )}
-            <FieldInput>
-              <TextInput
-                placeholder="Email"
-                onChange={handleEmailChange}
-              ></TextInput>
-            </FieldInput>
-            <FieldInput>
-              <TextInput
-                placeholder="密碼"
-                onChange={handlePasswordChange}
-              ></TextInput>
-            </FieldInput>
-            {identity === "user" ? (
-              <div></div>
-            ) : action === "signup" ? (
-              <FieldInput>
-                <TextInput
-                  placeholder="連絡電話"
-                  onChange={handlePhoneChange}
-                ></TextInput>
-              </FieldInput>
-            ) : (
-              <div></div>
-            )}
-            {identity === "user" ? (
-              <div></div>
-            ) : action === "signup" ? (
-              <FieldInput>
-                <TextInput
-                  placeholder="機構地址"
-                  onChange={handleAddressChange}
-                ></TextInput>
-              </FieldInput>
-            ) : (
-              <div></div>
-            )}
-          </Field>
+      <Modal show={show} onHide={handleClose} style={styles.modal}>
+        {identity === "user" && action === "login" ? (
+          <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
+            <HeaderActive id={"user"} onClick={(e) => handleIdentityChange(e)}>
+              志工登入
+            </HeaderActive>
+            <Header
+              id={"organization"}
+              onClick={(e) => handleIdentityChange(e)}
+            >
+              機構登入
+            </Header>
+          </Modal.Header>
+        ) : identity === "user" ? (
+          <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
+            <HeaderActive id={"user"} onClick={(e) => handleIdentityChange(e)}>
+              志工註冊
+            </HeaderActive>
+            <Header
+              id={"organization"}
+              onClick={(e) => handleIdentityChange(e)}
+            >
+              機構註冊
+            </Header>
+          </Modal.Header>
+        ) : action === "login" ? (
+          <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
+            <Header id={"user"} onClick={(e) => handleIdentityChange(e)}>
+              志工登入
+            </Header>
+            <HeaderActive
+              id={"organization"}
+              onClick={(e) => handleIdentityChange(e)}
+            >
+              機構登入
+            </HeaderActive>
+          </Modal.Header>
+        ) : (
+          <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
+            <Header id={"user"} onClick={(e) => handleIdentityChange(e)}>
+              志工註冊
+            </Header>
+            <HeaderActive
+              id={"organization"}
+              onClick={(e) => handleIdentityChange(e)}
+            >
+              機構註冊
+            </HeaderActive>
+          </Modal.Header>
+        )}
+        <Modal.Body className="mx-5 py-4">
           {action === "login" ? (
-            <Button onClick={handleLoginButton}>登入</Button>
+            <Form>
+              <Form.Group controlId="email">
+                <Form.Control
+                  type="email"
+                  placeholder="Email"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="password">
+                <Form.Control
+                  type="password"
+                  placeholder="密碼"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Form>
+          ) : identity === "user" ? (
+            <Form>
+              <Form.Group controlId="name">
+                <Form.Control
+                  type="name"
+                  placeholder="姓名"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="email">
+                <Form.Control
+                  type="email"
+                  placeholder="Email"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="password">
+                <Form.Control
+                  type="password"
+                  placeholder="密碼"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Form>
           ) : (
-            <Button onClick={handleSignupButton}>註冊</Button>
+            <Form>
+              <Form.Group controlId="name">
+                <Form.Control
+                  type="name"
+                  placeholder="機構名稱"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="email">
+                <Form.Control
+                  type="email"
+                  placeholder="Email"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="password">
+                <Form.Control
+                  type="password"
+                  placeholder="密碼"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="phone">
+                <Form.Control
+                  type="password"
+                  placeholder="連絡電話"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Form>
           )}
-          {identity === "user" ? (
-            <SwitchIdentity id={"organization"} onClick={handleIdentityChange}>
-              我是機構單位
-            </SwitchIdentity>
+        </Modal.Body>
+        <Modal.Footer className="mx-5 mb-4 pt-0" style={styles.modalFooter}>
+          {action === "login" ? (
+            <ButtonContainer>
+              <SwitchButton id="signup" onClick={(e) => handleActionChange(e)}>
+                立即註冊
+              </SwitchButton>
+              <SubmitButton onClick={handleLoginButton}>登入</SubmitButton>
+            </ButtonContainer>
           ) : (
-            <SwitchIdentity id={"user"} onClick={handleIdentityChange}>
-              我是志工
-            </SwitchIdentity>
+            <ButtonContainer>
+              <SwitchButton id="login" onClick={(e) => handleActionChange(e)}>
+                立即登入
+              </SwitchButton>
+              <SubmitButton onClick={handleSignupButton}>註冊</SubmitButton>
+            </ButtonContainer>
           )}
-        </LoginContent>
-      </LoginDialogue>
-      <Mask></Mask>
+        </Modal.Footer>
+      </Modal>
     </Wrapper>
   );
 }
