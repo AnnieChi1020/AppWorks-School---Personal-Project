@@ -22,7 +22,7 @@ function ProfilePage() {
   const role = useSelector((state) => state.isLogged.userRole);
 
   return (
-    <Container className="container-xl">
+    <Container className="container-xl mb-5">
       {/* <Wrapper> */}
       <Profile />
       {role === 1 ? <HosterEvents /> : <div />}

@@ -6,55 +6,51 @@ import {
   getCurrentStatus,
   updateNewStatus,
 } from "../../../utils/firebase.js";
+import { useSelector } from "react-redux";
+import { Col, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 
+const EventsContainer = styled.div`
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+`;
 
-const Wrapper = styled.div`
+const Events = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  margin: 0 auto;
+  padding: 20px 0;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const EventInfo = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
 `;
 
-const Event = styled.div`
-  width: 90%;
-  margin: 0 auto;
-  padding: 10px 0;
+const EventStatus = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
+  margin-top: 10px;
+  padding-top: 15px;
+  justify-content: flex-end;
 `;
 
-const EventImage = styled.img`
-  width: 20%;
-  height: 15vh;
-  object-fit: cover;
-  margin-right: 10px;
-`;
-
-const EventDetail = styled.div`
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-`;
-
-const EventTitle = styled.div`
-  font-size: 16px;
-  font-height: 20px;
-`;
-
-const EventTime = styled.div`
-  font-size: 14px;
-  font-height: 20px;
+const EventText = styled.div`
+  font-size: 12px;
+  line-height: 20px;
   margin-top: 5px;
-`;
-
-const Button = styled.button`
-  padding: 3px 5px;
-  margin: 0 5px;
 `;
 
 const NoEvent = styled.div`
@@ -62,10 +58,51 @@ const NoEvent = styled.div`
   margin: 0 auto;
   padding: 10px 0;
   font-size: 16px;
-  font-height: 24px;
+  line-height: 24px;
   margin-top: 20px;
   text-align: center;
 `;
+
+const CurrentStatus = styled.div`
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 8px;
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  background-color: rgb(251, 251, 251, 0.6);
+  color: rgb(0, 0, 0, 0.9);
+`;
+
+const CancelButton = styled.button`
+  width: 100px;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 5px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #ebedef66;
+`;
+
+const styles = {
+  cardImage: {
+    objectFit: "cover",
+    width: "100%",
+    height: "150px",
+    cursor: "pointer",
+  },
+  cardBody: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  cardTitle: {
+    fontSize: "16px",
+  },
+  cardCol: {
+    overflow: "hidden",
+  },
+};
 
 function UserConfirmedEvents() {
   const userId = useSelector((state) => state.isLogged.userId);
@@ -81,9 +118,7 @@ function UserConfirmedEvents() {
     let eventInfoArray = [];
     await eventIdArray.map(async (id) => {
       const event = await getEventInfo(id);
-      const startT = event.startTime.seconds * 1000;
-      const currentT = new Date().getTime();
-      if (startT > currentT) {
+      if (event.eventStatus === 0) {
         eventInfoArray.push(event);
       }
       setEvents([eventInfoArray]);
@@ -107,8 +142,14 @@ function UserConfirmedEvents() {
     const date = timestamp.toDate().getDate();
     const day = getDay(timestamp.toDate().getDay());
     const time = timestamp.toDate().toTimeString().slice(0, 5);
-    const reformatedTime = `${year}-${month}-${date}(${day}) ${time}`;
+    const reformatedTime = `${year}-${month}-${date} (${day})`;
     return reformatedTime;
+  };
+
+  let history = useHistory();
+  const handleEventClick = (e) => {
+    console.log(e);
+    history.push(`/events/${e}`);
   };
 
   const handleCancelClick = async (eventId, userId) => {
@@ -117,51 +158,65 @@ function UserConfirmedEvents() {
     updateNewStatus(eventId, userId, currentStatus);
   };
 
-  let history = useHistory();
-  const handleCommentClick = (id) => {
-    history.push(`profile/comments/${id}`);
-  };
+  // const handleCommentClick = (id) => {
+  //   history.push(`profile/comments/${id}`);
+  // };
 
   if (events.length === 0) {
-    return (
-      <Wrapper>
-        <NoEvent>沒有活動喔</NoEvent>
-      </Wrapper>
-    );
+    return null;
   }
 
-  return (
-    <Wrapper className="applying-events">
-      {events[0].map((event, index) => (
-        <Event key={index}>
-          <EventImage src={event.eventCoverImage} />
-          <EventDetail>
-            <EventTitle>{event.eventTitle}</EventTitle>
-            <EventTime>{reformatTimestamp(event.startTime)}</EventTime>
-            <EventTime>{reformatTimestamp(event.endTime)}</EventTime>
-          </EventDetail>
-          <Button
-            onClick={(e) => {
-              handleCancelClick(event.eventId, userId);
-              e.target.textContent = "已取消";
-            }}
-          >
-            取消報名
-          </Button>
-          {console.log(event)}
-          {event.participantAttended === true && !event.participantRating && (
-            <Button onClick={() => handleCommentClick(event.id)}>
-              評價活動
-            </Button>
-          )}
-          {event.participantAttended === true && event.participantRating && (
-            <Button>已評價活動</Button>
-          )}
+  // if (events[0].length === 0) {
+  //   return (
+  //     <EventsContainer>
+  //       <NoEvent>沒有活動喔</NoEvent>
+  //     </EventsContainer>
+  //   );
+  // }
 
-          {event.participantAttended === false && <Button>待確認出席</Button>}
-        </Event>
-      ))}
-    </Wrapper>
+  return (
+    <EventsContainer className="applying-events">
+      <Events>
+        {events[0].map((event, index) => (
+          <Col className="p-0" style={styles.cardCol} key={index}>
+            <Card style={{ height: "100%" }}>
+              <CurrentStatus>已確認報名</CurrentStatus>
+              <Card.Img
+                variant="top"
+                src={event.eventCoverImage}
+                style={styles.cardImage}
+                onClick={() => handleEventClick(event.eventId)}
+              />
+              <Card.Body style={styles.cardBody}>
+                <EventInfo>
+                  <Card.Title style={styles.cardTitle}>
+                    {event.eventTitle}
+                  </Card.Title>
+                  <Card.Text>
+                    <EventText>{`${reformatTimestamp(
+                      event.startTime
+                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                    <EventText>
+                      {event.eventAddress.formatted_address}
+                    </EventText>
+                  </Card.Text>
+                </EventInfo>
+                <EventStatus>
+                  <CancelButton
+                    onClick={(e) => {
+                      handleCancelClick(event.eventId, userId);
+                      e.target.textContent = "已取消";
+                    }}
+                  >
+                    取消報名
+                  </CancelButton>
+                </EventStatus>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Events>
+    </EventsContainer>
   );
 }
 

@@ -44,7 +44,7 @@ const TagSelected = styled.div`
   border: solid 1px #979797;
   border-radius: 20px;
   margin-right: 5px;
-  background: #656565;
+  background: #1190cb;
   color: white;
   cursor: pointer;
 `;
@@ -62,17 +62,6 @@ const Events = styled.div`
     grid-template-columns: 1fr;
   }
 `;
-
-// const Event = styled.div`
-//   width: 100%;
-//   margin-bottom: 20px;
-// `;
-
-// const EventImage = styled.img`
-//   width: 100%;
-//   height: 20vw;
-//   object-fit: cover;
-// `;
 
 const EventTagContianer = styled.div`
   width: 100%;
