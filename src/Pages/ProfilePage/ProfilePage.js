@@ -2,22 +2,25 @@ import styled from "styled-components";
 import Profile from "./Profile.js";
 import HosterEvents from "./HosterEvents/HosterEvents.js";
 import UserEvents from "./UserEvents/UserEvents.js";
+import { useSelector, useDispatch } from "react-redux";
+// import { useHistory, Redirect } from "react-router-dom";
 
-const Wrapper = styled.div`
+const Container = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
   margin: 0 auto;
-  margin-bottom: 100px;
+  margin-top: 70px;
 `;
 
 function ProfilePage() {
+  // const isLogged = useSelector((state) => state.isLogged.isLogged);
+  const role = useSelector((state) => state.isLogged.userRole);
+
   return (
-    <Wrapper>
+    <Container className="container-xl mb-5">
       <Profile />
-      <HosterEvents />
-      <UserEvents />
-    </Wrapper>
+      {role === 1 ? <HosterEvents /> : <div />}
+      {role === 0 ? <UserEvents /> : <div />}
+    </Container>
   );
 }
 

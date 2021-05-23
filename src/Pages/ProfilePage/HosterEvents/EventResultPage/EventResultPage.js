@@ -1,20 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   getEventInfo,
   getImageURL,
   updateEvent,
 } from "../../../../utils/firebase.js";
+import background from "../../../../images/background.jpg";
+import { Form } from "react-bootstrap";
 
-const Wrapper = styled.div`
-  width: 70%;
+const Background = styled.div`
+  width: 100%;
+  height: 100%;
+  background-image: url(${background});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+`;
+
+const Mask = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 0px;
+`;
+
+const CreateEventContainer = styled.div`
+  width: 80%;
   display: flex;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 120px;
+  margin-bottom: 100px;
   flex-direction: column;
   padding: 10px 20px;
+  background-color: white;
   border-radius: 8px;
   border: solid 1px #979797;
 `;
@@ -25,44 +58,42 @@ const Event = styled.div`
   margin-bottom: 20px;
 `;
 
+const EventTitle = styled.div`
+  font-size: 20px;
+  line-height: 24px;
+  margin-bottom: 0.5rem;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 600;
+`;
+
 const EventInfo = styled.div`
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 24px;
+  margin-bottom: 0.5rem;
+  color: rgba(0, 0, 0, 0.6);
 `;
 
-const Field = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const FieldName = styled.label`
-  width: 150px;
-  line-height: 24px;
-  font-size: 14px;
-  color: #3f3a3a;
-  margin-right: 10px;
-`;
-
-const FieldInput = styled.div`
-  width: 300px;
-  display: flex;
-  align-items: center;
-`;
-
-const TextInput = styled.input`
+const EventImage = styled.img`
   width: 100%;
-  height: 30px;
-  border-radius: 8px;
-  border: solid 1px #979797;
-  padding: 0 4px;
+  height: 20vw;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 20px;
 `;
 
-const SubmitButton = styled.button`
-  width: 130px;
-  height: 30px;
-  margin-top: 20px;
+const Button = styled.button`
+  width: 150px;
+  background-color: #0e6cd0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 5px 20px;
+  margin-left: calc(50% - 75px);
+  margin-top: 40px;
+  margin-bottom: 20px;
 `;
 
 function EventResult() {
@@ -94,6 +125,7 @@ function EventResult() {
     endTime: "",
     address: "",
     content: "",
+    image: "",
   });
 
   const getEventDetail = async () => {
@@ -105,8 +137,9 @@ function EventResult() {
       title: event.eventTitle,
       startTime: reformatTimestamp(event.startTime),
       endTime: reformatTimestamp(event.endTime),
-      address: event.eventAddress,
+      address: event.eventAddress.formatted_address,
       content: event.eventContent,
+      image: event.eventCoverImage,
     });
   };
 
@@ -114,7 +147,7 @@ function EventResult() {
     getEventDetail();
   }, []);
 
-  // let history = useHistory();
+  let history = useHistory();
 
   const resultChanged = (input) => {
     setResult(input);
@@ -126,9 +159,7 @@ function EventResult() {
       let imageFile = e.target.files[i];
       const url = await getImageURL(imageFile);
       imageArray.push(url);
-      console.log(url);
     }
-    console.log(imageArray);
     setFiles(imageArray);
   };
 
@@ -138,41 +169,49 @@ function EventResult() {
 
   const handelClickSubmit = async () => {
     const eventData = await getEventInfo(eventId);
-    console.log(eventData);
     eventData.resultContent = result;
     eventData.resultImage = files;
     console.log(eventData);
-    updateEvent(eventId, eventData);
+    const update = await updateEvent(eventId, eventData);
+    alert("已上傳活動成果");
+    history.goBack();
   };
 
   return (
-    <Wrapper>
-      <Event>
-        <EventInfo>活動名稱 | {eventInfo.title}</EventInfo>
-        <EventInfo>
-          活動時間 | {`${eventInfo.startTime} - ${eventInfo.endTime}`}
-        </EventInfo>
-        <EventInfo>活動地點 | {eventInfo.address}</EventInfo>
-      </Event>
-
-      <Field>
-        <FieldName>活動成果說明</FieldName>
-        <FieldInput>
-          <TextInput
+    <Container className="container-xl mb-5">
+      <Background></Background>
+      <Mask></Mask>
+      <CreateEventContainer className=" p-5">
+        <Event>
+          <EventImage src={eventInfo.image}></EventImage>
+          <EventTitle>{eventInfo.title}</EventTitle>
+          <EventInfo>
+            {`${eventInfo.startTime} - ${eventInfo.endTime}`}
+          </EventInfo>
+          <EventInfo>{eventInfo.address}</EventInfo>
+        </Event>
+        <Form.Group>
+          <Form.Label>活動成果說明</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
             onChange={(e) => resultChanged(e.target.value)}
-          ></TextInput>
-        </FieldInput>
-      </Field>
-      <Field>
-        <FieldName>活動圖片(可上傳多張)</FieldName>
-        <input
-          type="file"
-          multiple="multiple"
-          onChange={(e) => fileChange(e)}
-        />
-      </Field>
-      <SubmitButton onClick={handelClickSubmit}>送出成果資料</SubmitButton>
-    </Wrapper>
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>上傳活動圖片 (至少3張)</Form.Label>
+          <Form>
+            <Form.File id="formcheck-api-regular">
+              <Form.File.Input
+                multiple="multiple"
+                onChange={(e) => fileChange(e)}
+              />
+            </Form.File>
+          </Form>
+        </Form.Group>
+        <Button onClick={handelClickSubmit}>送出成果資料</Button>
+      </CreateEventContainer>
+    </Container>
   );
 }
 

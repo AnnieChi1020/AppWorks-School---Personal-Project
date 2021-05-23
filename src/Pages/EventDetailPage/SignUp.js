@@ -57,6 +57,7 @@ function EventSignUp() {
   const { id } = useParams();
   const eventId = id;
   const userId = useSelector((state) => state.isLogged.userId);
+
   const dispatch = useDispatch();
 
   // const participantId = "9xRjcIJWdYWT4zIKs1oG";

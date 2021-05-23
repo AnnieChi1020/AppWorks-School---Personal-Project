@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getUserProfile } from "../../utils/firebase.js";
-// import { useHistory } from "react-router-dom";
+import { getUserProfile, userLogout } from "../../utils/firebase.js";
+import { useSelector, useDispatch } from "react-redux";
+import user from "../../images/user.png";
+import { useHistory } from "react-router";
 
-const Wrapper = styled.div`
-  width: 100%;
+const ProfileContainer = styled.div`
+  width: 90%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -17,7 +19,7 @@ const ProfileDiv = styled.div`
   margin-bottom: 20px;
   padding: 10px 0;
   display: grid;
-  grid-template-columns: 1fr 5fr 1fr;
+  grid-template-columns: 100px 1fr 100px;
   align-items: center;
   justify-content: space-around;
   border-radius: 8px;
@@ -26,14 +28,23 @@ const ProfileDiv = styled.div`
 `;
 
 const ProfileImg = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
-  margin: 10px;
+  margin: 20px;
+  border-radius: 50%;
+  background-color: grey;
 `;
 
 const ProfileDetial = styled.div`
   margin: 10px;
+`;
+
+const ProfileName = styled.div`
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  margin-bottom: 5px;
 `;
 
 const ProfileText = styled.div`
@@ -42,17 +53,53 @@ const ProfileText = styled.div`
 `;
 
 const Button = styled.button`
-  width: 80px;
-  height: 30px;
+  margin: 0 auto;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #e9e9e9b3;
+  color: #2e2e2f;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 5px 15px;
 `;
 
 function Profile() {
-  const userId = "U0001";
-  const [userData, setUserData] = useState("");
+  const userId = useSelector((state) => state.isLogged.userId);
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    photo: "",
+  });
 
   const getUserData = async () => {
     const data = await getUserProfile(userId);
-    setUserData(data);
+    data.role === 0
+      ? setUserData({
+          ...userData,
+          name: data.userName,
+          email: data.userEmail,
+          photo: data.userPhoto,
+        })
+      : setUserData({
+          ...userData,
+          name: data.orgName,
+          email: data.orgEmail,
+          photo: data.orgPhoto,
+        });
+  };
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const handleLogoutButton = async () => {
+    const logout = await userLogout();
+    if (logout) {
+      dispatch({ type: "SIGN_IN", data: false });
+      dispatch({ type: "GET_USERID", data: "" });
+      dispatch({ type: "GET_USERROLE", data: "" });
+      alert("已登出");
+      history.push("/");
+    }
   };
 
   useEffect(() => {
@@ -60,16 +107,20 @@ function Profile() {
   }, []);
 
   return (
-    <Wrapper>
+    <ProfileContainer>
       <ProfileDiv>
-        <ProfileImg src={userData.userPhoto} />
+        {userData.userPhoto ? (
+          <ProfileImg src={userData.photo} />
+        ) : (
+          <ProfileImg src={user} />
+        )}
         <ProfileDetial>
-          <ProfileText>{userData.userName}</ProfileText>
-          <ProfileText>{userData.userEmail}</ProfileText>
+          <ProfileName>{userData.name}</ProfileName>
+          <ProfileText>{userData.email}</ProfileText>
         </ProfileDetial>
-        <Button>登出</Button>
+        <Button onClick={handleLogoutButton}>登出</Button>
       </ProfileDiv>
-    </Wrapper>
+    </ProfileContainer>
   );
 }
 

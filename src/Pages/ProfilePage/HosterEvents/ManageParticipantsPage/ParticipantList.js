@@ -7,72 +7,101 @@ import {
   updateNewStatus,
 } from "../../../../utils/firebase.js";
 import { useParams } from "react-router-dom";
+import { Col, Card } from "react-bootstrap";
 
-const Wrapper = styled.div`
-  width: 100%;
+const EventsContainer = styled.div`
+  width: 90%;
   display: flex;
   flex-direction: column;
-  margin: 0;
-`;
-
-const Participants = styled.div`
-  width: 90%;
   margin: 0 auto;
 `;
 
-const Title = styled.div`
+const Events = styled.div`
   width: 100%;
-  font-size: 20px;
-  line-height: 30px;
-  margin-top: 10px;
-`;
-
-const Participant = styled.div`
-  width: 100%;
-  margin-top: 10px;
-  padding: 5px 0;
-  border-radius: 8px;
-  border: solid 1px #979797;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 10px;
+  margin: 0 auto;
+  padding: 20px 0;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const EventInfo = styled.div`
-  width: 20%;
-  font-size: 14px;
-  line-height: 20px;
-  margin-left: 5px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  text-align: center;
+`;
+
+const ButtonsContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  padding-top: 15px;
+  justify-content: flex-start;
 `;
 
 const EventText = styled.div`
   font-size: 12px;
   line-height: 20px;
+  margin-top: 5px;
 `;
 
-const ParticipantInfo = styled.div`
-  width: 50%;
+// const NoEvent = styled.div`
+//   width: 90%;
+//   margin: 0 auto;
+//   padding: 10px 0;
+//   font-size: 16px;
+//   line-height: 24px;
+//   margin-top: 20px;
+//   text-align: center;
+// `;
+
+const ConfirmButton = styled.button`
   font-size: 14px;
   line-height: 20px;
-  margin-left: 5px;
-  display: flex;
-  flex-direction: column;
+  padding: 3px 8px;
+  margin-right: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #619e6f;
+  color: white;
 `;
 
-const ParticipantText = styled.div`
-  font-size: 12px;
-  line-height: 20px;
-`;
+const styles = {
+  cardImage: {
+    objectFit: "cover",
+    width: "100%",
+    height: "150px",
+    cursor: "pointer",
+  },
+  cardBody: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  cardTitle: {
+    fontSize: "16px",
+  },
+  cardCol: {
+    overflow: "hidden",
+    minWidth: "200px",
+  },
+};
 
-const Button = styled.button`
-  height: 30px;
-  width: 80px;
-  line-height: 20px;
-  margin: 0 5px;
+const Title = styled.div`
+  font-size: 20px;
+  line-height: 30px;
+  padding: 5px;
+  margin: 0 auto;
+  margin-top: 15px;
+  text-align: center;
+  border-bottom: 2px solid #619e6f;
 `;
 
 function ParticipantList() {
@@ -134,32 +163,42 @@ function ParticipantList() {
   };
 
   return (
-    <Wrapper>
-      <Participants>
-        <Title>活動參加名單</Title>
-
+    <EventsContainer>
+      <Title>活動參加名單</Title>
+      <Events>
         {participants.map((participant, index) => (
-          <Participant key={index}>
-            <EventInfo>
-              <EventText>{event.startTime}</EventText>
-            </EventInfo>
-            <ParticipantInfo>
-              <ParticipantText>{participant.participantName}</ParticipantText>
-              <ParticipantText>{participant.participantPhone}</ParticipantText>
-              <ParticipantText>{participant.participantEmail}</ParticipantText>
-            </ParticipantInfo>
-            <Button
-              onClick={(e) => {
-                handleAttendClick(eventId, participant.participantId);
-                e.target.textContent = "已確認出席";
-              }}
-            >
-              出席確認
-            </Button>
-          </Participant>
+          <Col className="p-0" style={styles.cardCol} key={index}>
+            <Card style={{ height: "100%" }}>
+              <Card.Body style={styles.cardBody}>
+                <EventInfo>
+                  <Card.Title style={styles.cardTitle}>
+                    {participant.participantName}
+                  </Card.Title>
+                  <Card.Text>
+                    <EventText>{participant.participantPhone}</EventText>
+                    <EventText>{participant.participantEmail}</EventText>
+                  </Card.Text>
+                </EventInfo>
+                <ButtonsContainer>
+                  {participant.participantAttended === false ? (
+                    <ConfirmButton
+                      onClick={(e) => {
+                        handleAttendClick(eventId, participant.participantId);
+                        e.target.textContent = "已確認出席";
+                      }}
+                    >
+                      出席確認
+                    </ConfirmButton>
+                  ) : (
+                    <ConfirmButton disabled>已確認出席</ConfirmButton>
+                  )}
+                </ButtonsContainer>
+              </Card.Body>
+            </Card>
+          </Col>
         ))}
-      </Participants>
-    </Wrapper>
+      </Events>
+    </EventsContainer>
   );
 }
 

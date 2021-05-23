@@ -4,11 +4,12 @@ import styled from "styled-components";
 // import { useHistory, useParams } from "react-router-dom";
 import banner from "../../images/banner.png";
 
-const Wrapper = styled.div`
+const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 0px;
-  padding-bottom: 50px;
+  margin-top: 150px;
+
+  text-align: center;
 `;
 
 const BannerDiv = styled.div`
@@ -35,14 +36,15 @@ const BannerContent = styled.div`
 
 function HomePage() {
   return (
-    <Wrapper>
+    <Container>
+      那個... 這頁4首頁啦 但我什麼都還沒做
       {/* <BannerDiv>
         <BannerContent></BannerContent>
         <BannerImage>
           <Image src={banner} />
         </BannerImage>
       </BannerDiv> */}
-    </Wrapper>
+    </Container>
   );
 }
 

@@ -3,19 +3,53 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ReactStars from "react-rating-stars-component";
 import { useHistory } from "react-router-dom";
+import background from "../../../../images/background.jpg";
 import {
   getEventInfo,
   getCurrentStatus,
   updateNewStatus,
 } from "../../../../utils/firebase.js";
+import { Form, Row, Col } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 
-const Wrapper = styled.div`
-  width: 70%;
+const Background = styled.div`
+  width: 100%;
+  height: 100%;
+  background-image: url(${background});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+`;
+
+const Mask = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 0px;
+`;
+
+const CommentContainer = styled.div`
+  width: 80%;
   display: flex;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 120px;
+  margin-bottom: 100px;
   flex-direction: column;
-  padding: 10px 20px;
+  padding: 20px 30px;
+  background-color: white;
   border-radius: 8px;
   border: solid 1px #979797;
 `;
@@ -27,48 +61,30 @@ const Event = styled.div`
 `;
 
 const EventInfo = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
-`;
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const FieldName = styled.label`
-  width: 80px;
-  line-height: 24px;
-  font-size: 14px;
-  color: #3f3a3a;
-  margin-right: 30px;
-`;
-
-const FieldInput = styled.div`
-  width: 300px;
-  display: flex;
-  align-items: center;
-`;
-
-const TextInput = styled.input`
-  width: 100%;
-  height: 30px;
-  border-radius: 8px;
-  border: solid 1px #979797;
-  padding: 0 4px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 10px;
 `;
 
 const SubmitButton = styled.button`
-  width: 80px;
-  height: 30px;
+  font-size: 14px;
+  line-height: 24px;
+  padding: 5px 20px;
+  margin: 0 auto;
   margin-top: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+  background-color: #1190cb;
+  color: white;
 `;
 
 function Comments() {
   const { id } = useParams();
 
-  const participantId = "RQwkmO7Byk5YsOGfvp8D";
+  const participantId = useSelector((state) => state.isLogged.userId);
+
   const eventId = id;
   let rating;
   let comment;
@@ -106,7 +122,7 @@ function Comments() {
       title: event.eventTitle,
       startTime: reformatTimestamp(event.startTime),
       endTime: reformatTimestamp(event.endTime),
-      address: event.eventAddress,
+      address: event.eventAddress.formatted_address,
       content: event.eventContent,
     });
   };
@@ -118,17 +134,6 @@ function Comments() {
   useEffect(() => {
     console.log(eventInfo);
   }, [eventInfo]);
-
-  const [signUpInput, setSignUpInput] = useState({
-    eventId: eventId,
-    participantId: participantId,
-    participantName: "",
-    participantPhone: "",
-    participantEmail: "",
-    participantStatus: 0,
-    participantAttended: false,
-    participantComment: "",
-  });
 
   const ratingChanged = (newRating) => {
     rating = newRating;
@@ -145,36 +150,49 @@ function Comments() {
     const currentStatus = await getCurrentStatus(eventInfo.id, participantId);
     currentStatus.participantInfo.participantComment = comment;
     currentStatus.participantInfo.participantRating = rating;
-    updateNewStatus(eventInfo.id, participantId, currentStatus);
+    console.log(currentStatus);
+    await updateNewStatus(eventInfo.id, participantId, currentStatus);
     alert("已送出評價");
     history.goBack();
   };
 
   return (
-    <Wrapper>
-      <Event>
-        <EventInfo>活動名稱 | {eventInfo.title}</EventInfo>
-        <EventInfo>
-          活動時間 | {`${eventInfo.startTime} - ${eventInfo.endTime}`}
-        </EventInfo>
-        <EventInfo>活動地點 | {eventInfo.address}</EventInfo>
-      </Event>
-      <ReactStars
-        count={5}
-        onChange={ratingChanged}
-        size={24}
-        activeColor="#ffd700"
-      />
-      <Field>
-        <FieldName>活動評價</FieldName>
-        <FieldInput>
-          <TextInput
-            onChange={(e) => commentChanged(e.target.value)}
-          ></TextInput>
-        </FieldInput>
-      </Field>
-      <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
-    </Wrapper>
+    <Container className="container-xl">
+      <Background></Background>
+      <Mask></Mask>
+      <CommentContainer>
+        <Event>
+          <EventInfo>活動名稱 | {eventInfo.title}</EventInfo>
+          <EventInfo>
+            活動時間 | {`${eventInfo.startTime} - ${eventInfo.endTime}`}
+          </EventInfo>
+          <EventInfo>活動地點 | {eventInfo.address}</EventInfo>
+        </Event>
+
+        <Form>
+          <Form.Group>
+            <Form.Label>活動評分</Form.Label>
+            <ReactStars
+              count={5}
+              onChange={ratingChanged}
+              size={24}
+              height={"20px"}
+              activeColor="#ffd700"
+              style={{ lineHeight: "1.5" }}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>活動評價</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              onChange={(e) => commentChanged(e.target.value)}
+            />
+          </Form.Group>
+        </Form>
+        <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
+      </CommentContainer>
+    </Container>
   );
 }
 

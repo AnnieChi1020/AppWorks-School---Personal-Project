@@ -6,8 +6,8 @@ import ActiveEvents from "./ActiveEvents.js";
 import ClosedEvents from "./ClosedEvents.js";
 import CancelledEvents from "./CancelledEvents.js";
 
-const Wrapper = styled.div`
-  width: 100%;
+const TabsContainer = styled.div`
+  width: 90%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -19,15 +19,13 @@ const Title = styled.div`
   line-height: 30px;
   margin: 0 auto;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-weight: bold;
 `;
 
 const Tabs = styled.div`
   width: 90%;
   margin: 0 auto;
-  padding-bottom: 5px;
-  border-bottom: 1px solid black;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -36,34 +34,82 @@ const Tabs = styled.div`
 const Tab = styled.div`
   font-size: 16px;
   line-height: 20px;
-  padding-right: 20px;
+  margin-right: 10px;
+  padding: 5px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+`;
+
+const TabActive = styled.div`
+  font-size: 16px;
+  line-height: 20px;
+  margin-right: 10px;
+  padding: 5px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+  background-color: #1190cb;
+  color: white;
 `;
 
 function HosterEvents() {
   const [eventStatus, setEventStatus] = useState("招募中");
+  const [tabs, setTabs] = useState([
+    {
+      name: "招募中",
+      selected: true,
+    },
+    {
+      name: "已結束",
+      selected: false,
+    },
+    {
+      name: "已取消",
+      selected: false,
+    },
+  ]);
 
-  const handleTabClick = (status) => {
-    setEventStatus(status);
+  const handleTabClick = (tabId) => {
+    setEventStatus(tabId);
+    let currentTabs = tabs;
+    currentTabs.map((tab) => {
+      if (tab.name === tabId) {
+        tab.selected = true;
+      } else {
+        tab.selected = false;
+      }
+      return null;
+    });
+    setTabs(currentTabs);
   };
 
   return (
-    <Wrapper>
-      <Title>我主辦的活動</Title>
+    <TabsContainer>
+      <Title>我的志工活動</Title>
       <Tabs>
-        <Tab value="招募中" onClick={(e) => handleTabClick(e.target.innerHTML)}>
-          招募中
-        </Tab>
-        <Tab value="已結束" onClick={(e) => handleTabClick(e.target.innerHTML)}>
-          已結束
-        </Tab>
-        <Tab value="已取消" onClick={(e) => handleTabClick(e.target.innerHTML)}>
-          已取消
-        </Tab>
+        {tabs.map((tab, index) =>
+          tab.selected === false ? (
+            <Tab
+              key={index}
+              id={tab.name}
+              onClick={(e) => handleTabClick(e.target.id)}
+            >
+              {tab.name}
+            </Tab>
+          ) : (
+            <TabActive
+              key={index}
+              id={tab.name}
+              onClick={(e) => handleTabClick(e.target.id)}
+            >
+              {tab.name}
+            </TabActive>
+          )
+        )}
       </Tabs>
       {eventStatus === "招募中" && <ActiveEvents />}
       {eventStatus === "已結束" && <ClosedEvents />}
       {eventStatus === "已取消" && <CancelledEvents />}
-    </Wrapper>
+    </TabsContainer>
   );
 }
 

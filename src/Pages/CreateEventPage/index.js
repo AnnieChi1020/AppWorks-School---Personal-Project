@@ -59,49 +59,6 @@ const CreateEventContainer = styled.div`
   border: solid 1px #979797;
 `;
 
-// const Field = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   margin-top: 20px;
-// `;
-
-// const FieldName = styled.label`
-//   width: 80px;
-//   line-height: 19px;
-//   font-size: 16px;
-//   color: #3f3a3a;
-//   margin-right: 30px;
-// `;
-
-// const FieldInput = styled.div`
-//   width: 300px;
-//   display: flex;
-//   align-items: center;
-// `;
-
-// const TextInput = styled.input`
-//   width: 100%;
-//   height: 30px;
-//   border-radius: 8px;
-//   border: solid 1px #979797;
-//   padding: 0 4px;
-// `;
-
-// const SelectInput = styled.select`
-//   width: 100px;
-//   height: 30px;
-//   border-radius: 8px;
-//   border: solid 1px #979797;
-//   padding: 0 4px;
-// `;
-
-// const SubmitButton = styled.button`
-//   width: 80px;
-//   height: 30px;
-//   margin-top: 20px;
-// `;
-
 const Tags = styled.div`
   display: flex;
   flex-direction: row;
@@ -154,30 +111,6 @@ const Button = styled.button`
   margin-top: 40px;
   margin-bottom: 20px;
 `;
-
-// const constructHourArray = () => {
-//   let hourArray = [];
-//   for (let i = 0; i < 10; i++) {
-//     hourArray.push({ name: `0${i}`, value: i });
-//   }
-//   for (let i = 10; i < 24; i++) {
-//     hourArray.push({ name: `${i}`, value: i });
-//   }
-//   return hourArray;
-// };
-
-// const constructMinuteArray = () => {
-//   let minuteArray = [
-//     { name: `00`, value: 0 },
-//     { name: `05`, value: 5 },
-//   ];
-//   let minute = 5;
-//   for (let i = 0; i < 10; i++) {
-//     minute += 5;
-//     minuteArray.push({ name: `${minute}`, value: minute });
-//   }
-//   return minuteArray;
-// };
 
 function CreateEvent() {
   const dispatch = useDispatch();
@@ -278,22 +211,6 @@ function CreateEvent() {
       });
   };
 
-  // const createEventDetails = (id, imageURL) => {
-  //   return {
-  //     eventId: id,
-  //     eventTitle: eventName,
-  //     eventContent: eventContent,
-  //     // eventLocation: geopoint,
-  //     eventAddress: geoAddress,
-  //     eventCoverImage: imageURL,
-  //     eventStatus: 0,
-  //     eventTags: getSelectedTags(tags),
-  //     hosterId: "szKr1hWragbubtIilQnV",
-  //     resultImage: [],
-  //     resultContent: "",
-  //   };
-  // };
-
   let history = useHistory();
 
   async function handelClickSubmit() {
@@ -309,14 +226,8 @@ function CreateEvent() {
     eventDetail.eventId = newEventRef.id;
     eventDetail.eventCoverImage = imageUrl;
     console.log(eventDetail);
-
-    // const eventDetail = createEventDetails(newEventRef.id, imageUrl);
-    // console.log(eventDetail);
-    // console.log(createEventData);
     await postEventDetailtoDoc(newEventRef, eventDetail);
     alert("已創建志工活動");
-    // history.go(0);
-    // console.log(eventId);
   }
 
   const handleStartTimeChange = (e) => {

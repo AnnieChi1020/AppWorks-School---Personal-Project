@@ -194,6 +194,8 @@ function EventDetail() {
   let { id } = useParams();
   let eventId = id;
   const logStatus = useSelector((state) => state.isLogged);
+  const signupData = useSelector((state) => state.signup);
+
   const dispatch = useDispatch();
 
   const [event, setEvent] = useState({
@@ -251,8 +253,6 @@ function EventDetail() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const signupData = useSelector((state) => state.signup);
 
   useEffect(() => {
     dispatch({ type: "ADD_USERID", data: logStatus.userId });

@@ -1,47 +1,50 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getUserEvents, getEventInfo } from "../../../utils/firebase.js";
-// import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Col, Card } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 
-const Wrapper = styled.div`
+const EventsContainer = styled.div`
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+`;
+
+const Events = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  margin: 0 auto;
+  padding: 20px 0;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const EventInfo = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
 `;
 
-const Event = styled.div`
-  width: 90%;
-  margin: 0 auto;
-  padding: 10px 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-`;
+// const EventStatus = styled.div`
+//   width: 100%;
+//   display: flex;
+//   flex-direction: row;
+//   margin-top: 10px;
+//   padding-top: 15px;
+//   justify-content: flex-end;
+// `;
 
-const EventImage = styled.img`
-  width: 20%;
-  height: 15vh;
-  object-fit: cover;
-  margin-right: 10px;
-`;
-
-const EventDetail = styled.div`
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-`;
-
-const EventTitle = styled.div`
-  font-size: 16px;
-  font-height: 20px;
-`;
-
-const EventTime = styled.div`
-  font-size: 14px;
-  font-height: 20px;
+const EventText = styled.div`
+  font-size: 12px;
+  line-height: 20px;
   margin-top: 5px;
 `;
 
@@ -50,33 +53,80 @@ const NoEvent = styled.div`
   margin: 0 auto;
   padding: 10px 0;
   font-size: 16px;
-  font-height: 24px;
+  line-height: 24px;
   margin-top: 20px;
   text-align: center;
 `;
 
-function UserCompletedEvents() {
-  const userId = "RQwkmO7Byk5YsOGfvp8D";
-  const [events, setEvents] = useState([]);
+const CurrentStatus = styled.div`
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 8px;
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  background-color: rgb(251, 251, 251, 0.6);
+  color: rgb(0, 0, 0, 0.9);
+`;
+
+const styles = {
+  cardImage: {
+    objectFit: "cover",
+    width: "100%",
+    height: "150px",
+    cursor: "pointer",
+  },
+  cardBody: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  cardTitle: {
+    fontSize: "16px",
+  },
+  cardCol: {
+    overflow: "hidden",
+  },
+};
+
+function UserCancelledEvents() {
+  const [events, setEvents] = useState("");
+
+  const userId = useSelector((state) => state.isLogged.userId);
 
   const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 9);
+    console.log(applyingEvents);
     return applyingEvents;
   };
 
   const getApplyingEventsInfo = async () => {
     const eventIdArray = await getApplyingEventsId();
     let eventInfoArray = [];
-    await eventIdArray.map(async (id) => {
-      const event = await getEventInfo(id);
-      eventInfoArray.push(event);
-      setEvents([eventInfoArray]);
-    });
+    if (eventIdArray.length > 0) {
+      await eventIdArray.map(async (id) => {
+        const event = await getEventInfo(id);
+        console.log(event);
+        eventInfoArray.push(event);
+        setEvents([eventInfoArray]);
+      });
+    }
     return eventInfoArray;
+  };
+
+  let history = useHistory();
+  const handleEventClick = (e) => {
+    console.log(e);
+    history.push(`/events/${e}`);
   };
 
   useEffect(() => {
     getApplyingEventsInfo();
+  }, []);
+
+  useEffect(() => {
+    console.log(events);
+    console.log(events.length);
   }, []);
 
   const getDay = (day) => {
@@ -89,33 +139,66 @@ function UserCompletedEvents() {
     const month = timestamp.toDate().getMonth() + 1;
     const date = timestamp.toDate().getDate();
     const day = getDay(timestamp.toDate().getDay());
-    const time = timestamp.toDate().toTimeString().slice(0, 5);
-    const reformatedTime = `${year}-${month}-${date}(${day}) ${time}`;
+    const reformatedTime = `${year}-${month}-${date} (${day})`;
     return reformatedTime;
   };
 
-  if (events.length === 0) {
-    return (
-      <Wrapper>
-        <NoEvent>沒有活動喔</NoEvent>
-      </Wrapper>
-    );
+  if (!events) {
+    return null;
   }
+
+  // if (events.length === 0) {
+  //   return (
+  //     <EventsContainer>
+  //       <NoEvent>沒有活動喔</NoEvent>
+  //     </EventsContainer>
+  //   );
+  // }
+
   return (
-    <Wrapper className="applying-events">
-      {events[0].map((event, index) => (
-        <Event key={index}>
-          <EventImage src={event.eventCoverImage} />
-          <EventDetail>
-            <EventTitle>{event.eventTitle}</EventTitle>
-            <EventTime>{`${reformatTimestamp(
-              event.startTime
-            )} ~ ${reformatTimestamp(event.endTime)}`}</EventTime>
-          </EventDetail>
-        </Event>
-      ))}
-    </Wrapper>
+    <EventsContainer className="applying-events">
+      <Events>
+        {events[0].map((event, index) => (
+          <Col className="p-0" style={styles.cardCol} key={index}>
+            <Card style={{ height: "100%" }}>
+              <CurrentStatus>已取消報名</CurrentStatus>
+              <Card.Img
+                variant="top"
+                src={event.eventCoverImage}
+                style={styles.cardImage}
+                onClick={() => handleEventClick(event.eventId)}
+              />
+              <Card.Body style={styles.cardBody}>
+                <EventInfo>
+                  <Card.Title style={styles.cardTitle}>
+                    {event.eventTitle}
+                  </Card.Title>
+                  <Card.Text>
+                    <EventText>{`${reformatTimestamp(
+                      event.startTime
+                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                    <EventText>
+                      {event.eventAddress.formatted_address}
+                    </EventText>
+                  </Card.Text>
+                </EventInfo>
+                {/* <EventStatus>
+                  <CancelButton
+                    onClick={(e) => {
+                      handleCancelClick(event.eventId, userId);
+                      e.target.textContent = "已取消";
+                    }}
+                  >
+                    取消報名
+                  </CancelButton>
+                </EventStatus> */}
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Events>
+    </EventsContainer>
   );
 }
 
-export default UserCompletedEvents;
+export default UserCancelledEvents;

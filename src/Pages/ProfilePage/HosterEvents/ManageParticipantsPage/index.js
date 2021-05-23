@@ -5,20 +5,18 @@ import ParticipantList from "./ParticipantList.js";
 // import { getHosterEvents } from "../../utils/firebase.js";
 // import { useHistory, useParams } from "react-router-dom";
 
-const Wrapper = styled.div`
+const Container = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
   margin: 0 auto;
-  padding: 0px;
+  margin-top: 70px;
 `;
 
 function ManageParticipant() {
   return (
-    <Wrapper>
+    <Container className="container-xl mb-5">
       <WaitingList />
       <ParticipantList />
-    </Wrapper>
+    </Container>
   );
 }
 

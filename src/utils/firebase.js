@@ -306,11 +306,33 @@ export const createNewUser = (userId, userData) => {
     });
 };
 
-// export const checkAuthStatus = async () => {
-//   let user = await firebase.auth().currentUser;
-//   if (user) {
-//     return user;
-//   } else {
-//     console.log("nooooooooooo");
-//   }
-// };
+export const getCurrentUser = () => {
+  let user = firebase.auth().currentUser;
+  if (user) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const getAuthStateChange = async () => {
+  return firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      let userId = user.uid;
+      let email = user.email;
+      console.log(userId, email);
+      return userId;
+    } else {
+      return false;
+    }
+  });
+};
+
+export const userLogout = () => {
+  return firebase
+    .auth()
+    .signOut()
+    .then(function () {
+      return true;
+    });
+};
