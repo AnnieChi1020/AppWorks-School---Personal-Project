@@ -6,6 +6,8 @@ import {
   getCurrentStatus,
 } from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 
 const Wrapper = styled.div`
   width: 100%;
@@ -65,7 +67,7 @@ const NoEvent = styled.div`
 `;
 
 function UserCompletedEvents() {
-  const userId = "RQwkmO7Byk5YsOGfvp8D";
+  const userId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
 
   const getApplyingEventsId = async () => {

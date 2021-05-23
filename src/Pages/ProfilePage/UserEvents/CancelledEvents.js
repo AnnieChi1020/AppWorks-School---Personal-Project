@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getUserEvents, getEventInfo } from "../../../utils/firebase.js";
+import { useSelector, useDispatch } from "react-redux";
+
 // import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -50,13 +52,13 @@ const NoEvent = styled.div`
   margin: 0 auto;
   padding: 10px 0;
   font-size: 16px;
-  font-height: 24px;
+  line-height: 24px;
   margin-top: 20px;
   text-align: center;
 `;
 
 function UserCompletedEvents() {
-  const userId = "RQwkmO7Byk5YsOGfvp8D";
+  const userId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
 
   const getApplyingEventsId = async () => {

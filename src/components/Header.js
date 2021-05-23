@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import React, { useState } from "react";
-import { getEvents, updateEvent } from "../utils/firebase.js";
+import {
+  getEvents,
+  updateEvent,
+  // getAuthStateChange,
+} from "../utils/firebase.js";
 import Login from "./Login.js";
 import logo from "../images/logo.png";
 import { useSelector, useDispatch } from "react-redux";

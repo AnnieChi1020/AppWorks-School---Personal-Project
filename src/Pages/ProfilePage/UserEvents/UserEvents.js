@@ -11,6 +11,7 @@ import ApplyingEvents from "./ApplyingEvents.js";
 import ConfirmedEvents from "./ConfirmedEvents.js";
 import CompletedEvents from "./CompletedEvents.js";
 import CancelledEvents from "./CancelledEvents.js";
+import { useSelector, useDispatch } from "react-redux";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -46,7 +47,7 @@ const Tab = styled.div`
 `;
 
 function UserEvents() {
-  const userId = "RQwkmO7Byk5YsOGfvp8D";
+  const userId = useSelector((state) => state.isLogged.userId);
   const [participateStatus, setParticipateStatus] = useState("申請中");
 
   const handleTabClick = (status) => {

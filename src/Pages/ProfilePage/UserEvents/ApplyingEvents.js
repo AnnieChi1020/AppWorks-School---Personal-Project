@@ -6,6 +6,8 @@ import {
   getCurrentStatus,
   updateNewStatus,
 } from "../../../utils/firebase.js";
+import { useSelector, useDispatch } from "react-redux";
+
 // import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -66,8 +68,9 @@ const Button = styled.button`
 `;
 
 function UserApplyingEvents() {
-  const userId = "RQwkmO7Byk5YsOGfvp8D";
   const [events, setEvents] = useState([]);
+
+  const userId = useSelector((state) => state.isLogged.userId);
 
   const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 0);

@@ -314,3 +314,16 @@ export const getCurrentUser = () => {
     return false;
   }
 };
+
+export const getAuthStateChange = async () => {
+  await firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      let userId = user.uid;
+      let email = user.email;
+      console.log(userId, email);
+      return userId;
+    } else {
+      return false;
+    }
+  });
+};

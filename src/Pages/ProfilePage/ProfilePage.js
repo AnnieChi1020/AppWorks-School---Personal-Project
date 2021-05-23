@@ -2,6 +2,13 @@ import styled from "styled-components";
 import Profile from "./Profile.js";
 import HosterEvents from "./HosterEvents/HosterEvents.js";
 import UserEvents from "./UserEvents/UserEvents.js";
+import { useSelector, useDispatch } from "react-redux";
+
+const Container = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 70px;
+`;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -12,12 +19,17 @@ const Wrapper = styled.div`
 `;
 
 function ProfilePage() {
+  const role = useSelector((state) => state.isLogged.userRole);
+
   return (
-    <Wrapper>
+    <Container className="container-xl">
+      {/* <Wrapper> */}
       <Profile />
-      <HosterEvents />
-      <UserEvents />
-    </Wrapper>
+      {role === 1 ? <HosterEvents /> : <div />}
+      {role === 0 ? <UserEvents /> : <div />}
+
+      {/* </Wrapper> */}
+    </Container>
   );
 }
 
