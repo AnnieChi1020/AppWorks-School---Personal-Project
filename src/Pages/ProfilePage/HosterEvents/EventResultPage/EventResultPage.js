@@ -75,7 +75,8 @@ const EventInfo = styled.div`
 
 const EventImage = styled.img`
   width: 100%;
-  height: 200px;
+  height: 20vw;
+  max-height: 300px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -90,7 +91,7 @@ const Button = styled.button`
   font-size: 1rem;
   line-height: 1.5;
   padding: 5px 20px;
-  margin-left: calc(50% - 60px);
+  margin-left: calc(50% - 75px);
   margin-top: 40px;
   margin-bottom: 20px;
 `;
@@ -177,7 +178,7 @@ function EventResult() {
   };
 
   return (
-    <Container className="container-xl">
+    <Container className="container-xl mb-5">
       <Background></Background>
       <Mask></Mask>
       <CreateEventContainer className=" p-5">

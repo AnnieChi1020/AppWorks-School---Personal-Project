@@ -1,7 +1,6 @@
 // import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import WaitingList from "./WaitingList.js";
-import ParticipantList from "./ParticipantList.js";
+import PastEvents from "./PastEvents.js";
 // import { getHosterEvents } from "../../utils/firebase.js";
 // import { useHistory, useParams } from "react-router-dom";
 
@@ -11,13 +10,12 @@ const Container = styled.div`
   margin-top: 70px;
 `;
 
-function ManageParticipant() {
+function PastEventsPage() {
   return (
     <Container className="container-xl mb-5">
-      <WaitingList />
-      <ParticipantList />
+      <PastEvents />
     </Container>
   );
 }
 
-export default ManageParticipant;
+export default PastEventsPage;

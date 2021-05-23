@@ -316,7 +316,7 @@ export const getCurrentUser = () => {
 };
 
 export const getAuthStateChange = async () => {
-  await firebase.auth().onAuthStateChanged(function (user) {
+  return firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       let userId = user.uid;
       let email = user.email;
@@ -326,4 +326,13 @@ export const getAuthStateChange = async () => {
       return false;
     }
   });
+};
+
+export const userLogout = () => {
+  return firebase
+    .auth()
+    .signOut()
+    .then(function () {
+      return true;
+    });
 };

@@ -132,10 +132,11 @@ function UserApplyingEvents() {
     history.push(`/events/${e}`);
   };
 
-  const handleCancelClick = async (eventId, userId) => {
+  const handleCancelClick = async (eventId, userId, e) => {
     let currentStatus = await getCurrentStatus(eventId, userId);
     currentStatus.participantInfo.participantStatus = 9;
     updateNewStatus(eventId, userId, currentStatus);
+    e.target.textContent = "已取消";
   };
 
   useEffect(() => {
@@ -198,8 +199,7 @@ function UserApplyingEvents() {
                 <EventStatus>
                   <CancelButton
                     onClick={(e) => {
-                      handleCancelClick(event.eventId, userId);
-                      e.target.textContent = "已取消";
+                      handleCancelClick(event.eventId, userId, e);
                     }}
                   >
                     取消報名

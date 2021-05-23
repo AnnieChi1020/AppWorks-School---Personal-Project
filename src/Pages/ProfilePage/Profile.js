@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getUserProfile } from "../../utils/firebase.js";
-import { useSelector } from "react-redux";
+import { getUserProfile, userLogout } from "../../utils/firebase.js";
+import { useSelector, useDispatch } from "react-redux";
 import user from "../../images/user.png";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faUser } from "@fortawesome/free-solid-svg-icons";
-// import { Card, Row, Col } from "react-bootstrap";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router";
 
 const ProfileContainer = styled.div`
   width: 90%;
@@ -47,6 +44,7 @@ const ProfileName = styled.div`
   font-size: 18px;
   line-height: 24px;
   font-weight: 600;
+  margin-bottom: 5px;
 `;
 
 const ProfileText = styled.div`
@@ -67,11 +65,41 @@ const Button = styled.button`
 
 function Profile() {
   const userId = useSelector((state) => state.isLogged.userId);
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    photo: "",
+  });
 
   const getUserData = async () => {
     const data = await getUserProfile(userId);
-    setUserData(data);
+    data.role === 0
+      ? setUserData({
+          ...userData,
+          name: data.userName,
+          email: data.userEmail,
+          photo: data.userPhoto,
+        })
+      : setUserData({
+          ...userData,
+          name: data.orgName,
+          email: data.orgEmail,
+          photo: data.orgPhoto,
+        });
+  };
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const handleLogoutButton = async () => {
+    const logout = await userLogout();
+    if (logout) {
+      dispatch({ type: "SIGN_IN", data: false });
+      dispatch({ type: "GET_USERID", data: "" });
+      dispatch({ type: "GET_USERROLE", data: "" });
+      alert("已登出");
+      history.push("/");
+    }
   };
 
   useEffect(() => {
@@ -82,15 +110,15 @@ function Profile() {
     <ProfileContainer>
       <ProfileDiv>
         {userData.userPhoto ? (
-          <ProfileImg src={userData.userPhoto} />
+          <ProfileImg src={userData.photo} />
         ) : (
           <ProfileImg src={user} />
         )}
         <ProfileDetial>
-          <ProfileName>{userData.userName}</ProfileName>
-          <ProfileText>{userData.userEmail}</ProfileText>
+          <ProfileName>{userData.name}</ProfileName>
+          <ProfileText>{userData.email}</ProfileText>
         </ProfileDetial>
-        <Button>登出</Button>
+        <Button onClick={handleLogoutButton}>登出</Button>
       </ProfileDiv>
     </ProfileContainer>
   );

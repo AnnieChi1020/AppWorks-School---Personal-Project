@@ -122,7 +122,7 @@ function ActiveEvents() {
     history.push(`profile/edit-event/${id}`);
   };
 
-  const handleCancelClick = async (id) => {
+  const handleCancelClick = async (id, e) => {
     const eventData = await getEventInfo(id);
     eventData.eventStatus = 9;
     updateEvent(id, eventData);
@@ -140,6 +140,7 @@ function ActiveEvents() {
     });
     console.log(applyingUserData);
     console.log(eventData);
+    e.target.textContent = "已取消";
   };
 
   const getDay = (day) => {
@@ -195,7 +196,7 @@ function ActiveEvents() {
                   <Button onClick={() => handleParticipantClick(event.eventId)}>
                     管理參加者
                   </Button>
-                  <Button onClick={() => handleCancelClick(event.eventId)}>
+                  <Button onClick={(e) => handleCancelClick(event.eventId, e)}>
                     取消活動
                   </Button>
                 </ManageEventContainer>
