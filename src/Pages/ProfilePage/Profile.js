@@ -86,7 +86,6 @@ function Profile() {
         ) : (
           <ProfileImg src={user} />
         )}
-
         <ProfileDetial>
           <ProfileName>{userData.userName}</ProfileName>
           <ProfileText>{userData.userEmail}</ProfileText>

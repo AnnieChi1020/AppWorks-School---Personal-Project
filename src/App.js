@@ -10,7 +10,7 @@ import CreateEvent from "./Pages/CreateEventPage/index.js";
 import EventDetail from "./Pages/EventDetailPage/index.js";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
 import EventsPage from "./Pages/EventsPage/index.js";
-import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage/ManageParticipantPage.js";
+import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage/index.js";
 import EventComments from "./Pages/ProfilePage/UserEvents/CommentsPage/CommentsPage.js";
 import PastEvents from "./Pages/PastEventsPage/PastEventsPage.js";
 import EventResult from "./Pages/ProfilePage/HosterEvents/EventResultPage/EventResultPage.js";

@@ -169,7 +169,7 @@ function UserApplyingEvents() {
   // }
 
   return (
-    <EventsContainer className="applying-events">
+    <EventsContainer>
       <Events>
         {events[0].map((event, index) => (
           <Col className="p-0" style={styles.cardCol} key={index}>

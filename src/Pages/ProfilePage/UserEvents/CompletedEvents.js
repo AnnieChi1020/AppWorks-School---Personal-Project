@@ -176,7 +176,7 @@ function UserCompletedEvents() {
   // }
 
   return (
-    <EventsContainer className="applying-events">
+    <EventsContainer>
       <Events>
         {events[0].map((event, index) => (
           <Col className="p-0" style={styles.cardCol} key={index}>
@@ -208,14 +208,13 @@ function UserCompletedEvents() {
                 </EventInfo>
                 <EventStatus>
                   {event.userAttend === false ? (
-                    <RateButton>評價活動</RateButton>
+                    <RateButton disabled>評價活動</RateButton>
                   ) : (
                     <div />
                   )}
                   {event.userAttend === true && event.userRate === 0 ? (
                     <RateButton
-                      disabled
-                      onClick={() => handleCommentClick(event.id)}
+                      onClick={() => handleCommentClick(event.eventId)}
                     >
                       評價活動
                     </RateButton>
@@ -223,7 +222,7 @@ function UserCompletedEvents() {
                     <div />
                   )}
                   {event.userAttend === true && event.userRate !== 0 ? (
-                    <RateButton>已評價活動</RateButton>
+                    <RateButton disabled>已評價活動</RateButton>
                   ) : (
                     <div />
                   )}
