@@ -10,25 +10,14 @@ const Container = styled.div`
   margin-top: 70px;
 `;
 
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  margin-bottom: 100px;
-`;
-
 function ProfilePage() {
   const role = useSelector((state) => state.isLogged.userRole);
 
   return (
     <Container className="container-xl mb-5">
-      {/* <Wrapper> */}
       <Profile />
       {role === 1 ? <HosterEvents /> : <div />}
       {role === 0 ? <UserEvents /> : <div />}
-
-      {/* </Wrapper> */}
     </Container>
   );
 }
