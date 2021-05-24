@@ -1,4 +1,5 @@
-import styled, { withTheme } from "styled-components";
+/* eslint-disable react-hooks/exhaustive-deps */
+import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";

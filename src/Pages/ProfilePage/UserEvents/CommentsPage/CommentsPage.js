@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -9,8 +10,8 @@ import {
   getCurrentStatus,
   updateNewStatus,
 } from "../../../../utils/firebase.js";
-import { Form, Row, Col } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { Form} from "react-bootstrap";
+import { useSelector, } from "react-redux";
 
 const Background = styled.div`
   width: 100%;

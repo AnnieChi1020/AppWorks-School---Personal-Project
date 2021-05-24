@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Profile from "./Profile.js";
 import HosterEvents from "./HosterEvents/HosterEvents.js";
 import UserEvents from "./UserEvents/UserEvents.js";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 // import { useHistory, Redirect } from "react-router-dom";
 
 const Container = styled.div`

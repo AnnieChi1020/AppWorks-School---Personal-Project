@@ -237,7 +237,7 @@ export const createUser = (email, password) => {
     })
     .catch((error) => {
       let errorCode = error.code;
-      let errorMessage = error.message;
+      // let errorMessage = error.message;
       return errorCode;
     });
 };
@@ -252,7 +252,7 @@ export const userLogin = (email, password) => {
     })
     .catch((error) => {
       const errorCode = error.code;
-      const errorMessage = error.message;
+      // const errorMessage = error.message;
       return errorCode;
     });
 };
@@ -283,7 +283,7 @@ export const getAuthStateChange = async () => {
   return firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       let userId = user.uid;
-      let email = user.email;
+      // let email = user.email;
       return userId;
     } else {
       return false;

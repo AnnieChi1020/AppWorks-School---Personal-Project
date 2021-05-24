@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   createUser,
   userLogin,
@@ -82,7 +82,7 @@ function Login() {
   const [show, setShow] = useState(true);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
   const [action, setAction] = useState("login");
   const [identity, setIdentity] = useState("user");
@@ -94,7 +94,7 @@ function Login() {
     address: "",
   });
   const dispatch = useDispatch();
-  const logStatus = useSelector((state) => state.isLogged);
+  // const logStatus = useSelector((state) => state.isLogged);
 
   const constructUserData = (userId) => {
     let userData = {

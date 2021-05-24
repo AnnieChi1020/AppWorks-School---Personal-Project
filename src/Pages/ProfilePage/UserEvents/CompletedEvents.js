@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -52,15 +53,15 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-const NoEvent = styled.div`
-  width: 90%;
-  margin: 0 auto;
-  padding: 10px 0;
-  font-size: 16px;
-  line-height: 24px;
-  margin-top: 20px;
-  text-align: center;
-`;
+// const NoEvent = styled.div`
+//   width: 90%;
+//   margin: 0 auto;
+//   padding: 10px 0;
+//   font-size: 16px;
+//   line-height: 24px;
+//   margin-top: 20px;
+//   text-align: center;
+// `;
 
 const CurrentStatus = styled.div`
   font-size: 14px;

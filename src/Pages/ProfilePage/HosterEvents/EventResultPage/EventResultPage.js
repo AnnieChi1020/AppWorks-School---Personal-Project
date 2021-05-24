@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -101,7 +102,7 @@ function EventResult() {
   const eventId = id;
 
   const [result, setResult] = useState("");
-  const [files, setFiles] = useState([]);
+  // const [files, setFiles] = useState([]);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];

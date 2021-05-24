@@ -7,9 +7,8 @@ import {
 } from "../utils/firebase.js";
 import Login from "./Login.js";
 import logo from "../images/logo.png";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { useHistory, Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;

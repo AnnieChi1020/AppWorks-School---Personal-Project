@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -53,15 +54,15 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-const NoEvent = styled.div`
-  width: 90%;
-  margin: 0 auto;
-  padding: 10px 0;
-  font-size: 16px;
-  line-height: 24px;
-  margin-top: 20px;
-  text-align: center;
-`;
+// const NoEvent = styled.div`
+//   width: 90%;
+//   margin: 0 auto;
+//   padding: 10px 0;
+//   font-size: 16px;
+//   line-height: 24px;
+//   margin-top: 20px;
+//   text-align: center;
+// `;
 
 const CurrentStatus = styled.div`
   font-size: 14px;
@@ -141,7 +142,6 @@ function UserConfirmedEvents() {
     const month = timestamp.toDate().getMonth() + 1;
     const date = timestamp.toDate().getDate();
     const day = getDay(timestamp.toDate().getDay());
-    const time = timestamp.toDate().toTimeString().slice(0, 5);
     const reformatedTime = `${year}-${month}-${date} (${day})`;
     return reformatedTime;
   };

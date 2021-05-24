@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -115,6 +116,7 @@ function ParticipantList() {
     let participantsArray = [];
     newParticipants.map((e) => {
       participantsArray.push(e.participantInfo);
+      return true;
     });
     setParticipants([...participantsArray]);
   };

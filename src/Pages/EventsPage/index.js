@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Events from "./Events.js";
-import { useSelector, useDispatch } from "react-redux";
-import { getAuthStateChange } from "../../utils/firebase.js";
+// import { useSelector, useDispatch } from "react-redux";
+// import { getAuthStateChange } from "../../utils/firebase.js";
 import { useEffect } from "react";
 
 const Container = styled.div`
@@ -11,11 +11,11 @@ const Container = styled.div`
 `;
 
 function EventsPage() {
-  const logStatus = useSelector((state) => state.isLogged);
-  const dispatch = useDispatch();
+  // const logStatus = useSelector((state) => state.isLogged);
+  // const dispatch = useDispatch();
 
   const checkLogingStatus = async () => {
-    const userId = await getAuthStateChange();
+    // const userId = await getAuthStateChange();
     // if (userId) {
     //   dispatch({ type: "SIGN_IN", data: true });
     //   dispatch({ type: "GET_USERID", data: userId });

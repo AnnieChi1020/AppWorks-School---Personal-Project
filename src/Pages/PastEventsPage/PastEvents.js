@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEventInfo, getEvents, getUserList } from "../../utils/firebase.js";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 const Wrapper = styled.div`
   width: 80%;
@@ -44,14 +45,6 @@ const EventTitle = styled.div`
   color: white;
   padding: 5px 10px;
   background-color: #b3b3b35e;
-`;
-
-const PastEvent = styled.div`
-  width: 100%;
-  border-radius: 8px;
-  border: solid 1px #979797;
-  padding: 20px 20px 50px 20px;
-  margin-bottom: 20px;
 `;
 
 const PastEventTitle = styled.div`
@@ -96,14 +89,6 @@ const UserFeedbacks = styled.div`
   padding: 5px 0;
 `;
 
-const UserImage = styled.img`
-  height: 60px;
-  width: 60px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-right: 20px;
-`;
-
 const UserFeedback = styled.div`
   display: flex;
   flex-direction: row;
@@ -116,16 +101,8 @@ const UserComment = styled.div`
   line-height: 18px;
 `;
 
-const styles = {
-  modal: {
-    // width: "600px",
-    // margin: "0 auto",
-  },
-};
-
 function PastEvents() {
   const [events, setEvents] = useState([]);
-  // const [viewEvent, setViewEvent] = useState("");
   const [eventResult, setEventResult] = useState({
     title: "",
     startTime: "",
@@ -178,7 +155,7 @@ function PastEvents() {
 
   useEffect(() => {}, [eventResult]);
 
-  let history = useHistory();
+  // let history = useHistory();
   const handleEventClick = (id) => {
     // setViewEvent(id);
     setShow(true);
@@ -208,6 +185,7 @@ function PastEvents() {
       if (e.participantInfo.participantRating !== 0) {
         currentFeedback.push(e.participantInfo);
       }
+      return true;
     });
     setUserFeedback(currentFeedback);
   };
@@ -231,7 +209,7 @@ function PastEvents() {
         ))}
       </Wrapper>
 
-      <Modal show={show} onHide={handleClose} style={styles.modal}>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title className="pl-2">活動成果</Modal.Title>
         </Modal.Header>
