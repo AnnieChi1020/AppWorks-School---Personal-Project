@@ -38,6 +38,7 @@ const Tab = styled.div`
   padding: 5px 15px;
   border: 1px solid #ced4da;
   border-radius: 20px;
+  cursor: pointer;
 `;
 
 const TabActive = styled.div`
@@ -49,6 +50,7 @@ const TabActive = styled.div`
   border-radius: 20px;
   background-color: #1190cb;
   color: white;
+  cursor: pointer;
 `;
 
 function HosterEvents() {
