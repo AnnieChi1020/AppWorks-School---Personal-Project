@@ -158,6 +158,7 @@ function EventResult() {
     for (let i = 0; i < e.target.files.length; i++) {
       let imageFile = e.target.files[i];
       const url = await getImageURL(imageFile);
+      console.log(url);
       imageArray.push(url);
     }
     setFiles(imageArray);

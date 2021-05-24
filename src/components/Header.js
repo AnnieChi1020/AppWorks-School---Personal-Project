@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useHistory, Redirect } from "react-router-dom";
 
-const Wrapper = styled.header`
+const Container = styled.div`
   width: 100%;
   margin: 0 auto;
 `;
@@ -48,7 +48,7 @@ const NavItem = styled.a`
   font-size: 16px;
   line-height: 20px;
   padding: 5px 0px;
-  margin-right: 30px;
+  margin-left: 30px;
   text-decoration: none;
   cursor: pointer;
   &:hover {
@@ -84,6 +84,7 @@ function Header() {
       return true;
     });
   };
+  updatePassedEvent();
 
   const handleLogoClick = () => {
     history.push("/");
@@ -109,12 +110,10 @@ function Header() {
     click === false ? setClick(true) : setClick(false);
   };
 
-  updatePassedEvent();
-
   return (
-    <Wrapper>
+    <Container>
       <HeaderContent>
-        <NavContent className="container-md">
+        <NavContent className="container-xl mb-5">
           <NavItems>
             <Img src={logo} onClick={handleLogoClick} />
           </NavItems>
@@ -131,7 +130,7 @@ function Header() {
         </NavContent>
       </HeaderContent>
       {click ? <Login></Login> : <div />}
-    </Wrapper>
+    </Container>
   );
 }
 

@@ -1,13 +1,9 @@
 import styled from "styled-components";
-// import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useHistory } from "react-router-dom";
 import background from "../../images/background.jpg";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-
-// import { GoogleApiWrapper } from "google-maps-react";
-// import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 
 import {
   createNewDoc,
@@ -181,8 +177,6 @@ function CreateEvent() {
     { name: "生態保護", id: "生態保護", select: false },
   ]);
 
-  // const hourArray = constructHourArray();
-  // const minuteArray = constructMinuteArray();
   const cityArray = [
     "台北市",
     "新北市",
@@ -212,23 +206,6 @@ function CreateEvent() {
   };
 
   let history = useHistory();
-
-  async function handelClickSubmit() {
-    const imageUrl = await getImageURL(file);
-    console.log(imageUrl);
-    const newEventRef = createNewDoc();
-    await dispatch({ type: "ADD_HOSTERID", data: hosterId });
-    await dispatch({ type: "ADD_ID", data: newEventRef.id });
-    await dispatch({ type: "ADD_COVERIMAGE", data: imageUrl });
-
-    const eventDetail = createEventData;
-    eventDetail.hosterId = hosterId;
-    eventDetail.eventId = newEventRef.id;
-    eventDetail.eventCoverImage = imageUrl;
-    console.log(eventDetail);
-    await postEventDetailtoDoc(newEventRef, eventDetail);
-    alert("已創建志工活動");
-  }
 
   const handleStartTimeChange = (e) => {
     setStartTime({ ...startTime, [e.target.type]: e.target.value });
@@ -295,6 +272,24 @@ function CreateEvent() {
     console.log(address);
     getGeopoint(address.city, address.location);
   }, [address]);
+
+  async function handelClickSubmit() {
+    const imageUrl = await getImageURL(file);
+    console.log(imageUrl);
+    const newEventRef = createNewDoc();
+    await dispatch({ type: "ADD_HOSTERID", data: hosterId });
+    await dispatch({ type: "ADD_ID", data: newEventRef.id });
+    await dispatch({ type: "ADD_COVERIMAGE", data: imageUrl });
+
+    const eventDetail = createEventData;
+    eventDetail.hosterId = hosterId;
+    eventDetail.eventId = newEventRef.id;
+    eventDetail.eventCoverImage = imageUrl;
+    console.log(eventDetail);
+    await postEventDetailtoDoc(newEventRef, eventDetail);
+    alert("已創建志工活動");
+    history.push("/events");
+  }
 
   return (
     <Container className="container-xl">
@@ -428,111 +423,6 @@ function CreateEvent() {
             創建活動
           </Button>
         </Form>
-        {/* <Field>
-          <FieldName>活動名稱</FieldName>
-          <FieldInput>
-            <TextInput
-              onChange={(e) => setEventName(e.target.value)}
-            ></TextInput>
-          </FieldInput>
-        </Field>
-        <Field>
-          <FieldName>活動內容</FieldName>
-          <FieldInput>
-            <TextInput
-              onChange={(e) => setEventContent(e.target.value)}
-            ></TextInput>
-          </FieldInput>
-        </Field>
-        <Field>
-          <FieldName>開始時間</FieldName>
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            dateFormat="yyyy/MM/dd (EEE)"
-            showYearDropdown
-            scrollableMonthYearDropdown
-          />
-          <SelectInput onChange={(e) => setStartHour(e.target.value)}>
-            {hourArray.map((hour, hourId) => (
-              <option value={hour.value} key={hourId}>
-                {hour.name}
-              </option>
-            ))}
-          </SelectInput>
-          <SelectInput onChange={(e) => setStartMinute(e.target.value)}>
-            {minuteArray.map((minute, minuteId) => (
-              <option value={minute.value} key={minuteId}>
-                {minute.name}
-              </option>
-            ))}
-          </SelectInput>
-        </Field>
-        <Field>
-          <FieldName>結束時間</FieldName>
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            dateFormat="yyyy/MM/dd (EEE)"
-            showYearDropdown
-            scrollableMonthYearDropdown
-          />
-          <SelectInput onChange={(e) => setEndHour(e.target.value)}>
-            {hourArray.map((hour, hourId) => (
-              <option value={hour.value} key={hourId}>
-                {hour.name}
-              </option>
-            ))}
-          </SelectInput>
-          <SelectInput onChange={(e) => setEndMinute(e.target.value)}>
-            {minuteArray.map((minute, minuteId) => (
-              <option value={minute.value} key={minuteId}>
-                {minute.name}
-              </option>
-            ))}
-          </SelectInput>
-        </Field>
-        <Field>
-          <FieldName>活動地址</FieldName>
-          <SelectInput onChange={(e) => setCity(e.target.value)}>
-            {cityArray.map((city, cityId) => (
-              <option value={city} key={cityId}>
-                {city}
-              </option>
-            ))}
-          </SelectInput>
-          <FieldInput>
-            <TextInput onChange={(e) => setAddress(e.target.value)}></TextInput>
-          </FieldInput>
-        </Field>
-
-        <Field>
-          <FieldName>活動類型</FieldName>
-          {tags.map((tag, index) =>
-            tag.select === true ? (
-              <OptionSelected
-                id={tag.id}
-                key={index}
-                onClick={(e) => handleTagClick(e)}
-              >
-                {tag.name}
-              </OptionSelected>
-            ) : (
-              <Option
-                id={tag.id}
-                key={index}
-                onClick={(e) => handleTagClick(e)}
-              >
-                {tag.name}
-              </Option>
-            )
-          )}
-        </Field>
-        <Field>
-          <FieldName>封面圖片</FieldName>
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-        </Field>
-        <SubmitButton onClick={handelClickSubmit}>創建活動</SubmitButton> */}
       </CreateEventContainer>
     </Container>
   );
