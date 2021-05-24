@@ -124,7 +124,6 @@ function UserCompletedEvents() {
         event.userRate = userRate;
         event.userAttend = userAttend;
 
-        console.log(event);
         eventInfoArray.push(event);
       }
       setEvents([eventInfoArray]);
@@ -135,9 +134,7 @@ function UserCompletedEvents() {
     getApplyingEventsInfo();
   }, []);
 
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
+  useEffect(() => {}, [events]);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
@@ -155,7 +152,6 @@ function UserCompletedEvents() {
 
   let history = useHistory();
   const handleEventClick = (e) => {
-    console.log(e);
     history.push(`/events/${e}`);
   };
 

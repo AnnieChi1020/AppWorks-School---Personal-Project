@@ -17,7 +17,6 @@ firebase.initializeApp({
 export const createNewDoc = () => {
   const db = firebase.firestore();
   let newEventRef = db.collection("events").doc();
-  console.log(newEventRef);
   return newEventRef;
 };
 
@@ -25,8 +24,6 @@ export const postEventDetailtoDoc = (newEventRef, eventDetail) => {
   return newEventRef
     .set(eventDetail)
     .then(() => {
-      console.log("Document successfully written!");
-      console.log(eventDetail);
       return newEventRef.id;
     })
     .catch((error) => {
@@ -78,9 +75,7 @@ export const getEvents = (status) => {
       });
       return events;
     })
-    .catch((error) => {
-      console.log("Error getting documents: ", error);
-    });
+    .catch((error) => {});
 };
 
 export const updateEvent = (eventId, updateInfo) => {
@@ -88,9 +83,7 @@ export const updateEvent = (eventId, updateInfo) => {
   const eventRef = db.collection("events").doc(eventId);
   return eventRef
     .update(updateInfo)
-    .then(() => {
-      console.log("Document successfully updated!");
-    })
+    .then(() => {})
     .catch((error) => {
       // The document probably doesn't exist.
       console.error("Error updating document: ", error);
@@ -108,13 +101,10 @@ export const getHosterEvents = (hosterId, eventStatus) => {
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         events.push(doc.data());
-        console.log(doc.data());
       });
       return events;
     })
-    .catch((error) => {
-      console.log("Error getting documents: ", error);
-    });
+    .catch((error) => {});
 };
 
 export const getUserList = (eventId, status) => {
@@ -130,12 +120,9 @@ export const getUserList = (eventId, status) => {
       querySnapshot.forEach((doc) => {
         applications.push(doc.data());
       });
-      // console.log(applications);
       return applications;
     })
-    .catch((error) => {
-      console.log("Error getting documents: ", error);
-    });
+    .catch((error) => {});
 };
 
 export const getCurrentStatus = (eventId, userId) => {
@@ -149,15 +136,11 @@ export const getCurrentStatus = (eventId, userId) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        console.log(doc.data());
         return doc.data();
       } else {
-        console.log("No such document!");
       }
     })
-    .catch((error) => {
-      console.log("Error getting document:", error);
-    });
+    .catch((error) => {});
 };
 
 export const updateNewStatus = (eventId, userId, updateInfo) => {
@@ -169,9 +152,7 @@ export const updateNewStatus = (eventId, userId, updateInfo) => {
     .doc(userId);
   return participantRef
     .update(updateInfo)
-    .then(() => {
-      console.log("Document successfully updated!");
-    })
+    .then(() => {})
     .catch((error) => {
       // The document probably doesn't exist.
       console.error("Error updating document: ", error);
@@ -187,12 +168,9 @@ export const getUserProfile = (id) => {
       if (doc.exists) {
         return doc.data();
       } else {
-        console.log("No such document!");
       }
     })
-    .catch((error) => {
-      console.log("Error getting document:", error);
-    });
+    .catch((error) => {});
 };
 
 export const getUserEvents = (userId, status) => {
@@ -206,14 +184,11 @@ export const getUserEvents = (userId, status) => {
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        console.log(doc.data());
         events.push(doc.data().participantInfo.eventId);
       });
       return events;
     })
-    .catch((error) => {
-      console.log("Error getting documents: ", error);
-    });
+    .catch((error) => {});
 };
 
 export const getEventsWithTag = (tag) => {
@@ -227,18 +202,14 @@ export const getEventsWithTag = (tag) => {
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        console.log(doc.data());
         events.push(doc.data());
       });
       return events;
     })
-    .catch((error) => {
-      console.log("Error getting documents: ", error);
-    });
+    .catch((error) => {});
 };
 
 export const getEventsByArea = (city) => {
-  console.log(city);
   const db = firebase.firestore();
   let events = [];
   const eventRef = db
@@ -249,14 +220,11 @@ export const getEventsByArea = (city) => {
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        console.log(doc.data());
         events.push(doc.data());
       });
       return events;
     })
-    .catch((error) => {
-      console.log("Error getting documents: ", error);
-    });
+    .catch((error) => {});
 };
 
 export const createUser = (email, password) => {
@@ -270,7 +238,6 @@ export const createUser = (email, password) => {
     .catch((error) => {
       let errorCode = error.code;
       let errorMessage = error.message;
-      console.log(errorCode);
       return errorCode;
     });
 };
@@ -286,7 +253,6 @@ export const userLogin = (email, password) => {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
       return errorCode;
     });
 };
@@ -297,8 +263,6 @@ export const createNewUser = (userId, userData) => {
   return newUserRef
     .set(userData)
     .then(() => {
-      console.log("Document successfully written!");
-      console.log(userData);
       return;
     })
     .catch((error) => {
@@ -320,7 +284,6 @@ export const getAuthStateChange = async () => {
     if (user) {
       let userId = user.uid;
       let email = user.email;
-      console.log(userId, email);
       return userId;
     } else {
       return false;

@@ -99,7 +99,6 @@ function CancelledEvents() {
 
   let history = useHistory();
   const handleEventClick = (e) => {
-    console.log(e);
     history.push(`/events/${e}`);
   };
 

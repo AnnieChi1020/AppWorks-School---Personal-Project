@@ -157,7 +157,6 @@ function ParticipantList() {
 
   const handleAttendClick = async (eventId, userId) => {
     let currentStatus = await getCurrentStatus(eventId, userId);
-    console.log(currentStatus);
     currentStatus.participantInfo.participantAttended = true;
     updateNewStatus(eventId, userId, currentStatus);
   };

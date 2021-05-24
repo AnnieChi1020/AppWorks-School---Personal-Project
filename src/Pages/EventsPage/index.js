@@ -13,17 +13,13 @@ const Container = styled.div`
 function EventsPage() {
   const logStatus = useSelector((state) => state.isLogged);
   const dispatch = useDispatch();
-  console.log(logStatus);
 
   const checkLogingStatus = async () => {
     const userId = await getAuthStateChange();
-    console.log(userId);
     // if (userId) {
-    //   console.log(userId);
     //   dispatch({ type: "SIGN_IN", data: true });
     //   dispatch({ type: "GET_USERID", data: userId });
     // } else {
-    //   console.log("noooo");
     // }
   };
 
@@ -32,7 +28,7 @@ function EventsPage() {
   }, []);
 
   return (
-    <Container className="container-xl">
+    <Container className="container-xl mb-5">
       <Events />
     </Container>
   );

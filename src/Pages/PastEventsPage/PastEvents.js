@@ -15,7 +15,9 @@ const Wrapper = styled.div`
 `;
 
 const Event = styled.div`
-  height: 25vh;
+  height: 15vw;
+  max-height: 200px;
+  min-width: 30%;
   flex-grow: 1;
   margin: 5px;
   position: relative;
@@ -66,7 +68,9 @@ const PastEventImages = styled.div`
 `;
 
 const PastEventImage = styled.img`
-  height: 15vh;
+  height: 10vw;
+  max-height: 120px;
+  min-width: 40%;
   flex-grow: 1;
   margin: 5px;
   position: relative;
@@ -146,7 +150,6 @@ function PastEvents() {
         endTime: reformatTimestamp(event.endTime),
       };
       eventsArray.push(pastEvent);
-      console.log(pastEvent);
       return true;
     });
     setEvents(eventsArray);
@@ -173,9 +176,7 @@ function PastEvents() {
     getPastEvents();
   }, []);
 
-  useEffect(() => {
-    console.log(eventResult);
-  }, [eventResult]);
+  useEffect(() => {}, [eventResult]);
 
   let history = useHistory();
   const handleEventClick = (id) => {
@@ -198,12 +199,10 @@ function PastEvents() {
       resultImages: eventInfo.resultImage,
       eventResult: eventInfo.resultContent,
     });
-    console.log(eventInfo);
   };
 
   const getUserFeedbacks = async (id) => {
     const userData = await getUserList(id, 1);
-    console.log(userData);
     let currentFeedback = [];
     userData.map((e) => {
       if (e.participantInfo.participantRating !== 0) {
@@ -211,8 +210,6 @@ function PastEvents() {
       }
     });
     setUserFeedback(currentFeedback);
-    console.log(currentFeedback);
-    console.log(userData);
   };
 
   const [show, setShow] = useState(false);
@@ -242,7 +239,7 @@ function PastEvents() {
           <PastEventImages>
             <PastEventImage src={eventResult.coverImage} />
             {eventResult.resultImages.map((image, index) => (
-              <PastEventImage src={image} />
+              <PastEventImage src={image} key={index} />
             ))}
           </PastEventImages>
 

@@ -115,7 +115,6 @@ function Comments() {
 
   const getEventDetail = async () => {
     const event = await getEventInfo(eventId);
-    console.log(event);
     setEventInfo({
       ...eventInfo,
       id: event.eventId,
@@ -131,9 +130,7 @@ function Comments() {
     getEventDetail();
   }, []);
 
-  useEffect(() => {
-    console.log(eventInfo);
-  }, [eventInfo]);
+  useEffect(() => {}, [eventInfo]);
 
   const ratingChanged = (newRating) => {
     rating = newRating;
@@ -150,7 +147,6 @@ function Comments() {
     const currentStatus = await getCurrentStatus(eventInfo.id, participantId);
     currentStatus.participantInfo.participantComment = comment;
     currentStatus.participantInfo.participantRating = rating;
-    console.log(currentStatus);
     await updateNewStatus(eventInfo.id, participantId, currentStatus);
     alert("已送出評價");
     history.goBack();

@@ -125,7 +125,6 @@ function ClosedEvents() {
   };
 
   const handleEventClick = (e) => {
-    console.log(e);
     history.push(`/events/${e}`);
   };
 

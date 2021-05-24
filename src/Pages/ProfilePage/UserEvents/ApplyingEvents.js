@@ -119,7 +119,6 @@ function UserApplyingEvents() {
     let eventInfoArray = [];
     await eventIdArray.map(async (id) => {
       const event = await getEventInfo(id);
-      console.log(event);
       eventInfoArray.push(event);
       setEvents([eventInfoArray]);
     });
@@ -128,7 +127,6 @@ function UserApplyingEvents() {
 
   let history = useHistory();
   const handleEventClick = (e) => {
-    console.log(e);
     history.push(`/events/${e}`);
   };
 

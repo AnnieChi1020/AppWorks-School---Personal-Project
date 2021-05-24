@@ -156,7 +156,6 @@ function AllEvents() {
     const month = timestamp.toDate().getMonth() + 1;
     const date = timestamp.toDate().getDate();
     const day = getDay(timestamp.toDate().getDay());
-    // const time = timestamp.toDate().toTimeString().slice(0, 5);
     const reformatedTime = `${year}-${month}-${date} (${day})`;
     return reformatedTime;
   };
@@ -198,13 +197,9 @@ function AllEvents() {
           event.startTime = reformatTimestamp(event.startTime);
           event.endTime = reformatTimestamp(event.endTime);
           event.eventAddress = getAdministrativeArea(event);
-          // console.log(getAdministrativeArea(event));
           return true;
         });
         setEvents(eventData);
-      } else {
-        // eventData = await getEvents(0);
-        // setEvents(eventData);
       }
     });
     return;

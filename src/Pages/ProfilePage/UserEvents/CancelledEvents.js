@@ -96,7 +96,6 @@ function UserCancelledEvents() {
 
   const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 9);
-    console.log(applyingEvents);
     return applyingEvents;
   };
 
@@ -106,7 +105,6 @@ function UserCancelledEvents() {
     if (eventIdArray.length > 0) {
       await eventIdArray.map(async (id) => {
         const event = await getEventInfo(id);
-        console.log(event);
         eventInfoArray.push(event);
         setEvents([eventInfoArray]);
       });
@@ -116,7 +114,6 @@ function UserCancelledEvents() {
 
   let history = useHistory();
   const handleEventClick = (e) => {
-    console.log(e);
     history.push(`/events/${e}`);
   };
 
@@ -124,10 +121,7 @@ function UserCancelledEvents() {
     getApplyingEventsInfo();
   }, []);
 
-  useEffect(() => {
-    console.log(events);
-    console.log(events.length);
-  }, []);
+  useEffect(() => {}, []);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];

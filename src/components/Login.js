@@ -104,7 +104,6 @@ function Login() {
       userName: signupInfo.name,
       userPhoto: "",
     };
-    console.log(userData);
     return userData;
   };
 
@@ -117,22 +116,18 @@ function Login() {
       orgContact: signupInfo.phone,
       orgPhoto: "",
     };
-    console.log(hosterData);
     return hosterData;
   };
 
   const handleActionChange = (e) => {
     setAction(e.target.id);
-    console.log(e.target.id);
   };
 
   const handleInputChange = (e) => {
     setSignupInfo({ ...signupInfo, [e.target.id]: e.target.value });
   };
 
-  useEffect(() => {
-    console.log(signupInfo);
-  }, [signupInfo]);
+  useEffect(() => {}, [signupInfo]);
 
   const handleIdentityChange = (e) => {
     setIdentity(e.target.id);
@@ -156,7 +151,6 @@ function Login() {
       dispatch({ type: "GET_USERID", data: userId });
       alert("已註冊成功");
     }
-    console.log(signupMessage);
   };
 
   const handleLoginButton = async () => {
@@ -169,7 +163,6 @@ function Login() {
       const currentUser = await getCurrentUser();
       if (currentUser) {
         const userId = loginMessage;
-        console.log(userId);
         const userData = await getUserProfile(userId);
         if (identity === "user" && userData.role === 0) {
           dispatch({ type: "SIGN_IN", data: true });
