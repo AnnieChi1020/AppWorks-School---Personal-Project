@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
 import "firebase/auth";
+import { useSelector, useDispatch } from "react-redux";
 
 firebase.initializeApp({
   apiKey: "AIzaSyB3u52FblPOqzBp4GUIASlMLohB5NcyLqs",
@@ -279,16 +280,21 @@ export const getCurrentUser = () => {
   }
 };
 
-export const getAuthStateChange = async () => {
-  return firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      let userId = user.uid;
-      // let email = user.email;
-      return userId;
-    } else {
-      return false;
-    }
+export const checkAuthStatus = async () => {
+  const promise = new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        let userId = user.uid;
+        let email = user.email;
+        console.log(userId, email);
+        resolve(userId);
+      } else {
+        resolve(false);
+      }
+    });
   });
+  let response = await promise;
+  return response;
 };
 
 export const userLogout = () => {

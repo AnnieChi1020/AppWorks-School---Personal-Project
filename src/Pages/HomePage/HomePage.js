@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 // import React, { useEffect, useState } from "react";
-// import { getEvents } from "../../utils/firebase.js";
+import { checkAuthState } from "../../utils/firebase.js";
 // import { useHistory, useParams } from "react-router-dom";
 // import banner from "../../images/banner.png";
 

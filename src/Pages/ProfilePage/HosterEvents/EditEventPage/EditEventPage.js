@@ -5,13 +5,12 @@ import { useHistory } from "react-router-dom";
 import background from "../../../../images/background.jpg";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-
 import {
-  createNewDoc,
-  postEventDetailtoDoc,
   getImageURL,
+  getEventInfo,
+  updateEvent,
 } from "../../../../utils/firebase.js";
-
+import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
 const Background = styled.div`
@@ -96,7 +95,7 @@ const Map = styled.iframe`
 `;
 
 const Button = styled.button`
-  width: 120px;
+  width: 140px;
   background-color: #0e6cd0;
   color: white;
   border: none;
@@ -104,72 +103,38 @@ const Button = styled.button`
   font-size: 1rem;
   line-height: 1.5;
   padding: 5px 20px;
-  margin-left: calc(50% - 60px);
+  margin-left: calc(50% - 70px);
   margin-top: 40px;
   margin-bottom: 20px;
 `;
 
 function EditEvent() {
-  const dispatch = useDispatch();
-  const hosterId = useSelector((state) => state.isLogged.userId);
-  const createEventData = useSelector((state) => state.createEvent);
+  const { id } = useParams();
+  const eventId = id;
 
   const [file, setFile] = useState(null);
-
-  const getCurrentDate = () => {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = () => {
-      const month = new Date().getMonth();
-      if (month < 10) {
-        return `0${month + 1}`;
-      } else {
-        return `${month + 1}`;
-      }
-    };
-    const currentDate = () => {
-      const date = new Date().getDate();
-      if (date < 10) {
-        return `0${date}`;
-      } else {
-        return `${date}`;
-      }
-    };
-    return `${currentYear}-${currentMonth()}-${currentDate()}`;
-  };
-
-  const getCurrentTime = () => {
-    const currentHours = () => {
-      const hours = new Date().getHours();
-      if (hours < 10) {
-        return `0${hours}`;
-      } else {
-        return `${hours}`;
-      }
-    };
-    const currentMinutes = () => {
-      const minutes = new Date().getMinutes();
-      if (minutes < 10) {
-        return `0${minutes}`;
-      } else {
-        return `${minutes}`;
-      }
-    };
-    return `${currentHours()}:${currentMinutes()}`;
-  };
-
-  const [startTime, setStartTime] = useState({
-    date: getCurrentDate(),
-    time: getCurrentTime(),
-  });
-  const [endTime, setEndTime] = useState({
-    date: getCurrentDate(),
-    time: getCurrentTime(),
+  const [event, setEvent] = useState({
+    eventId: "",
+    eventTitle: "",
+    eventContent: "",
+    eventCoverImage: "",
+    startTime: {
+      date: "",
+      time: "",
+    },
+    endTime: {
+      date: "",
+      time: "",
+    },
+    eventStatus: "",
+    eventTags: [],
+    hosterId: "",
+    resultImage: [],
+    resultContent: "",
+    eventAddress: "",
   });
 
-  const [address, setAddress] = useState({
-    city: "台北市",
-    location: "",
-  });
+  const [address, setAddress] = useState({ city: "", address: "" });
 
   const [tags, setTags] = useState([
     { name: "社會福利", id: "社會福利", select: false },
@@ -182,6 +147,7 @@ function EditEvent() {
     "台北市",
     "新北市",
     "桃園市",
+    "新竹市",
     "新竹縣",
     "苗栗縣",
     "台中市",
@@ -196,35 +162,150 @@ function EditEvent() {
     "台東縣",
   ];
 
+  const getCurrentEventInfo = async () => {
+    let eventInfo = await getEventInfo(eventId);
+
+    const reformatedStartTime = {
+      date: getReformatedDate(eventInfo.startTime.toDate()),
+      time: getReformatedTime(eventInfo.startTime.toDate()),
+    };
+    const reformatedEndTime = {
+      date: getReformatedDate(eventInfo.endTime.toDate()),
+      time: getReformatedTime(eventInfo.endTime.toDate()),
+    };
+
+    const addressText = () => {
+      const addressComponents = eventInfo.eventAddress.address_components;
+      let addressText = "";
+      for (let i = addressComponents.length - 4; i > -1; i--) {
+        addressText += addressComponents[i].short_name;
+      }
+      return addressText;
+    };
+
+    const addressCity = () => {
+      const addressComponents = eventInfo.eventAddress.address_components;
+      const location = addressComponents.length - 3;
+      return addressComponents[location].short_name;
+    };
+
+    // const reformatedAddress = {
+    //   city: addressCity(),
+    //   address: addressText(),
+    // };
+
+    setEvent({
+      eventId: eventInfo.eventId,
+      eventTitle: eventInfo.eventTitle,
+      eventContent: eventInfo.eventContent,
+      eventCoverImage: eventInfo.eventCoverImage,
+      startTime: reformatedStartTime,
+      endTime: reformatedEndTime,
+      eventStatus: eventInfo.eventStatus,
+      eventTags: eventInfo.eventTags,
+      hosterId: eventInfo.hosterId,
+      resultImage: [],
+      resultContent: "",
+      eventAddress: eventInfo.eventAddress,
+    });
+    setTags(
+      tags.map((tag) =>
+        eventInfo.eventTags.includes(tag.id)
+          ? { ...tag, select: true }
+          : { ...tag }
+      )
+    );
+    setAddress({ ...address, city: addressCity(), address: addressText() });
+  };
+
+  useEffect(() => {
+    getCurrentEventInfo();
+  }, []);
+
+  const getReformatedDate = (timestamp) => {
+    const reformatYear = timestamp.getFullYear();
+    const reformatMonth = () => {
+      const month = timestamp.getMonth();
+      if (month < 10) {
+        return `0${month + 1}`;
+      } else {
+        return `${month + 1}`;
+      }
+    };
+    const reformatDate = () => {
+      const date = timestamp.getDate();
+      if (date < 10) {
+        return `0${date}`;
+      } else {
+        return `${date}`;
+      }
+    };
+    return `${reformatYear}-${reformatMonth()}-${reformatDate()}`;
+  };
+
+  const getReformatedTime = (timestamp) => {
+    const reformatHours = () => {
+      const hours = timestamp.getHours();
+      if (hours < 10) {
+        return `0${hours}`;
+      } else {
+        return `${hours}`;
+      }
+    };
+    const reformatMinutes = () => {
+      const minutes = timestamp.getMinutes();
+      if (minutes < 10) {
+        return `0${minutes}`;
+      } else {
+        return `${minutes}`;
+      }
+    };
+    return `${reformatHours()}:${reformatMinutes()}`;
+  };
+
   const getGeopoint = (city, address) => {
-    fetch(
+    return fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${address}&key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18`
     )
       .then((res) => res.json())
       .then((result) => {
-        dispatch({ type: "ADD_ADDRESS", data: result.results[0] });
+        return result.results[0];
       });
   };
 
   let history = useHistory();
 
-  const handleStartTimeChange = (e) => {
-    setStartTime({ ...startTime, [e.target.type]: e.target.value });
+  const handleTitleChange = (e) => {
+    setEvent({ ...event, eventTitle: e.target.value });
   };
 
-  useEffect(() => {
-    const newStartTime = new Date(startTime.date + " " + startTime.time);
-    dispatch({ type: "ADD_STARTTIME", data: newStartTime });
-  }, [startTime]);
+  const handleContentChange = (e) => {
+    setEvent({ ...event, eventContent: e.target.value });
+  };
+
+  const handleStartDateChange = (e) => {
+    const start = event.startTime;
+    start.date = e.target.value;
+    setEvent({ ...event, startTime: start });
+  };
+
+  const handleStartTimeChange = (e) => {
+    const start = event.startTime;
+    start.time = e.target.value;
+    setEvent({ ...event, startTime: start });
+  };
+
+  const handleEndDateChange = (e) => {
+    const end = event.endTime;
+    end.date = e.target.value;
+    setEvent({ ...event, endTime: end });
+  };
 
   const handleEndTimeChange = (e) => {
-    setEndTime({ ...endTime, [e.target.type]: e.target.value });
+    const end = event.endTime;
+    end.time = e.target.value;
+    setEvent({ ...event, endTime: end });
   };
-
-  useEffect(() => {
-    const newEndTime = new Date(endTime.date + " " + endTime.time);
-    dispatch({ type: "ADD_ENDTIME", data: newEndTime });
-  }, [endTime]);
 
   const handleTagClick = (tag) => {
     let selectedId = tag.target.id;
@@ -239,58 +320,65 @@ function EditEvent() {
     );
   };
 
+  useEffect(() => {
+    console.log(address.city);
+    console.log(event);
+  }, [event]);
+
   const getSelectedTags = (tags) => {
     let selectedTags = [];
     tags.forEach((tag) => {
       tag.select === true ? selectedTags.push(tag.id) : console.log("none");
     });
-    console.log(selectedTags);
     return selectedTags;
   };
 
   useEffect(() => {
     const selectedTags = getSelectedTags(tags);
-    dispatch({ type: "ADD_TAGS", data: selectedTags });
+    setEvent({ ...event, eventTags: selectedTags });
   }, [tags]);
 
-  const handleInputChange = (e) => {
-    console.log(e.target.id);
-    dispatch({ type: `${e.target.id}`, data: e.target.value });
-  };
-
   const handleCityChange = (e) => {
-    const city = e.target.value;
-    setAddress({ ...address, city: city });
-    console.log(e.target.value);
+    setAddress({ ...address, city: e.target.value, address: "" });
+    document.querySelector("#formEventAddress").value = "";
   };
 
   const handleLocationChange = (e) => {
-    const location = e.target.value;
-    setAddress({ ...address, location: location });
+    setAddress({ ...address, address: e.target.value });
   };
 
-  useEffect(() => {
-    console.log(address);
-    getGeopoint(address.city, address.location);
-  }, [address]);
+  // useEffect(() => {
+  //   getGeopoint(event.eventAddress.city, event.eventAddress.location);
+  // }, [event.eventAddress]);
 
-  async function handelClickSubmit() {
-    const imageUrl = await getImageURL(file);
-    console.log(imageUrl);
-    const newEventRef = createNewDoc();
-    await dispatch({ type: "ADD_HOSTERID", data: hosterId });
-    await dispatch({ type: "ADD_ID", data: newEventRef.id });
-    await dispatch({ type: "ADD_COVERIMAGE", data: imageUrl });
+  const handelClickSubmit = async () => {
+    let updatedEventDetail = event;
 
-    const eventDetail = createEventData;
-    eventDetail.hosterId = hosterId;
-    eventDetail.eventId = newEventRef.id;
-    eventDetail.eventCoverImage = imageUrl;
-    console.log(eventDetail);
-    await postEventDetailtoDoc(newEventRef, eventDetail);
-    alert("已創建志工活動");
-    history.push("/events");
-  }
+    if (file) {
+      const imageUrl = await getImageURL(file);
+      console.log(imageUrl);
+      updatedEventDetail.eventCoverImage = imageUrl;
+    }
+
+    updatedEventDetail.eventAddress = await getGeopoint(
+      address.city,
+      address.address
+    );
+
+    updatedEventDetail.startTime = new Date(
+      event.startTime.date + " " + event.startTime.time
+    );
+    updatedEventDetail.endTime = new Date(
+      event.endTime.date + " " + event.endTime.time
+    );
+
+    console.log(updatedEventDetail);
+
+    await updateEvent(event.eventId, updatedEventDetail);
+
+    alert("已更新志工活動資訊");
+    history.goBack();
+  };
 
   return (
     <Container className="container-xl">
@@ -303,7 +391,8 @@ function EditEvent() {
             <Form.Control
               type="input"
               id="ADD_TITLE"
-              onChange={(e) => handleInputChange(e)}
+              defaultValue={event.eventTitle}
+              onChange={(e) => handleTitleChange(e)}
             />
           </Form.Group>
           <Form.Group>
@@ -312,7 +401,8 @@ function EditEvent() {
               as="textarea"
               rows={3}
               id="ADD_CONTENT"
-              onChange={(e) => handleInputChange(e)}
+              defaultValue={event.eventContent}
+              onChange={(e) => handleContentChange(e)}
             />
           </Form.Group>
           <Form.Group>
@@ -321,15 +411,15 @@ function EditEvent() {
                 <Form.Label>開始日期</Form.Label>
                 <Form.Control
                   type="date"
-                  defaultValue={startTime.date}
-                  onChange={(e) => handleStartTimeChange(e)}
+                  defaultValue={event.startTime.date}
+                  onChange={(e) => handleStartDateChange(e)}
                 />
               </Col>
               <Col>
                 <Form.Label>時間</Form.Label>
                 <Form.Control
                   type="time"
-                  defaultValue={startTime.time}
+                  defaultValue={event.startTime.time}
                   onChange={(e) => handleStartTimeChange(e)}
                 />
               </Col>
@@ -341,15 +431,15 @@ function EditEvent() {
                 <Form.Label>結束日期</Form.Label>
                 <Form.Control
                   type="date"
-                  defaultValue={endTime.date}
-                  onChange={(e) => handleEndTimeChange(e)}
+                  defaultValue={event.endTime.date}
+                  onChange={(e) => handleEndDateChange(e)}
                 />
               </Col>
               <Col>
                 <Form.Label>時間</Form.Label>
                 <Form.Control
                   type="time"
-                  defaultValue={endTime.time}
+                  defaultValue={event.endTime.time}
                   onChange={(e) => handleEndTimeChange(e)}
                 />
               </Col>
@@ -386,7 +476,7 @@ function EditEvent() {
                   <Form.Label>活動縣市</Form.Label>
                   <Form.Control
                     as="select"
-                    defaultValue="選擇所在縣市"
+                    defaultInputValue={address.city}
                     onChange={(e) => handleCityChange(e)}
                   >
                     {cityArray.map((city, cityId) => (
@@ -400,6 +490,7 @@ function EditEvent() {
                   <Form.Label>地址</Form.Label>
                   <Form.Control
                     tyle="input"
+                    defaultValue={address.address}
                     onChange={(e) => handleLocationChange(e)}
                   />
                 </Form.Group>
@@ -409,7 +500,7 @@ function EditEvent() {
           <Form.Group>
             <Map
               src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
-    &q=${address.city}+${address.location}`}
+    &q=${address.city}+${address.address}`}
             ></Map>
           </Form.Group>
           <Form.Group controlId="formEventCoverImage">
@@ -421,7 +512,7 @@ function EditEvent() {
             </Form>
           </Form.Group>
           <Button type="button" onClick={handelClickSubmit}>
-            創建活動
+            儲存活動資訊
           </Button>
         </Form>
       </CreateEventContainer>
