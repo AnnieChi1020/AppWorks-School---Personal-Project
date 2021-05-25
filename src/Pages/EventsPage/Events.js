@@ -1,4 +1,5 @@
-import styled, { withTheme } from "styled-components";
+/* eslint-disable react-hooks/exhaustive-deps */
+import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
@@ -121,6 +122,7 @@ function AllEvents() {
     "台北市",
     "新北市",
     "桃園市",
+    "新竹市",
     "新竹縣",
     "苗栗縣",
     "台中市",
@@ -156,7 +158,6 @@ function AllEvents() {
     const month = timestamp.toDate().getMonth() + 1;
     const date = timestamp.toDate().getDate();
     const day = getDay(timestamp.toDate().getDay());
-    // const time = timestamp.toDate().toTimeString().slice(0, 5);
     const reformatedTime = `${year}-${month}-${date} (${day})`;
     return reformatedTime;
   };
@@ -198,13 +199,9 @@ function AllEvents() {
           event.startTime = reformatTimestamp(event.startTime);
           event.endTime = reformatTimestamp(event.endTime);
           event.eventAddress = getAdministrativeArea(event);
-          // console.log(getAdministrativeArea(event));
           return true;
         });
         setEvents(eventData);
-      } else {
-        // eventData = await getEvents(0);
-        // setEvents(eventData);
       }
     });
     return;

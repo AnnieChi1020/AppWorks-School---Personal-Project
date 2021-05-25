@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -9,8 +10,8 @@ import {
   getCurrentStatus,
   updateNewStatus,
 } from "../../../../utils/firebase.js";
-import { Form, Row, Col } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { Form} from "react-bootstrap";
+import { useSelector, } from "react-redux";
 
 const Background = styled.div`
   width: 100%;
@@ -115,7 +116,6 @@ function Comments() {
 
   const getEventDetail = async () => {
     const event = await getEventInfo(eventId);
-    console.log(event);
     setEventInfo({
       ...eventInfo,
       id: event.eventId,
@@ -131,9 +131,7 @@ function Comments() {
     getEventDetail();
   }, []);
 
-  useEffect(() => {
-    console.log(eventInfo);
-  }, [eventInfo]);
+  useEffect(() => {}, [eventInfo]);
 
   const ratingChanged = (newRating) => {
     rating = newRating;
@@ -150,7 +148,6 @@ function Comments() {
     const currentStatus = await getCurrentStatus(eventInfo.id, participantId);
     currentStatus.participantInfo.participantComment = comment;
     currentStatus.participantInfo.participantRating = rating;
-    console.log(currentStatus);
     await updateNewStatus(eventInfo.id, participantId, currentStatus);
     alert("已送出評價");
     history.goBack();

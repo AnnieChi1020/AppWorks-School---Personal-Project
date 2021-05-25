@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 // import React, { useEffect, useState } from "react";
-// import { getEvents } from "../../utils/firebase.js";
+import { checkAuthState } from "../../utils/firebase.js";
 // import { useHistory, useParams } from "react-router-dom";
-import banner from "../../images/banner.png";
+// import banner from "../../images/banner.png";
 
 const Container = styled.div`
   width: 100%;
@@ -12,27 +13,27 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const BannerDiv = styled.div`
-  width: 100%;
-  height: 50vh;
-  display: flex;
-  flex-direction: row;
-  padding: 50px 0;
-`;
+// const BannerDiv = styled.div`
+//   width: 100%;
+//   height: 50vh;
+//   display: flex;
+//   flex-direction: row;
+//   padding: 50px 0;
+// `;
 
-const BannerImage = styled.div`
-  width: calc(100% - 400px);
-  text-align: right;
-`;
+// const BannerImage = styled.div`
+//   width: calc(100% - 400px);
+//   text-align: right;
+// `;
 
-const Image = styled.img`
-  max-width: 100%;
-  max-height: 100%;
-`;
+// const Image = styled.img`
+//   max-width: 100%;
+//   max-height: 100%;
+// `;
 
-const BannerContent = styled.div`
-  width: 400px;
-`;
+// const BannerContent = styled.div`
+//   width: 400px;
+// `;
 
 function HomePage() {
   return (

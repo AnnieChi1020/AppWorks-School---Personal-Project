@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -101,7 +102,7 @@ function EventResult() {
   const eventId = id;
 
   const [result, setResult] = useState("");
-  const [files, setFiles] = useState([]);
+  // const [files, setFiles] = useState([]);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
@@ -130,7 +131,6 @@ function EventResult() {
 
   const getEventDetail = async () => {
     const event = await getEventInfo(eventId);
-    console.log(event);
     setEventInfo({
       ...eventInfo,
       id: event.eventId,
@@ -153,27 +153,37 @@ function EventResult() {
     setResult(input);
   };
 
+  let fileArray;
   const fileChange = async (e) => {
-    let imageArray = [];
-    for (let i = 0; i < e.target.files.length; i++) {
-      let imageFile = e.target.files[i];
-      const url = await getImageURL(imageFile);
-      console.log(url);
-      imageArray.push(url);
-    }
-    setFiles(imageArray);
+    fileArray = e.target.files;
+    // let imageArray = [];
+    // for (let i = 0; i < e.target.files.length; i++) {
+    //   let imageFile = e.target.files[i];
+    //   const url = await getImageURL(imageFile);
+    //   imageArray.push(url);
+    // }
+    // setFiles(imageArray);
   };
 
-  useEffect(() => {
-    console.log(files);
-  }, []);
+  const uploadImage = async () => {
+    let imageArray = [];
+    for (let i = 0; i < fileArray.length; i++) {
+      let imageFile = fileArray[i];
+      const url = await getImageURL(imageFile);
+      imageArray.push(url);
+    }
+    // setFiles(imageArray);
+    return imageArray;
+  };
+
+  useEffect(() => {}, []);
 
   const handelClickSubmit = async () => {
     const eventData = await getEventInfo(eventId);
+    const imageUrl = await uploadImage(fileArray);
     eventData.resultContent = result;
-    eventData.resultImage = files;
-    console.log(eventData);
-    const update = await updateEvent(eventId, eventData);
+    eventData.resultImage = imageUrl;
+    await updateEvent(eventId, eventData);
     alert("已上傳活動成果");
     history.goBack();
   };

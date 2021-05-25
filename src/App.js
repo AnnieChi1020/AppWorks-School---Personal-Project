@@ -1,10 +1,9 @@
 import React from "react";
 // import { checkAuthStatus } from "./utils/firebase.js";
-
-import { useSelector, useDispatch } from "react-redux";
-// import { increment, decrement } from "./actions";
+// import { useSelector, useDispatch } from "react-redux";
 
 import Header from "./components/Header.js";
+// import Footer from "./components/Footer.js";
 import HomePage from "./Pages/HomePage/HomePage.js";
 import CreateEvent from "./Pages/CreateEventPage/index.js";
 import EventDetail from "./Pages/EventDetailPage/index.js";
@@ -16,23 +15,15 @@ import PastEvents from "./Pages/PastEventsPage/index.js";
 import EventResult from "./Pages/ProfilePage/HosterEvents/EventResultPage/EventResultPage.js";
 import EditEvent from "./Pages/ProfilePage/HosterEvents/EditEventPage/EditEventPage.js";
 
-import {
-  BrowserRouter as Router,
-  redirect,
-  Route,
-  Link,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 function App() {
   // const getLoginStatus = async () => {
   //   const data = await checkAuthStatus();
-  //   console.log(data);
   // };
   // getLoginStatus();
 
-  // const counter = useSelector((state) => state.counter);
-  const isLogged = useSelector((state) => state.isLogged.isLogged);
-  console.log(isLogged);
+  // const isLogged = useSelector((state) => state.isLogged.isLogged);
   // const dispatch = useDispatch();
 
   return (
@@ -54,6 +45,7 @@ function App() {
         <Route exact path="/profile/event-result/:id" component={EventResult} />
         <Route exact path="/profile/comments/:id" component={EventComments} />
         <Route exact path="/pastEvents" component={PastEvents} />
+        {/* <Footer /> */}
       </div>
     </Router>
   );

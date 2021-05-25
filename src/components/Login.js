@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   createUser,
   userLogin,
@@ -82,7 +82,7 @@ function Login() {
   const [show, setShow] = useState(true);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
   const [action, setAction] = useState("login");
   const [identity, setIdentity] = useState("user");
@@ -94,7 +94,7 @@ function Login() {
     address: "",
   });
   const dispatch = useDispatch();
-  const logStatus = useSelector((state) => state.isLogged);
+  // const logStatus = useSelector((state) => state.isLogged);
 
   const constructUserData = (userId) => {
     let userData = {
@@ -104,7 +104,6 @@ function Login() {
       userName: signupInfo.name,
       userPhoto: "",
     };
-    console.log(userData);
     return userData;
   };
 
@@ -117,22 +116,18 @@ function Login() {
       orgContact: signupInfo.phone,
       orgPhoto: "",
     };
-    console.log(hosterData);
     return hosterData;
   };
 
   const handleActionChange = (e) => {
     setAction(e.target.id);
-    console.log(e.target.id);
   };
 
   const handleInputChange = (e) => {
     setSignupInfo({ ...signupInfo, [e.target.id]: e.target.value });
   };
 
-  useEffect(() => {
-    console.log(signupInfo);
-  }, [signupInfo]);
+  useEffect(() => {}, [signupInfo]);
 
   const handleIdentityChange = (e) => {
     setIdentity(e.target.id);
@@ -156,7 +151,6 @@ function Login() {
       dispatch({ type: "GET_USERID", data: userId });
       alert("已註冊成功");
     }
-    console.log(signupMessage);
   };
 
   const handleLoginButton = async () => {
@@ -169,7 +163,6 @@ function Login() {
       const currentUser = await getCurrentUser();
       if (currentUser) {
         const userId = loginMessage;
-        console.log(userId);
         const userData = await getUserProfile(userId);
         if (identity === "user" && userData.role === 0) {
           dispatch({ type: "SIGN_IN", data: true });

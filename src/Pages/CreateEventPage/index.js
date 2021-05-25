@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 import { useHistory } from "react-router-dom";
@@ -181,6 +182,7 @@ function CreateEvent() {
     "台北市",
     "新北市",
     "桃園市",
+    "新竹市",
     "新竹縣",
     "苗栗縣",
     "台中市",
@@ -240,10 +242,7 @@ function CreateEvent() {
 
   const getSelectedTags = (tags) => {
     let selectedTags = [];
-    tags.forEach((tag) => {
-      tag.select === true ? selectedTags.push(tag.id) : console.log("none");
-    });
-    console.log(selectedTags);
+    tags.forEach((tag) => {});
     return selectedTags;
   };
 
@@ -253,14 +252,12 @@ function CreateEvent() {
   }, [tags]);
 
   const handleInputChange = (e) => {
-    console.log(e.target.id);
     dispatch({ type: `${e.target.id}`, data: e.target.value });
   };
 
   const handleCityChange = (e) => {
     const city = e.target.value;
     setAddress({ ...address, city: city });
-    console.log(e.target.value);
   };
 
   const handleLocationChange = (e) => {
@@ -269,13 +266,11 @@ function CreateEvent() {
   };
 
   useEffect(() => {
-    console.log(address);
     getGeopoint(address.city, address.location);
   }, [address]);
 
   async function handelClickSubmit() {
     const imageUrl = await getImageURL(file);
-    console.log(imageUrl);
     const newEventRef = createNewDoc();
     await dispatch({ type: "ADD_HOSTERID", data: hosterId });
     await dispatch({ type: "ADD_ID", data: newEventRef.id });
@@ -285,7 +280,6 @@ function CreateEvent() {
     eventDetail.hosterId = hosterId;
     eventDetail.eventId = newEventRef.id;
     eventDetail.eventCoverImage = imageUrl;
-    console.log(eventDetail);
     await postEventDetailtoDoc(newEventRef, eventDetail);
     alert("已創建志工活動");
     history.push("/events");

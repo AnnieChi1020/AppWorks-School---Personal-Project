@@ -76,7 +76,6 @@ function UserEvents() {
   const [participateStatus, setParticipateStatus] = useState("申請中");
 
   const handleTabClick = (tabId) => {
-    console.log(tabId);
     setParticipateStatus(tabId);
     let currentTabs = tabs;
     currentTabs.map((tab) => {

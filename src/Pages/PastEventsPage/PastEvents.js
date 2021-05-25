@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getEventInfo, getEvents, getUserList } from "../../utils/firebase.js";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 const Wrapper = styled.div`
   width: 80%;
@@ -15,7 +16,9 @@ const Wrapper = styled.div`
 `;
 
 const Event = styled.div`
-  height: 25vh;
+  height: 15vw;
+  max-height: 200px;
+  min-width: 30%;
   flex-grow: 1;
   margin: 5px;
   position: relative;
@@ -44,14 +47,6 @@ const EventTitle = styled.div`
   background-color: #b3b3b35e;
 `;
 
-const PastEvent = styled.div`
-  width: 100%;
-  border-radius: 8px;
-  border: solid 1px #979797;
-  padding: 20px 20px 50px 20px;
-  margin-bottom: 20px;
-`;
-
 const PastEventTitle = styled.div`
   font-size: 20px;
   line-height: 30px;
@@ -66,7 +61,9 @@ const PastEventImages = styled.div`
 `;
 
 const PastEventImage = styled.img`
-  height: 15vh;
+  height: 10vw;
+  max-height: 120px;
+  min-width: 40%;
   flex-grow: 1;
   margin: 5px;
   position: relative;
@@ -92,14 +89,6 @@ const UserFeedbacks = styled.div`
   padding: 5px 0;
 `;
 
-const UserImage = styled.img`
-  height: 60px;
-  width: 60px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-right: 20px;
-`;
-
 const UserFeedback = styled.div`
   display: flex;
   flex-direction: row;
@@ -112,16 +101,8 @@ const UserComment = styled.div`
   line-height: 18px;
 `;
 
-const styles = {
-  modal: {
-    // width: "600px",
-    // margin: "0 auto",
-  },
-};
-
 function PastEvents() {
   const [events, setEvents] = useState([]);
-  // const [viewEvent, setViewEvent] = useState("");
   const [eventResult, setEventResult] = useState({
     title: "",
     startTime: "",
@@ -146,7 +127,6 @@ function PastEvents() {
         endTime: reformatTimestamp(event.endTime),
       };
       eventsArray.push(pastEvent);
-      console.log(pastEvent);
       return true;
     });
     setEvents(eventsArray);
@@ -173,11 +153,9 @@ function PastEvents() {
     getPastEvents();
   }, []);
 
-  useEffect(() => {
-    console.log(eventResult);
-  }, [eventResult]);
+  useEffect(() => {}, [eventResult]);
 
-  let history = useHistory();
+  // let history = useHistory();
   const handleEventClick = (id) => {
     // setViewEvent(id);
     setShow(true);
@@ -198,21 +176,18 @@ function PastEvents() {
       resultImages: eventInfo.resultImage,
       eventResult: eventInfo.resultContent,
     });
-    console.log(eventInfo);
   };
 
   const getUserFeedbacks = async (id) => {
     const userData = await getUserList(id, 1);
-    console.log(userData);
     let currentFeedback = [];
     userData.map((e) => {
       if (e.participantInfo.participantRating !== 0) {
         currentFeedback.push(e.participantInfo);
       }
+      return true;
     });
     setUserFeedback(currentFeedback);
-    console.log(currentFeedback);
-    console.log(userData);
   };
 
   const [show, setShow] = useState(false);
@@ -234,7 +209,7 @@ function PastEvents() {
         ))}
       </Wrapper>
 
-      <Modal show={show} onHide={handleClose} style={styles.modal}>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title className="pl-2">活動成果</Modal.Title>
         </Modal.Header>
@@ -242,7 +217,7 @@ function PastEvents() {
           <PastEventImages>
             <PastEventImage src={eventResult.coverImage} />
             {eventResult.resultImages.map((image, index) => (
-              <PastEventImage src={image} />
+              <PastEventImage src={image} key={index} />
             ))}
           </PastEventImages>
 

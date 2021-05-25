@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getUserEvents, getEventInfo } from "../../../utils/firebase.js";
@@ -48,15 +49,15 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-const NoEvent = styled.div`
-  width: 90%;
-  margin: 0 auto;
-  padding: 10px 0;
-  font-size: 16px;
-  line-height: 24px;
-  margin-top: 20px;
-  text-align: center;
-`;
+// const NoEvent = styled.div`
+//   width: 90%;
+//   margin: 0 auto;
+//   padding: 10px 0;
+//   font-size: 16px;
+//   line-height: 24px;
+//   margin-top: 20px;
+//   text-align: center;
+// `;
 
 const CurrentStatus = styled.div`
   font-size: 14px;
@@ -96,7 +97,6 @@ function UserCancelledEvents() {
 
   const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 9);
-    console.log(applyingEvents);
     return applyingEvents;
   };
 
@@ -106,7 +106,6 @@ function UserCancelledEvents() {
     if (eventIdArray.length > 0) {
       await eventIdArray.map(async (id) => {
         const event = await getEventInfo(id);
-        console.log(event);
         eventInfoArray.push(event);
         setEvents([eventInfoArray]);
       });
@@ -116,7 +115,6 @@ function UserCancelledEvents() {
 
   let history = useHistory();
   const handleEventClick = (e) => {
-    console.log(e);
     history.push(`/events/${e}`);
   };
 
@@ -124,10 +122,7 @@ function UserCancelledEvents() {
     getApplyingEventsInfo();
   }, []);
 
-  useEffect(() => {
-    console.log(events);
-    console.log(events.length);
-  }, []);
+  useEffect(() => {}, []);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];

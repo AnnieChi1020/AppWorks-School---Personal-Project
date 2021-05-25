@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -101,7 +102,6 @@ function ActiveEvents() {
 
   const getHosterEventsData = async () => {
     const newEvents = await getHosterEvents(hosterId, 0);
-    console.log(newEvents);
     setEvents(newEvents);
   };
 
@@ -109,9 +109,7 @@ function ActiveEvents() {
     getHosterEventsData();
   }, []);
 
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
+  useEffect(() => {}, [events]);
 
   let history = useHistory();
   const handleParticipantClick = (id) => {
@@ -138,8 +136,6 @@ function ActiveEvents() {
       updateNewStatus(id, user.participantInfo.participantId, user);
       return true;
     });
-    console.log(applyingUserData);
-    console.log(eventData);
     e.target.textContent = "已取消";
   };
 
@@ -158,7 +154,6 @@ function ActiveEvents() {
   };
 
   const handleEventClick = (e) => {
-    console.log(e);
     history.push(`/events/${e}`);
   };
 

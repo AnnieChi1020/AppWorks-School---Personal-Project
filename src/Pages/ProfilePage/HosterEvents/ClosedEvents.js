@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getHosterEvents } from "../../../utils/firebase.js";
@@ -125,7 +126,6 @@ function ClosedEvents() {
   };
 
   const handleEventClick = (e) => {
-    console.log(e);
     history.push(`/events/${e}`);
   };
 
