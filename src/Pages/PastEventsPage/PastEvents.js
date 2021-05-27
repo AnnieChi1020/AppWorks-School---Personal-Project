@@ -1,18 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getEventInfo, getEvents, getUserList } from "../../utils/firebase.js";
+import {
+  getEventInfo,
+  getEvents,
+  getParticipants,
+} from "../../utils/firebase.js";
 // import { useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import { Modal } from "react-bootstrap";
 
-const Wrapper = styled.div`
-  width: 80%;
+const PastEventsContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
   margin-top: 20px;
-  padding: 10px 0;
+  padding: 20px 20px;
+  background-color: white;
+  border-radius: 10px;
 `;
 
 const Event = styled.div`
@@ -30,6 +36,7 @@ const EventImage = styled.img`
   object-fit: cover;
   vertical-align: bottom;
   cursor: pointer;
+  border-radius: 5px;
 `;
 
 // const EventTime = styled.div`
@@ -179,7 +186,7 @@ function PastEvents() {
   };
 
   const getUserFeedbacks = async (id) => {
-    const userData = await getUserList(id, 1);
+    const userData = await getParticipants(id, 1);
     let currentFeedback = [];
     userData.map((e) => {
       if (e.participantInfo.participantRating !== 0) {
@@ -196,7 +203,7 @@ function PastEvents() {
 
   return (
     <div>
-      <Wrapper>
+      <PastEventsContainer>
         {events.map((event, index) => (
           <Event key={index}>
             <EventImage
@@ -207,7 +214,7 @@ function PastEvents() {
             <EventTitle>{event.title}</EventTitle>
           </Event>
         ))}
-      </Wrapper>
+      </PastEventsContainer>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -261,7 +268,7 @@ function PastEvents() {
         </Modal.Footer>
       </Modal>
 
-      {/* <Wrapper>
+      {/* <PastEventsContainer>
         {eventResult && (
           <PastEvent>
             <PastEventImages>
@@ -301,7 +308,7 @@ function PastEvents() {
             </UserFeedbacks>
           </PastEvent>
         )}
-      </Wrapper> */}
+      </PastEventsContainer> */}
     </div>
   );
 }

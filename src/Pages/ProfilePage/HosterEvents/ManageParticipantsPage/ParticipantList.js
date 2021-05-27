@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
-  getUserList,
+  getParticipants,
   getEventInfo,
-  getCurrentStatus,
-  updateNewStatus,
+  getParticipantInfo,
+  updateParticipantStatus,
 } from "../../../../utils/firebase.js";
 import { useParams } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
@@ -112,7 +112,7 @@ function ParticipantList() {
   const [participants, setParticipants] = useState([]);
 
   const getParticipantsData = async () => {
-    const newParticipants = await getUserList(eventId, 1);
+    const newParticipants = await getParticipants(eventId, 1);
     let participantsArray = [];
     newParticipants.map((e) => {
       participantsArray.push(e.participantInfo);
@@ -158,9 +158,9 @@ function ParticipantList() {
   }, []);
 
   const handleAttendClick = async (eventId, userId) => {
-    let currentStatus = await getCurrentStatus(eventId, userId);
+    let currentStatus = await getParticipantInfo(eventId, userId);
     currentStatus.participantInfo.participantAttended = true;
-    updateNewStatus(eventId, userId, currentStatus);
+    updateParticipantStatus(eventId, userId, currentStatus);
   };
 
   return (

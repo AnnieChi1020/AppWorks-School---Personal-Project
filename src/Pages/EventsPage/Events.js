@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
+import { getEvents, getEventsByTags } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { Col, Card, DropdownButton, Dropdown } from "react-bootstrap";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
@@ -9,6 +9,7 @@ import "mdb-react-ui-kit/dist/css/mdb.min.css";
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
+  padding-top: 20px;
 `;
 
 const FilterContainer = styled.div`
@@ -112,6 +113,10 @@ const styles = {
 
 function AllEvents() {
   const [events, setEvents] = useState([]);
+  const [filter, setFilter] = useState({
+    tag: "",
+    city: "找尋所在地的活動",
+  });
   const [tags, setTags] = useState([
     { name: "社會福利", id: "社會福利", select: false },
     { name: "文化教育", id: "文化教育", select: false },
@@ -184,7 +189,7 @@ function AllEvents() {
     );
   };
 
-  const getEventsWithTagData = async () => {
+  const getEventsByTagsData = async () => {
     let tagExist = false;
     let selectedTag;
     let eventData;
@@ -194,7 +199,7 @@ function AllEvents() {
         tagExist = true;
       }
       if (tagExist) {
-        eventData = await getEventsWithTag(selectedTag);
+        eventData = await getEventsByTags(selectedTag);
         eventData.map((event) => {
           event.startTime = reformatTimestamp(event.startTime);
           event.endTime = reformatTimestamp(event.endTime);
@@ -218,26 +223,11 @@ function AllEvents() {
   };
 
   useEffect(() => {
-    getEventsWithTagData();
+    getEventsByTagsData();
   }, [tags]);
 
-  // const getTagName = (tagId) => {
-  //   let name;
-  //   const array = [
-  //     { name: "社會福利", id: "socialWelfare" },
-  //     { name: "文化教育", id: "cultureEducation" },
-  //     { name: "環境保護", id: "environment" },
-  //     { name: "生態保護", id: "conservation" },
-  //   ];
-  //   array.forEach((e) => {
-  //     if (tagId === e.id) {
-  //       name = e.name;
-  //     }
-  //   });
-  //   return name;
-  // };
-
   const handleAreaChange = async (city) => {
+    setFilter({ ...filter, city: city });
     let eventArray = [];
     const events = await getEvents(0);
     events.forEach((event) => {
@@ -250,6 +240,10 @@ function AllEvents() {
     });
     setEvents(eventArray);
   };
+
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
   return (
     <Container>
@@ -274,7 +268,7 @@ function AllEvents() {
         <DropdownButton
           variant="secondary"
           id="dropdown-basic-button"
-          title="找尋所在地的活動"
+          title={filter.city}
         >
           {cityArray.map((city, index) => (
             <Dropdown.Item

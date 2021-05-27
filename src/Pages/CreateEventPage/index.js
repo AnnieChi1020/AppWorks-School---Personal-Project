@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   createNewDoc,
-  postEventDetailtoDoc,
+  postEventInfo,
   getImageURL,
 } from "../../utils/firebase.js";
 
@@ -280,7 +280,7 @@ function CreateEvent() {
     eventDetail.hosterId = hosterId;
     eventDetail.eventId = newEventRef.id;
     eventDetail.eventCoverImage = imageUrl;
-    await postEventDetailtoDoc(newEventRef, eventDetail);
+    await postEventInfo(newEventRef, eventDetail);
     alert("已創建志工活動");
     history.push("/events");
   }

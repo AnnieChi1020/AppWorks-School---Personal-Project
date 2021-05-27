@@ -7,11 +7,11 @@ import { useHistory } from "react-router-dom";
 import background from "../../../../images/background.jpg";
 import {
   getEventInfo,
-  getCurrentStatus,
-  updateNewStatus,
+  getParticipantInfo,
+  updateParticipantStatus,
 } from "../../../../utils/firebase.js";
-import { Form} from "react-bootstrap";
-import { useSelector, } from "react-redux";
+import { Form } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const Background = styled.div`
   width: 100%;
@@ -145,10 +145,10 @@ function Comments() {
 
   let history = useHistory();
   const handelClickSubmit = async () => {
-    const currentStatus = await getCurrentStatus(eventInfo.id, participantId);
+    const currentStatus = await getParticipantInfo(eventInfo.id, participantId);
     currentStatus.participantInfo.participantComment = comment;
     currentStatus.participantInfo.participantRating = rating;
-    await updateNewStatus(eventInfo.id, participantId, currentStatus);
+    await updateParticipantStatus(eventInfo.id, participantId, currentStatus);
     alert("已送出評價");
     history.goBack();
   };

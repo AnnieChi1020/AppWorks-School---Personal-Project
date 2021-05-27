@@ -4,8 +4,8 @@ import styled from "styled-components";
 import {
   getUserEvents,
   getEventInfo,
-  getCurrentStatus,
-  updateNewStatus,
+  getParticipantInfo,
+  updateParticipantStatus,
 } from "../../../utils/firebase.js";
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
@@ -132,9 +132,9 @@ function UserApplyingEvents() {
   };
 
   const handleCancelClick = async (eventId, userId, e) => {
-    let currentStatus = await getCurrentStatus(eventId, userId);
+    let currentStatus = await getParticipantInfo(eventId, userId);
     currentStatus.participantInfo.participantStatus = 9;
-    updateNewStatus(eventId, userId, currentStatus);
+    updateParticipantStatus(eventId, userId, currentStatus);
     e.target.textContent = "已取消";
   };
 

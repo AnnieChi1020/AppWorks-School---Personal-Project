@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useHistory } from "react-router-dom";
 import background from "../../../../images/background.jpg";
 import { Form, Row, Col } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 import {
   getImageURL,
   getEventInfo,

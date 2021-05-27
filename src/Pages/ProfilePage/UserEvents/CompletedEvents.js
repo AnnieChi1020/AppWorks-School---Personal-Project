@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {
   getUserEvents,
   getEventInfo,
-  getCurrentStatus,
+  getParticipantInfo,
 } from "../../../utils/firebase.js";
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
@@ -119,7 +119,7 @@ function UserCompletedEvents() {
     await eventIdArray.map(async (id) => {
       const event = await getEventInfo(id);
       if (event.eventStatus === 1) {
-        const userDetail = await getCurrentStatus(id, userId);
+        const userDetail = await getParticipantInfo(id, userId);
         const userRate = userDetail.participantInfo.participantRating;
         const userAttend = userDetail.participantInfo.participantAttended;
         event.userRate = userRate;

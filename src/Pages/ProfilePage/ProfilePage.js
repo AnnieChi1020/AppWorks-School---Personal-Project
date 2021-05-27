@@ -1,25 +1,47 @@
+import React from "react";
 import styled from "styled-components";
 import Profile from "./Profile.js";
 import HosterEvents from "./HosterEvents/HosterEvents.js";
 import UserEvents from "./UserEvents/UserEvents.js";
 import { useSelector } from "react-redux";
-// import { useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 70px;
+  margin-top: 50px;
+`;
+
+const Background = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: #80808012;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
 `;
 
 function ProfilePage() {
-  // const isLogged = useSelector((state) => state.isLogged.isLogged);
   const role = useSelector((state) => state.isLogged.userRole);
+  const history = useHistory();
+
+  const renderEventsData = () => {
+    if (role === 0) {
+      return <UserEvents />;
+    } else if (role === 1) {
+      return <HosterEvents />;
+    }
+    // else {
+    //   history.push("/");
+    // }
+  };
 
   return (
-    <Container className="container-xl mb-5">
+    <Container className="container-xl">
+      <Background></Background>
       <Profile />
-      {role === 1 ? <HosterEvents /> : <div />}
-      {role === 0 ? <UserEvents /> : <div />}
+      {renderEventsData()}
     </Container>
   );
 }

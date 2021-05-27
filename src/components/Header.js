@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
-import {
-  getEvents,
-  updateEvent,
-  checkAuthStatus,
-  getUserProfile,
-} from "../utils/firebase.js";
+import React, { useState } from "react";
+// import {
+//   getEvents,
+//   updateEvent,
+//   checkAuthStatus,
+//   getUserProfile,
+// } from "../utils/firebase.js";
 import Login from "./Login.js";
 import logo from "../images/logo.png";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
@@ -69,23 +69,23 @@ function Header() {
   const [click, setClick] = useState(false);
   const isLogged = useSelector((state) => state.isLogged.isLogged);
   const userRole = useSelector((state) => state.isLogged.userRole);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const history = useHistory();
 
-  const updatePassedEvent = async () => {
-    const activeEvents = await getEvents(0);
-    activeEvents.map((event) => {
-      const startT = event.startTime.seconds * 1000;
-      const currentT = new Date().getTime();
-      if (startT < currentT) {
-        event.eventStatus = 1;
-        updateEvent(event.eventId, event);
-      }
-      return true;
-    });
-  };
-  updatePassedEvent();
+  // const updatePassedEvent = async () => {
+  //   const activeEvents = await getEvents(0);
+  //   activeEvents.map((event) => {
+  //     const startT = event.startTime.seconds * 1000;
+  //     const currentT = new Date().getTime();
+  //     if (startT < currentT) {
+  //       event.eventStatus = 1;
+  //       updateEvent(event.eventId, event);
+  //     }
+  //     return true;
+  //   });
+  // };
+  // updatePassedEvent();
 
   const handleLogoClick = () => {
     history.push("/");
@@ -111,20 +111,20 @@ function Header() {
     click === false ? setClick(true) : setClick(false);
   };
 
-  const checkLoginStatus = async () => {
-    const userId = await checkAuthStatus();
-    const userProfile = await getUserProfile(userId);
-    if (userId) {
-      dispatch({ type: "SIGN_IN", data: true });
-      dispatch({ type: "GET_USERID", data: userId });
-      dispatch({ type: "GET_USERROLE", data: userProfile.role });
-    }
-    return;
-  };
+  // const checkLoginStatus = async () => {
+  //   const userId = await checkAuthStatus();
+  //   const userProfile = await getUserProfile(userId);
+  //   if (userId) {
+  //     dispatch({ type: "SIGN_IN", data: true });
+  //     dispatch({ type: "GET_USERID", data: userId });
+  //     dispatch({ type: "GET_USERROLE", data: userProfile.role });
+  //   }
+  //   return;
+  // };
 
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
+  // useEffect(() => {
+  //   checkLoginStatus();
+  // }, []);
 
   return (
     <Container>

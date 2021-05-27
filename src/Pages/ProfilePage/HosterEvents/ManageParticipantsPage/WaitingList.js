@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
-  getUserList,
+  getParticipants,
   getEventInfo,
-  getCurrentStatus,
-  updateNewStatus,
+  getParticipantInfo,
+  updateParticipantStatus,
 } from "../../../../utils/firebase.js";
 import { useParams } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
@@ -122,9 +123,10 @@ function WaitingList() {
 
   const getApplicantsData = async () => {
     let applicantsArray = [];
-    const newApplicants = await getUserList(eventId, 0);
+    const newApplicants = await getParticipants(eventId, 0);
     newApplicants.map((applicant) => {
       applicantsArray.push(applicant.participantInfo);
+      return true;
     });
     setApplicants(applicantsArray);
   };
@@ -166,15 +168,15 @@ function WaitingList() {
   }, []);
 
   const handleConfirmClick = async (eventId, userId) => {
-    let currentStatus = await getCurrentStatus(eventId, userId);
+    let currentStatus = await getParticipantInfo(eventId, userId);
     currentStatus.participantInfo.participantStatus = 1;
-    updateNewStatus(eventId, userId, currentStatus);
+    updateParticipantStatus(eventId, userId, currentStatus);
   };
 
   const handleRejectClick = async (eventId, userId) => {
-    let currentStatus = await getCurrentStatus(eventId, userId);
+    let currentStatus = await getParticipantInfo(eventId, userId);
     currentStatus.participantInfo.participantStatus = 2;
-    updateNewStatus(eventId, userId, currentStatus);
+    updateParticipantStatus(eventId, userId, currentStatus);
   };
 
   return (

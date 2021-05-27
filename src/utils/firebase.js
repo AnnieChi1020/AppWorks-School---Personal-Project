@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
 import "firebase/auth";
-import { useSelector, useDispatch } from "react-redux";
+import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
 
 firebase.initializeApp({
   apiKey: "AIzaSyB3u52FblPOqzBp4GUIASlMLohB5NcyLqs",
@@ -21,7 +21,7 @@ export const createNewDoc = () => {
   return newEventRef;
 };
 
-export const postEventDetailtoDoc = (newEventRef, eventDetail) => {
+export const postEventInfo = (newEventRef, eventDetail) => {
   return newEventRef
     .set(eventDetail)
     .then(() => {
@@ -108,7 +108,7 @@ export const getHosterEvents = (hosterId, eventStatus) => {
     .catch((error) => {});
 };
 
-export const getUserList = (eventId, status) => {
+export const getParticipants = (eventId, status) => {
   const db = firebase.firestore();
   let applications = [];
   return db
@@ -126,7 +126,7 @@ export const getUserList = (eventId, status) => {
     .catch((error) => {});
 };
 
-export const getCurrentStatus = (eventId, userId) => {
+export const getParticipantInfo = (eventId, userId) => {
   const db = firebase.firestore();
   const participantRef = db
     .collection("events")
@@ -144,7 +144,7 @@ export const getCurrentStatus = (eventId, userId) => {
     .catch((error) => {});
 };
 
-export const updateNewStatus = (eventId, userId, updateInfo) => {
+export const updateParticipantStatus = (eventId, userId, updateInfo) => {
   const db = firebase.firestore();
   const participantRef = db
     .collection("events")
@@ -155,7 +155,6 @@ export const updateNewStatus = (eventId, userId, updateInfo) => {
     .update(updateInfo)
     .then(() => {})
     .catch((error) => {
-      // The document probably doesn't exist.
       console.error("Error updating document: ", error);
     });
 };
@@ -192,7 +191,46 @@ export const getUserEvents = (userId, status) => {
     .catch((error) => {});
 };
 
-export const getEventsWithTag = (tag) => {
+export const getUserAttendedEvents = (userId) => {
+  const db = firebase.firestore();
+  let events = [];
+  const userRef = db
+    .collectionGroup("participants")
+    .where("participantInfo.participantId", "==", userId)
+    .where("participantInfo.participantAttended", "==", true);
+  return userRef
+    .get()
+    .then((querySnapshot) => {
+      // console.log(userId);
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.data().participantInfo.eventId);
+        events.push(doc.data().participantInfo.eventId);
+      });
+      return events;
+    })
+    .catch((error) => {});
+};
+
+export const getEventsByTagsAndArea = (tag, city) => {
+  const db = firebase.firestore();
+  let events = [];
+  const eventRef = db
+    .collection("events")
+    .where("eventTags", "array-contains", tag)
+    .where("eventAddress.address_components[4].long_name", "==", city)
+    .where("eventStatus", "==", 0);
+  return eventRef
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        events.push(doc.data());
+      });
+      return events;
+    })
+    .catch((error) => {});
+};
+
+export const getEventsByTags = (tag) => {
   const db = firebase.firestore();
   let events = [];
   const eventRef = db
@@ -228,7 +266,7 @@ export const getEventsByArea = (city) => {
     .catch((error) => {});
 };
 
-export const createUser = (email, password) => {
+export const createUserAuth = (email, password) => {
   return firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
@@ -243,7 +281,7 @@ export const createUser = (email, password) => {
     });
 };
 
-export const userLogin = (email, password) => {
+export const userSignIn = (email, password) => {
   return firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
@@ -258,7 +296,7 @@ export const userLogin = (email, password) => {
     });
 };
 
-export const createNewUser = (userId, userData) => {
+export const addNewUserInfo = (userId, userData) => {
   const db = firebase.firestore();
   let newUserRef = db.collection("users").doc(userId);
   return newUserRef
@@ -297,11 +335,27 @@ export const checkAuthStatus = async () => {
   return response;
 };
 
-export const userLogout = () => {
+export const userSignOut = () => {
   return firebase
     .auth()
     .signOut()
     .then(function () {
       return true;
     });
+};
+
+export const getAllUsers = () => {
+  const db = firebase.firestore();
+  let users = [];
+  return db
+    .collection("users")
+    .where("role", "==", 0)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data());
+      });
+      return users;
+    })
+    .catch((error) => {});
 };

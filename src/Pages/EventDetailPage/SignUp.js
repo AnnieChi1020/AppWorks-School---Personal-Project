@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { postParticipantInfo } from "../../utils/firebase.js";
+// import { postParticipantInfo } from "../../utils/firebase.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 
@@ -41,17 +42,17 @@ const TextInput = styled.input`
   padding: 0 4px;
 `;
 
-const SubmitButton = styled.button`
-  width: 120px;
-  background-color: #0e6cd0;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  padding: 5px 10px;
-  margin: 0 auto;
-  margin-top: 30px;
-`;
+// const SubmitButton = styled.button`
+//   width: 120px;
+//   background-color: #0e6cd0;
+//   color: white;
+//   border: none;
+//   border-radius: 5px;
+//   font-size: 16px;
+//   padding: 5px 10px;
+//   margin: 0 auto;
+//   margin-top: 30px;
+// `;
 
 function EventSignUp() {
   const { id } = useParams();

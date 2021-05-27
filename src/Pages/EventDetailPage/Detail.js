@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -87,42 +88,26 @@ const EventText = styled.h2`
   color: #3e3e3e;
 `;
 
-const HosterContainer = styled.div`
-  width: 250px;
-  margin-top: 20px;
-  margin-left: 20px;
-  border: solid 1px #979797;
-  border-radius: 20px;
-  padding: 20px;
-`;
-
-const HosterName = styled.div`
-  width: 100%;
-  font-size: 16px;
-  line-height: 20px;
-`;
-
-const HosterDetail = styled.div`
-  width: 100%;
-  font-size: 16px;
-  line-height: 20px;
-  margin-top: 10px;
-`;
-
-// const WorkContentContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   margin-top: 30px;
-//   position: relative;
+// const HosterContainer = styled.div`
+//   width: 250px;
+//   margin-top: 20px;
+//   margin-left: 20px;
+//   border: solid 1px #979797;
+//   border-radius: 20px;
+//   padding: 20px;
 // `;
 
-// const WorkContentTitle = styled.div`
-//   font-size: 18px;
-//   line-height: 22px;
+// const HosterName = styled.div`
 //   width: 100%;
-//   padding-bottom: 10px;
-//   border-bottom: 1px solid #b9b9b9;
-//   margin-bottom: 10px;
+//   font-size: 16px;
+//   line-height: 20px;
+// `;
+
+// const HosterDetail = styled.div`
+//   width: 100%;
+//   font-size: 16px;
+//   line-height: 20px;
+//   margin-top: 10px;
 // `;
 
 const MapContainer = styled.div`

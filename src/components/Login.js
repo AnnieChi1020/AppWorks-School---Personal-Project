@@ -2,9 +2,9 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  createUser,
-  userLogin,
-  createNewUser,
+  createUserAuth,
+  userSignIn,
+  addNewUserInfo,
   getCurrentUser,
   getUserProfile,
 } from "../utils/firebase.js";
@@ -134,7 +134,7 @@ function Login() {
   };
 
   const handleSignupButton = async () => {
-    const signupMessage = await createUser(
+    const signupMessage = await createUserAuth(
       signupInfo.email,
       signupInfo.password
     );
@@ -146,15 +146,24 @@ function Login() {
       identity === "user"
         ? (userData = constructUserData(userId))
         : (userData = constructHosterData(userId));
-      await createNewUser(userId, userData);
+      await addNewUserInfo(userId, userData);
+
       dispatch({ type: "SIGN_IN", data: true });
       dispatch({ type: "GET_USERID", data: userId });
+
+      identity === "user"
+        ? dispatch({ type: "GET_USERROLE", data: 0 })
+        : dispatch({ type: "GET_USERROLE", data: 1 });
+
       alert("已註冊成功");
     }
   };
 
   const handleLoginButton = async () => {
-    const loginMessage = await userLogin(signupInfo.email, signupInfo.password);
+    const loginMessage = await userSignIn(
+      signupInfo.email,
+      signupInfo.password
+    );
     if (loginMessage === "auth/user-not-found") {
       alert("尚未註冊喔");
     } else if (loginMessage === "auth/wrong-password") {
