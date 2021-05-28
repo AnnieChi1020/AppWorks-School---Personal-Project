@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import React from "react";
 import animal from "../../images/animal.png";
 import welfare from "../../images/welfare.png";
@@ -8,11 +8,9 @@ import animalBackground from "../../images/animal_background.jpg";
 import welfareBackground from "../../images/welfare.jpg";
 import environmentBackground from "../../images/environment.jpg";
 import educationBackground from "../../images/education.jpg";
-
 import ReactCardFlipper from "react-card-flipper";
-import { getAllUsers, getUserAttendedEvents } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
-// import { Card } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 
 const CategoryContainer = styled.div`
   width: 100%;
@@ -112,12 +110,21 @@ const BackText = styled.span`
 `;
 
 function Category() {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const handleCardClick = (e) => {
+    console.log(e);
+    history.push(`/events`);
+    dispatch({ type: "ADD_TAG", data: e });
+  };
+
   return (
     <CategoryContainer>
       <MainContentContainer>
         <CategoryHeader>探索志工機會</CategoryHeader>
         <CategoriesContainer>
-          <CategoryCard>
+          <CategoryCard onClick={(e) => handleCardClick("社會福利")}>
             <ReactCardFlipper width="100%" height="250px" behavior="hover">
               <FrontCard>
                 <FrontImage src={welfare} />
@@ -129,7 +136,7 @@ function Category() {
               </BackCard>
             </ReactCardFlipper>
           </CategoryCard>
-          <CategoryCard>
+          <CategoryCard onClick={(e) => handleCardClick("文化教育")}>
             <ReactCardFlipper width="100%" height="250px" behavior="hover">
               <FrontCard>
                 <FrontImage src={education} />
@@ -141,7 +148,7 @@ function Category() {
               </BackCard>
             </ReactCardFlipper>
           </CategoryCard>
-          <CategoryCard>
+          <CategoryCard onClick={(e) => handleCardClick("生態保護")}>
             <ReactCardFlipper width="100%" height="250px" behavior="hover">
               <FrontCard>
                 <FrontImage src={animal} />
@@ -153,7 +160,7 @@ function Category() {
               </BackCard>
             </ReactCardFlipper>
           </CategoryCard>
-          <CategoryCard>
+          <CategoryCard onClick={(e) => handleCardClick("環境保護")}>
             <ReactCardFlipper width="100%" height="250px" behavior="hover">
               <FrontCard>
                 <FrontImage src={environment} />
