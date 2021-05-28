@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 
 import Header from "./components/Header.js";
 // import Footer from "./components/Footer.js";
-import HomePage from "./Pages/HomePage/HomePage.js";
+import HomePage from "./Pages/HomePage/index.js";
 import CreateEvent from "./Pages/CreateEventPage/index.js";
 import EventDetail from "./Pages/EventDetailPage/index.js";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";

@@ -63,8 +63,15 @@ const TextContainer = styled.div`
   align-items: center;
 `;
 
-const StarContainer = styled.div`
+const NumContainer = styled.div`
   width: 20px;
+  flex-grow: 0;
+  display: flex;
+  align-items: center;
+`;
+
+const StarContainer = styled.div`
+  width: 25px;
   flex-grow: 0;
   display: flex;
   align-items: center;
@@ -127,7 +134,7 @@ function LeaderBoard() {
             <Row key={index}>
               <Image src={userImg} />
               <TextContainer>{user.name}</TextContainer>
-              <StarContainer>{user.number}</StarContainer>
+              <NumContainer>{user.number}</NumContainer>
               <StarContainer>
                 <FontAwesomeIcon icon={faStar} style={styles.star} />
               </StarContainer>

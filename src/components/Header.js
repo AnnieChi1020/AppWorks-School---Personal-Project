@@ -129,7 +129,7 @@ function Header() {
   return (
     <Container>
       <HeaderContent>
-        <NavContent className="container-xl mb-5">
+        <NavContent className="mb-5">
           <NavItems>
             <Img src={logo} onClick={handleLogoClick} />
           </NavItems>

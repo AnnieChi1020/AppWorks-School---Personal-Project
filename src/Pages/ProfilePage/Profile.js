@@ -168,6 +168,7 @@ function Profile() {
   const getAttendedEventsNumber = async (id) => {
     console.log(id);
     const attendedEvents = await getUserAttendedEvents(id);
+    console.log(attendedEvents);
     return attendedEvents.length;
   };
 

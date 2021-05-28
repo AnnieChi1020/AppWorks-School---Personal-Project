@@ -2,7 +2,6 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
 import "firebase/auth";
-import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
 
 firebase.initializeApp({
   apiKey: "AIzaSyB3u52FblPOqzBp4GUIASlMLohB5NcyLqs",
