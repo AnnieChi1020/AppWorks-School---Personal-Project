@@ -385,7 +385,7 @@ function EditEvent() {
       <Background></Background>
       <Mask></Mask>
       <CreateEventContainer>
-        <Form className="p-4">
+        <Form className="px-0 py-3 p-md-4">
           <Form.Group>
             <Form.Label>活動名稱</Form.Label>
             <Form.Control
@@ -471,7 +471,7 @@ function EditEvent() {
           </Form.Group>
           <Form.Group>
             <Row>
-              <Col>
+              <Col className="col-12 col-sm-3 pr-sm-0">
                 <Form.Group controlId="formEventCity">
                   <Form.Label>活動縣市</Form.Label>
                   <Form.Control
@@ -485,7 +485,7 @@ function EditEvent() {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col xs={10} className="pl-0">
+              <Col className="col-12 col-sm-9 ">
                 <Form.Group className="pl-0" controlId="formEventAddress">
                   <Form.Label>地址</Form.Label>
                   <Form.Control
