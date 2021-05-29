@@ -358,3 +358,21 @@ export const getAllUsers = () => {
     })
     .catch((error) => {});
 };
+
+export const getParticipantNumber = (eventId) => {
+  const db = firebase.firestore();
+  let number = 0;
+  return db
+    .collection("events")
+    .doc(eventId)
+    .collection("participants")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        // applications.push(doc.data());
+        number += 1;
+      });
+      return number;
+    })
+    .catch((error) => {});
+};

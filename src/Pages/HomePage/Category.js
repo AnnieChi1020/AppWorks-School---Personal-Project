@@ -22,6 +22,12 @@ const MainContentContainer = styled.div`
   width: 100%;
   margin-top: 570px;
   text-align: center;
+  @media (max-width: 960px) {
+    margin-top: 720px;
+  }
+  @media (max-width: 540px) {
+    margin-top: calc(400px + 70vw);
+  }
 `;
 
 const CategoryHeader = styled.div`
@@ -37,22 +43,31 @@ const CategoryHeader = styled.div`
 
 const CategoriesContainer = styled.div`
   width: 100%;
+  margin: 0 auto;
   margin-top: 30px;
   padding: 0 20px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 20px;
   align-items: center;
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 
 const CategoryCard = styled.div`
   width: 100%;
+  height: 220px;
   flex-shrink: 1;
+  cursor: pointer;
+  @media (max-width: 720px) {
+    height: 160px;
+  }
 `;
 
 const FrontCard = styled.div`
   width: 100%;
-  height: 100%;
+  height: 200px;
   background-color: #89b2c461;
   border-radius: 20px;
   padding: 50px;
@@ -61,20 +76,26 @@ const FrontCard = styled.div`
   flex-direction: column;
   justify-content: center;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+  @media (max-width: 960px) {
+    height: 150px;
+  }
 `;
 
 const BackCard = styled.div`
   width: 100%;
-  height: 100%;
+  height: 200px;
   background-color: #89b2c461;
   border-radius: 20px;
   align-items: center;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+  @media (max-width: 960px) {
+    height: 150px;
+  }
 `;
 
 const FrontImage = styled.img`
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
 `;
 
 const BackImage = styled.img`
@@ -125,7 +146,7 @@ function Category() {
         <CategoryHeader>探索志工機會</CategoryHeader>
         <CategoriesContainer>
           <CategoryCard onClick={(e) => handleCardClick("社會福利")}>
-            <ReactCardFlipper width="100%" height="250px" behavior="hover">
+            <ReactCardFlipper width="100%" behavior="hover">
               <FrontCard>
                 <FrontImage src={welfare} />
               </FrontCard>
@@ -137,7 +158,7 @@ function Category() {
             </ReactCardFlipper>
           </CategoryCard>
           <CategoryCard onClick={(e) => handleCardClick("文化教育")}>
-            <ReactCardFlipper width="100%" height="250px" behavior="hover">
+            <ReactCardFlipper width="100%" behavior="hover">
               <FrontCard>
                 <FrontImage src={education} />
               </FrontCard>
@@ -149,7 +170,7 @@ function Category() {
             </ReactCardFlipper>
           </CategoryCard>
           <CategoryCard onClick={(e) => handleCardClick("生態保護")}>
-            <ReactCardFlipper width="100%" height="250px" behavior="hover">
+            <ReactCardFlipper width="100%" behavior="hover">
               <FrontCard>
                 <FrontImage src={animal} />
               </FrontCard>
@@ -161,7 +182,7 @@ function Category() {
             </ReactCardFlipper>
           </CategoryCard>
           <CategoryCard onClick={(e) => handleCardClick("環境保護")}>
-            <ReactCardFlipper width="100%" height="250px" behavior="hover">
+            <ReactCardFlipper width="100%" behavior="hover">
               <FrontCard>
                 <FrontImage src={environment} />
               </FrontCard>

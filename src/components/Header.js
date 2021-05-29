@@ -8,8 +8,11 @@ import React, { useState } from "react";
 // } from "../utils/firebase.js";
 import Login from "./Login.js";
 import logo from "../images/logo.png";
+import menu from "../images/menu.svg";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   width: 100%;
@@ -37,10 +40,34 @@ const NavContent = styled.div`
   justify-content: space-between;
 `;
 
-const NavItems = styled.div`
+const MenuContainer = styled.div`
+  display: none;
+  @media (max-width: 720px) {
+    display: block;
+    font-size: 12px;
+    line-height: 16px;
+    color: green;
+    position: fixed;
+    z-index: 10;
+  }
+`;
+
+const LogoContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  @media (max-width: 720px) {
+    margin: 0 auto;
+  }
+`;
+
+const NavItemsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  @media (max-width: 720px) {
+    display: none;
+  }
 `;
 
 const NavItem = styled.a`
@@ -69,23 +96,7 @@ function Header() {
   const [click, setClick] = useState(false);
   const isLogged = useSelector((state) => state.isLogged.isLogged);
   const userRole = useSelector((state) => state.isLogged.userRole);
-  // const dispatch = useDispatch();
-
   const history = useHistory();
-
-  // const updatePassedEvent = async () => {
-  //   const activeEvents = await getEvents(0);
-  //   activeEvents.map((event) => {
-  //     const startT = event.startTime.seconds * 1000;
-  //     const currentT = new Date().getTime();
-  //     if (startT < currentT) {
-  //       event.eventStatus = 1;
-  //       updateEvent(event.eventId, event);
-  //     }
-  //     return true;
-  //   });
-  // };
-  // updatePassedEvent();
 
   const handleLogoClick = () => {
     history.push("/");
@@ -111,29 +122,14 @@ function Header() {
     click === false ? setClick(true) : setClick(false);
   };
 
-  // const checkLoginStatus = async () => {
-  //   const userId = await checkAuthStatus();
-  //   const userProfile = await getUserProfile(userId);
-  //   if (userId) {
-  //     dispatch({ type: "SIGN_IN", data: true });
-  //     dispatch({ type: "GET_USERID", data: userId });
-  //     dispatch({ type: "GET_USERROLE", data: userProfile.role });
-  //   }
-  //   return;
-  // };
-
-  // useEffect(() => {
-  //   checkLoginStatus();
-  // }, []);
-
   return (
     <Container>
       <HeaderContent>
-        <NavContent className="mb-5">
-          <NavItems>
+        <NavContent>
+          <LogoContainer>
             <Img src={logo} onClick={handleLogoClick} />
-          </NavItems>
-          <NavItems>
+          </LogoContainer>
+          <NavItemsContainer>
             <NavItem onClick={handleEventsClick}>我要當志工</NavItem>
             <NavItem onClick={handleCreateEventClick}>招募志工</NavItem>
             <NavItem onClick={handlePastEventsClick}>活動成果</NavItem>
@@ -142,7 +138,10 @@ function Header() {
             ) : (
               <NavItem onClick={() => handleLoginClick()}>登入 / 註冊</NavItem>
             )}
-          </NavItems>
+          </NavItemsContainer>
+          <MenuContainer>
+            <Img src={menu} />
+          </MenuContainer>
         </NavContent>
       </HeaderContent>
       {click ? <Login></Login> : <div />}

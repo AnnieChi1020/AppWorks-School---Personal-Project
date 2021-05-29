@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 
 const BannerContainer = styled.div`
   width: 100vw;
-  height: 500px;
+  /* height: 500px; */
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
@@ -13,6 +13,13 @@ const BannerContainer = styled.div`
   position: absolute;
   top: 50px;
   left: 0;
+  padding-bottom: 50px;
+  @media (max-width: 960px) {
+    /* height: 700px; */
+  }
+  @media (max-width: 540px) {
+    /* height: 620px; */
+  }
 `;
 
 const MainContentContainer = styled.div`
@@ -23,11 +30,20 @@ const MainContentContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 960px) {
+    flex-direction: column;
+  }
 `;
 
 const TextContainer = styled.div`
   width: 600px;
   flex-grow: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  @media (max-width: 720px) {
+    width: 100%;
+  }
 `;
 
 const TextHeader = styled.div`
@@ -38,6 +54,14 @@ const TextHeader = styled.div`
   padding: 5px 20px;
   font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
     sans-serif;
+  @media (max-width: 960px) {
+    font-size: 30px;
+    text-align: center;
+  }
+  @media (max-width: 540px) {
+    font-size: 24px;
+    padding: 0px 20px;
+  }
 `;
 
 const TextSubtitle = styled.div`
@@ -49,12 +73,24 @@ const TextSubtitle = styled.div`
   padding: 5px 20px;
   font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
     sans-serif;
+  @media (max-width: 960px) {
+    font-size: 16px;
+    text-align: center;
+  }
 `;
 
 const ImageContainer = styled.div`
   width: 450px;
   height: 450px;
   flex-grow: 0;
+  @media (max-width: 960px) {
+    order: -1;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 540px) {
+    width: 100%;
+    height: 100vw;
+  }
   /* border: 1px solid grey; */
 `;
 
@@ -73,6 +109,10 @@ const Button = styled.button`
   background-color: #1190cb;
   border: 1px solid white;
   color: white;
+  @media (max-width: 960px) {
+    margin: 0 auto;
+    margin-top: 20px;
+  }
 `;
 
 function Banner() {
