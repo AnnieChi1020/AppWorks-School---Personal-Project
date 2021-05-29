@@ -113,6 +113,8 @@ const Button = styled.button`
 
 function Profile() {
   const id = useSelector((state) => state.isLogged.userId);
+  const role = useSelector((state) => state.isLogged.userRole);
+
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
@@ -185,28 +187,41 @@ function Profile() {
           <ProfileImg src={userImg} />
         )}
         <ProfileDetial>
-          <LevelTextContainer>
+          {role === 0 ? (
             <div>
-              {`志工初心者 `}
-              <FontAwesomeIcon icon={faStar} />
+              <LevelTextContainer>
+                <div>
+                  {`志工初心者 `}
+                  <FontAwesomeIcon icon={faStar} />
+                </div>
+                <div>
+                  {`志工初心者 `}
+                  <FontAwesomeIcon icon={faStar} />
+                </div>
+                <div>
+                  {`志工達人 `}
+                  <FontAwesomeIcon icon={faStar} />
+                </div>
+              </LevelTextContainer>
+              <LevelBarContainer>
+                <LevelBarFirst></LevelBarFirst>
+                <LevelBarSecond></LevelBarSecond>
+                <LevelBarThird></LevelBarThird>
+              </LevelBarContainer>
             </div>
-            <div>
-              {`志工初心者 `}
-              <FontAwesomeIcon icon={faStar} />
-            </div>
-            <div>
-              {`志工達人 `}
-              <FontAwesomeIcon icon={faStar} />
-            </div>
-          </LevelTextContainer>
-          <LevelBarContainer>
-            <LevelBarFirst></LevelBarFirst>
-            <LevelBarSecond></LevelBarSecond>
-            <LevelBarThird></LevelBarThird>
-          </LevelBarContainer>
+          ) : (
+            <div />
+          )}
+
           <ProfileName>{`哈囉，${userData.name}`}</ProfileName>
-          <ProfileText>{`您目前是 志工初心者`}</ProfileText>
-          <ProfileText>{`您已經參加了 ${userData.attendedNum} 場志工活動`}</ProfileText>
+          {role === 0 ? (
+            <div>
+              <ProfileText>{`您目前是 志工初心者`}</ProfileText>
+              <ProfileText>{`您已經參加了 ${userData.attendedNum} 場志工活動`}</ProfileText>
+            </div>
+          ) : (
+            <div />
+          )}
         </ProfileDetial>
         <Button onClick={handleLogoutButton}>登出</Button>
       </ProfileDiv>

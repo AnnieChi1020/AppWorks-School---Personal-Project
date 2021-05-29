@@ -11,6 +11,10 @@ const TabsContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  background-color: white;
+  padding-bottom: 20px;
+  border-radius: 10px;
+  margin-bottom: 50px;
 `;
 
 const Title = styled.div`
@@ -18,7 +22,7 @@ const Title = styled.div`
   font-size: 20px;
   line-height: 30px;
   margin: 0 auto;
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 20px;
   font-weight: bold;
 `;

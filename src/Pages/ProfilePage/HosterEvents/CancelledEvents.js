@@ -51,6 +51,15 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
+const NoEventText = styled.div`
+  width: 100px;
+  font-size: 16px;
+  line-height: 20px;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 80px;
+`;
+
 const styles = {
   cardImage: {
     objectFit: "cover",
@@ -135,6 +144,7 @@ function CancelledEvents() {
           </Col>
         ))}
       </Events>
+      {events.length === 0 ? <NoEventText>沒有活動喔</NoEventText> : <div />}
     </EventsContainer>
   );
 }

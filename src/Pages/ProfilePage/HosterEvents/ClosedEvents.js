@@ -70,6 +70,15 @@ const Button = styled.button`
   background-color: #ebedef66;
 `;
 
+const NoEventText = styled.div`
+  width: 100px;
+  font-size: 16px;
+  line-height: 20px;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 80px;
+`;
+
 const styles = {
   cardImage: {
     objectFit: "cover",
@@ -169,6 +178,7 @@ function ClosedEvents() {
           </Col>
         ))}
       </Events>
+      {/* {events.length === 0 ? <NoEventText>沒有活動喔</NoEventText> : <div />} */}
     </EventsContainer>
     // <Wrapper>
     //   {events.map((event, index) => (
