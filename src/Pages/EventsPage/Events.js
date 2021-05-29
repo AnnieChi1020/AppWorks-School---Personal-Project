@@ -27,6 +27,11 @@ const Filter = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Buttons = styled.div`
@@ -42,6 +47,7 @@ const Tags = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   flex-grow: 0;
+  align-items: center;
 `;
 
 const Tag = styled.div`
@@ -54,6 +60,12 @@ const Tag = styled.div`
   margin-right: 5px;
   cursor: pointer;
   text-align: center;
+  @media (max-width: 720px) {
+    width: 80px;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 5px 5px;
+  }
 `;
 
 const TagSelected = styled.div`
@@ -68,22 +80,41 @@ const TagSelected = styled.div`
   color: white;
   cursor: pointer;
   text-align: center;
+  @media (max-width: 720px) {
+    width: 80px;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 5px 5px;
+  }
 `;
 
 const SelectContainer = styled.div`
-  width: 150px;
-  margin-left: 20px;
+  margin-left: 10px;
   flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  @media (max-width: 720px) {
+    width: 250px;
+    margin-top: 10px;
+    margin-left: 0px;
+  }
 `;
 
 const Selector = styled.select`
-  width: 100%;
+  width: 120px;
   height: 32px;
   border: solid 1px #979797;
   border-radius: 10px;
   padding: 0 10px;
   color: #4f4f4f;
   font-size: 16px;
+
+  @media (max-width: 720px) {
+    height: 28px;
+    font-size: 14px;
+    line-height: 16px;
+  }
 `;
 
 const Events = styled.div`
@@ -152,8 +183,8 @@ const Button = styled.button`
 `;
 
 const ClearButton = styled.button`
-  width: 120px;
-  height: 35px;
+  width: 140px;
+  height: 32px;
   background-color: #97979740;
   color: #3e3e3e;
   border: none;
@@ -162,6 +193,12 @@ const ClearButton = styled.button`
   line-height: 20px;
   margin-left: 10px;
   cursor: pointer;
+  @media (max-width: 720px) {
+    width: 100px;
+    font-size: 14px;
+    line-height: 16px;
+    height: 28px;
+  }
 `;
 
 const styles = {
@@ -344,12 +381,13 @@ function AllEvents() {
                 <option value={city}>{city}</option>
               ))}
             </Selector>
+            <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
           </SelectContainer>
         </Filter>
-        <Buttons>
+        {/* <Buttons>
           <Button>搜尋活動</Button>
           <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
-        </Buttons>
+        </Buttons> */}
       </FilterContainer>
       <Events>
         {events.map((event, index) => (

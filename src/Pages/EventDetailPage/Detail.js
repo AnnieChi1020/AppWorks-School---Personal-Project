@@ -57,6 +57,10 @@ const Subtitle = styled.div`
   line-height: 20px;
   font-weight: 700;
   margin-bottom: 5px;
+  @media (max-width: 540px) {
+    font-size: 14px;
+    line-height: 20px;
+  }
 `;
 
 const SubtitleIconContainer = styled.div`
@@ -78,6 +82,12 @@ const EventTitle = styled.h2`
   margin-bottom: 15px;
   font-weight: 600;
   color: #3e3e3e;
+  @media (max-width: 540px) {
+    font-size: 20px;
+    line-height: 28px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
 `;
 
 const EventText = styled.h2`
@@ -86,6 +96,10 @@ const EventText = styled.h2`
   font-weight: 400;
   margin: 5px 0;
   color: #3e3e3e;
+  @media (max-width: 540px) {
+    font-size: 12px;
+    line-height: 18px;
+  }
 `;
 
 // const HosterContainer = styled.div`
@@ -124,6 +138,10 @@ const MapTitle = styled.div`
   padding-bottom: 10px;
   border-bottom: 1px solid #b9b9b9;
   margin-bottom: 10px;
+  @media (max-width: 540px) {
+    font-size: 16px;
+    line-height: 20px;
+  }
 `;
 
 const Map = styled.iframe`
@@ -142,6 +160,11 @@ const Button = styled.button`
   padding: 5px 10px;
   margin: 0 auto;
   margin-top: 20px;
+  @media (max-width: 540px) {
+    font-size: 14px;
+    line-height: 20px;
+    width: 100px;
+  }
 `;
 
 const styles = {
