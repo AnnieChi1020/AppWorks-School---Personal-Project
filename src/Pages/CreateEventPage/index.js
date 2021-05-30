@@ -287,8 +287,8 @@ function CreateEvent() {
 
   return (
     <Container className="container-xl">
-      <Background></Background>
-      <Mask></Mask>
+      <Background/>
+      <Mask/>
       <CreateEventContainer>
         <Form className="px-0 py-3 p-md-4">
           <Form.Group>

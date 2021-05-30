@@ -110,6 +110,13 @@ function UserApplyingEvents() {
 
   const userId = useSelector((state) => state.isLogged.userId);
 
+  const checkEventPassed = (event) => {
+    const startT = event.startTime.seconds * 1000;
+    const currentT = new Date().getTime();
+    const eventPassed = startT < currentT;
+    return eventPassed;
+  };
+
   const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 0);
     return applyingEvents;
@@ -120,8 +127,12 @@ function UserApplyingEvents() {
     let eventInfoArray = [];
     await eventIdArray.map(async (id) => {
       const event = await getEventInfo(id);
-      eventInfoArray.push(event);
-      setEvents([eventInfoArray]);
+      const eventPassed = checkEventPassed(event);
+      console.log(eventPassed);
+      if (!eventPassed) {
+        eventInfoArray.push(event);
+        setEvents([eventInfoArray]);
+      }
     });
     return eventInfoArray;
   };

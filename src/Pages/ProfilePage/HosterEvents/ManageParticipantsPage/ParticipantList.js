@@ -15,21 +15,29 @@ const EventsContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  background-color: white;
+  padding: 10px 20px 20px 20px;
+  border-radius: 20px;
+  margin-top: 20px;
 `;
 
 const Events = styled.div`
   width: 100%;
-  display: grid;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 10px;
+  grid-gap: 10px; */
   margin: 0 auto;
   padding: 20px 0;
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
   @media (max-width: 576px) {
     grid-template-columns: 1fr;
-  }
+  } */
 `;
 
 const EventInfo = styled.div`
@@ -64,6 +72,7 @@ const EventText = styled.div`
 // `;
 
 const ConfirmButton = styled.button`
+  width: 90px;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 8px;
@@ -101,6 +110,7 @@ const Title = styled.div`
   padding: 5px;
   margin: 0 auto;
   margin-top: 15px;
+  margin-bottom: 10px;
   text-align: center;
   border-bottom: 2px solid #619e6f;
 `;
@@ -150,17 +160,47 @@ function ParticipantList() {
         content: data.eventContent,
         address: data.eventAddress,
         location: data.eventLocation,
-        startTime: `${startDate}`,
-        endTime: `${endDate}`,
+        startTime: data.startTime,
+        endTime: data.endTime,
       });
     }
     getEventDetail();
   }, []);
 
   const handleAttendClick = async (eventId, userId) => {
+    console.log(eventId, userId);
     let currentStatus = await getParticipantInfo(eventId, userId);
     currentStatus.participantInfo.participantAttended = true;
     updateParticipantStatus(eventId, userId, currentStatus);
+  };
+
+  const renderButton = (e) => {
+    console.log(event);
+    const startT = event.startTime.seconds * 1000;
+    const currentT = new Date().getTime();
+    console.log(startT, currentT);
+    const eventPassed = startT < currentT;
+    return e.participantAttended === false && eventPassed ? (
+      <ConfirmButton
+        id={e.participantId}
+        onClick={(e) => {
+          handleAttendClick(eventId, e.target.id);
+          e.target.textContent = "已確認出席";
+          e.target.disabled = true;
+          e.target.style.opacity = "0.6";
+        }}
+      >
+        確認出席
+      </ConfirmButton>
+    ) : !eventPassed ? (
+      <ConfirmButton disabled style={{ opacity: "0.6" }}>
+        確認出席
+      </ConfirmButton>
+    ) : (
+      <ConfirmButton disabled style={{ opacity: "0.6" }}>
+        已確認出席
+      </ConfirmButton>
+    );
   };
 
   return (
@@ -168,7 +208,11 @@ function ParticipantList() {
       <Title>活動參加名單</Title>
       <Events>
         {participants.map((participant, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
+          <Col
+            className="p-1"
+            style={{ minWidth: "200px", maxWidth: "200px" }}
+            key={index}
+          >
             <Card style={{ height: "100%" }}>
               <Card.Body style={styles.cardBody}>
                 <EventInfo>
@@ -181,7 +225,8 @@ function ParticipantList() {
                   </Card.Text>
                 </EventInfo>
                 <ButtonsContainer>
-                  {participant.participantAttended === false ? (
+                  {renderButton(participant)}
+                  {/* {participant.participantAttended === false ? (
                     <ConfirmButton
                       onClick={(e) => {
                         handleAttendClick(eventId, participant.participantId);
@@ -192,7 +237,7 @@ function ParticipantList() {
                     </ConfirmButton>
                   ) : (
                     <ConfirmButton disabled>已確認出席</ConfirmButton>
-                  )}
+                  )} */}
                 </ButtonsContainer>
               </Card.Body>
             </Card>

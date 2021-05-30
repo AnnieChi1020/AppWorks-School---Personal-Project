@@ -77,7 +77,6 @@ function UserEvents() {
     },
   ]);
 
-  // const userId = useSelector((state) => state.isLogged.userId);
   const [participateStatus, setParticipateStatus] = useState("申請中");
 
   const handleTabClick = (tabId) => {
@@ -93,6 +92,11 @@ function UserEvents() {
     });
     setTabs(currentTabs);
   };
+
+  const updateEventStatus = ()=>{
+
+    
+  }
 
   return (
     <TabsContainer>

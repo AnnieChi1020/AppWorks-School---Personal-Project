@@ -15,21 +15,25 @@ const EventsContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  background-color: white;
+  padding: 10px 20px 20px 20px;
+  border-radius: 20px;
 `;
 
 const Events = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
   margin: 0 auto;
   padding: 20px 0;
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
   @media (max-width: 576px) {
     grid-template-columns: 1fr;
-  }
+  } */
 `;
 
 const EventInfo = styled.div`
@@ -63,7 +67,8 @@ const EventText = styled.div`
 //   text-align: center;
 // `;
 
-const Button = styled.button`
+const RejectButton = styled.button`
+  width: 75px;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 8px;
@@ -73,6 +78,7 @@ const Button = styled.button`
 `;
 
 const ConfirmButton = styled.button`
+  width: 75px;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 8px;
@@ -120,16 +126,23 @@ function WaitingList() {
   const eventId = id;
 
   const [applicants, setApplicants] = useState([]);
+  const [click, setClick] = useState(false);
 
   const getApplicantsData = async () => {
     let applicantsArray = [];
     const newApplicants = await getParticipants(eventId, 0);
     newApplicants.map((applicant) => {
+      applicant.participantInfo.click = false;
+      console.log(applicant);
       applicantsArray.push(applicant.participantInfo);
       return true;
     });
     setApplicants(applicantsArray);
   };
+
+  useEffect(() => {
+    console.log(applicants);
+  }, [applicants]);
 
   useEffect(() => {
     getApplicantsData();
@@ -149,8 +162,8 @@ function WaitingList() {
   useEffect(() => {
     async function getEventDetail() {
       const data = await getEventInfo(eventId);
-      const startDate = data.startTime.toDate().toLocaleDateString();
-      const endDate = data.endTime.toDate().toLocaleDateString();
+      // const startDate = data.startTime.toDate().toLocaleDateString();
+      // const endDate = data.endTime.toDate().toLocaleDateString();
 
       setEvent({
         ...event,
@@ -160,8 +173,8 @@ function WaitingList() {
         content: data.eventContent,
         address: data.eventAddress,
         location: data.eventLocation,
-        startTime: `${startDate}`,
-        endTime: `${endDate}`,
+        startTime: data.startTime,
+        endTime: data.endTime,
       });
     }
     getEventDetail();
@@ -175,8 +188,69 @@ function WaitingList() {
 
   const handleRejectClick = async (eventId, userId) => {
     let currentStatus = await getParticipantInfo(eventId, userId);
-    currentStatus.participantInfo.participantStatus = 2;
+    currentStatus.participantInfo.participantStatus = 9;
     updateParticipantStatus(eventId, userId, currentStatus);
+  };
+
+  const renderConfirmButton = (e) => {
+    const startT = event.startTime.seconds * 1000;
+    const currentT = new Date().getTime();
+    const eventPassed = startT < currentT;
+    return !eventPassed && !e.click ? (
+      <ConfirmButton
+        id={e.participantId}
+        onClick={(e) => {
+          handleConfirmClick(eventId, e.target.id);
+          e.target.textContent = "已確認";
+          e.target.disabled = true;
+          e.target.style.opacity = "0.6";
+          disableOtherButton(e);
+        }}
+      >
+        確認報名
+      </ConfirmButton>
+    ) : (
+      <ConfirmButton disabled style={{ opacity: "0.6" }}>
+        確認報名
+      </ConfirmButton>
+    );
+  };
+
+  const renderRejectButton = (e) => {
+    console.log(event);
+    const startT = event.startTime.seconds * 1000;
+    const currentT = new Date().getTime();
+    const eventPassed = startT < currentT;
+    return !eventPassed && !e.click ? (
+      <RejectButton
+        id={e.participantId}
+        onClick={(e) => {
+          handleRejectClick(eventId, e.target.id);
+          e.target.textContent = "已婉拒";
+          e.target.disabled = true;
+          e.target.style.opacity = "0.6";
+          disableOtherButton(e);
+        }}
+      >
+        婉拒報名
+      </RejectButton>
+    ) : (
+      <RejectButton disabled style={{ opacity: "0.6" }}>
+        婉拒報名
+      </RejectButton>
+    );
+  };
+
+  const disableOtherButton = (e) => {
+    let updatedApplicants = applicants.map((applicant) => {
+      if (applicant.participantId === e.target.id) {
+        applicant.click = true;
+      }
+      console.log(applicant);
+      return applicant;
+    });
+    console.log(updatedApplicants);
+    setApplicants([...updatedApplicants]);
   };
 
   return (
@@ -184,7 +258,11 @@ function WaitingList() {
       <Title>志工活動申請</Title>
       <Events>
         {applicants.map((applicant, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
+          <Col
+            className="p-0 m-1"
+            style={{ minWidth: "200px", maxWidth: "200px" }}
+            key={index}
+          >
             <Card style={{ height: "100%" }}>
               <Card.Body style={styles.cardBody}>
                 <EventInfo>
@@ -197,22 +275,17 @@ function WaitingList() {
                   </Card.Text>
                 </EventInfo>
                 <ButtonsContainer>
-                  <ConfirmButton
-                    onClick={(e) => {
-                      handleConfirmClick(eventId, applicant.participantId);
-                      e.target.textContent = "已確認";
-                    }}
-                  >
-                    確認報名
-                  </ConfirmButton>
-                  <Button
+                  {renderConfirmButton(applicant)}
+                  {renderRejectButton(applicant)}
+
+                  {/* <RejectButton
                     onClick={(e) => {
                       handleRejectClick(eventId, applicant.participantId);
                       e.target.textContent = "已拒絕";
                     }}
                   >
                     婉拒報名
-                  </Button>
+                  </RejectButton> */}
                 </ButtonsContainer>
               </Card.Body>
             </Card>
