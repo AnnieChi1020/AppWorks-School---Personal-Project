@@ -134,7 +134,7 @@ function EditEvent() {
     eventAddress: "",
   });
 
-  const [address, setAddress] = useState({ city: "", address: "" });
+  const [address, setAddress] = useState("");
 
   const [tags, setTags] = useState([
     { name: "社會福利", id: "社會福利", select: false },
@@ -143,24 +143,24 @@ function EditEvent() {
     { name: "生態保護", id: "生態保護", select: false },
   ]);
 
-  const cityArray = [
-    "台北市",
-    "新北市",
-    "桃園市",
-    "新竹市",
-    "新竹縣",
-    "苗栗縣",
-    "台中市",
-    "彰化縣",
-    "雲林縣",
-    "嘉義縣",
-    "台南市",
-    "高雄市",
-    "屏東縣",
-    "宜蘭縣",
-    "花蓮縣",
-    "台東縣",
-  ];
+  // const cityArray = [
+  //   "台北市",
+  //   "新北市",
+  //   "桃園市",
+  //   "新竹市",
+  //   "新竹縣",
+  //   "苗栗縣",
+  //   "台中市",
+  //   "彰化縣",
+  //   "雲林縣",
+  //   "嘉義縣",
+  //   "台南市",
+  //   "高雄市",
+  //   "屏東縣",
+  //   "宜蘭縣",
+  //   "花蓮縣",
+  //   "台東縣",
+  // ];
 
   const getCurrentEventInfo = async () => {
     let eventInfo = await getEventInfo(eventId);
@@ -174,20 +174,20 @@ function EditEvent() {
       time: getReformatedTime(eventInfo.endTime.toDate()),
     };
 
-    const addressText = () => {
-      const addressComponents = eventInfo.eventAddress.address_components;
-      let addressText = "";
-      for (let i = addressComponents.length - 4; i > -1; i--) {
-        addressText += addressComponents[i].short_name;
-      }
-      return addressText;
-    };
+    // const addressText = () => {
+    //   const addressComponents = eventInfo.eventAddress.address_components;
+    //   let addressText = "";
+    //   for (let i = addressComponents.length - 4; i > -1; i--) {
+    //     addressText += addressComponents[i].short_name;
+    //   }
+    //   return addressText;
+    // };
 
-    const addressCity = () => {
-      const addressComponents = eventInfo.eventAddress.address_components;
-      const location = addressComponents.length - 3;
-      return addressComponents[location].short_name;
-    };
+    // const addressCity = () => {
+    //   const addressComponents = eventInfo.eventAddress.address_components;
+    //   const location = addressComponents.length - 3;
+    //   return addressComponents[location].short_name;
+    // };
 
     // const reformatedAddress = {
     //   city: addressCity(),
@@ -215,7 +215,8 @@ function EditEvent() {
           : { ...tag }
       )
     );
-    setAddress({ ...address, city: addressCity(), address: addressText() });
+    setAddress(eventInfo.eventAddress.formatted_address);
+    console.log(eventInfo.eventAddress.formatted_address);
   };
 
   useEffect(() => {
@@ -263,9 +264,9 @@ function EditEvent() {
     return `${reformatHours()}:${reformatMinutes()}`;
   };
 
-  const getGeopoint = (city, address) => {
+  const getGeopoint = (address) => {
     return fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${address}&key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18`
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18`
     )
       .then((res) => res.json())
       .then((result) => {
@@ -320,11 +321,6 @@ function EditEvent() {
     );
   };
 
-  useEffect(() => {
-    console.log(address.city);
-    console.log(event);
-  }, [event]);
-
   const getSelectedTags = (tags) => {
     let selectedTags = [];
     tags.forEach((tag) => {
@@ -338,13 +334,13 @@ function EditEvent() {
     setEvent({ ...event, eventTags: selectedTags });
   }, [tags]);
 
-  const handleCityChange = (e) => {
-    setAddress({ ...address, city: e.target.value, address: "" });
-    document.querySelector("#formEventAddress").value = "";
-  };
+  // const handleCityChange = (e) => {
+  //   setAddress({ ...address, city: e.target.value, address: "" });
+  //   document.querySelector("#formEventAddress").value = "";
+  // };
 
   const handleLocationChange = (e) => {
-    setAddress({ ...address, address: e.target.value });
+    setAddress(e.target.value);
   };
 
   // useEffect(() => {
@@ -360,10 +356,7 @@ function EditEvent() {
       updatedEventDetail.eventCoverImage = imageUrl;
     }
 
-    updatedEventDetail.eventAddress = await getGeopoint(
-      address.city,
-      address.address
-    );
+    updatedEventDetail.eventAddress = await getGeopoint(address);
 
     updatedEventDetail.startTime = new Date(
       event.startTime.date + " " + event.startTime.time
@@ -377,7 +370,7 @@ function EditEvent() {
     await updateEvent(event.eventId, updatedEventDetail);
 
     alert("已更新志工活動資訊");
-    history.goBack();
+    history.push("/profile");
   };
 
   return (
@@ -471,7 +464,7 @@ function EditEvent() {
           </Form.Group>
           <Form.Group>
             <Row>
-              <Col className="col-12 col-sm-3 pr-sm-0">
+              {/* <Col className="col-12 col-sm-3 pr-sm-0">
                 <Form.Group controlId="formEventCity">
                   <Form.Label>活動縣市</Form.Label>
                   <Form.Control
@@ -484,13 +477,13 @@ function EditEvent() {
                     ))}
                   </Form.Control>
                 </Form.Group>
-              </Col>
-              <Col className="col-12 col-sm-9 ">
+              </Col> */}
+              <Col>
                 <Form.Group className="pl-0" controlId="formEventAddress">
                   <Form.Label>地址</Form.Label>
                   <Form.Control
                     tyle="input"
-                    defaultValue={address.address}
+                    defaultValue={address}
                     onChange={(e) => handleLocationChange(e)}
                   />
                 </Form.Group>
@@ -500,7 +493,7 @@ function EditEvent() {
           <Form.Group>
             <Map
               src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
-    &q=${address.city}+${address.address}`}
+    &q=${address}`}
             ></Map>
           </Form.Group>
           <Form.Group controlId="formEventCoverImage">

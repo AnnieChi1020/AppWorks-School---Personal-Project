@@ -47,10 +47,14 @@ const CreateEventContainer = styled.div`
   margin-top: 120px;
   margin-bottom: 100px;
   flex-direction: column;
-  padding: 10px 20px;
+  padding: 30px 30px;
   background-color: white;
   border-radius: 8px;
   border: solid 1px #979797;
+  @media (max-width: 720px) {
+    width: 90%;
+    padding: 20px 20px;
+  }
 `;
 
 const Event = styled.div`
@@ -62,21 +66,27 @@ const Event = styled.div`
 const EventTitle = styled.div`
   font-size: 20px;
   line-height: 24px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 15px;
   color: rgba(0, 0, 0, 0.6);
   font-weight: 600;
+  @media (max-width: 720px) {
+    font-size: 18px;
+  }
 `;
 
 const EventInfo = styled.div`
-  font-size: 1rem;
-  line-height: 24px;
-  margin-bottom: 0.5rem;
+  font-size: 14px;
+  line-height: 18px;
+  margin-bottom: 5px;
   color: rgba(0, 0, 0, 0.6);
+  @media (max-width: 720px) {
+    font-size: 12px;
+  }
 `;
 
 const EventImage = styled.img`
   width: 100%;
-  height: 20vw;
+  height: 25vw;
   max-height: 300px;
   object-fit: cover;
   border-radius: 10px;
@@ -95,6 +105,11 @@ const Button = styled.button`
   margin-left: calc(50% - 75px);
   margin-top: 40px;
   margin-bottom: 20px;
+  @media (max-width: 540px) {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+  }
 `;
 
 function EventResult() {
@@ -165,10 +180,10 @@ function EventResult() {
     // setFiles(imageArray);
   };
 
-  const uploadImage = async () => {
+  const uploadImage = async (files) => {
     let imageArray = [];
-    for (let i = 0; i < fileArray.length; i++) {
-      let imageFile = fileArray[i];
+    for (let i = 0; i < files.length; i++) {
+      let imageFile = files[i];
       const url = await getImageURL(imageFile);
       imageArray.push(url);
     }
@@ -179,20 +194,43 @@ function EventResult() {
   useEffect(() => {}, []);
 
   const handelClickSubmit = async () => {
-    const eventData = await getEventInfo(eventId);
-    const imageUrl = await uploadImage(fileArray);
-    eventData.resultContent = result;
-    eventData.resultImage = imageUrl;
-    await updateEvent(eventId, eventData);
-    alert("已上傳活動成果");
-    history.goBack();
+    // const eventData = await getEventInfo(eventId);
+    // const imageUrl = await uploadImage(fileArray);
+    // eventData.resultContent = result;
+    // eventData.resultImage = imageUrl;
+    // await updateEvent(eventId, eventData);
+    // alert("已上傳活動成果");
+    // history.goBack();
+  };
+
+  const [validated, setValidated] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const inputs = event.currentTarget;
+    setValidated(true);
+
+    if (inputs.checkValidity() === true) {
+      const eventData = await getEventInfo(eventId);
+      const imageUrl = await uploadImage(inputs.images.files);
+      eventData.resultContent = inputs.result.value;
+      eventData.resultImage = imageUrl;
+      console.log(eventData);
+      await updateEvent(eventId, eventData);
+      alert("已上傳活動成果");
+      history.push("/profile");
+    }
+
+    // console.log(inputs.result.value);
+    // console.log(inputs.images.files);
   };
 
   return (
     <Container className="container-xl mb-5">
       <Background></Background>
       <Mask></Mask>
-      <CreateEventContainer className=" p-5">
+      <CreateEventContainer>
         <Event>
           <EventImage src={eventInfo.image}></EventImage>
           <EventTitle>{eventInfo.title}</EventTitle>
@@ -201,26 +239,49 @@ function EventResult() {
           </EventInfo>
           <EventInfo>{eventInfo.address}</EventInfo>
         </Event>
-        <Form.Group>
-          <Form.Label>活動成果說明</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            onChange={(e) => resultChanged(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>上傳活動圖片 (至少3張)</Form.Label>
-          <Form>
-            <Form.File id="formcheck-api-regular">
-              <Form.File.Input
-                multiple="multiple"
-                onChange={(e) => fileChange(e)}
-              />
-            </Form.File>
-          </Form>
-        </Form.Group>
-        <Button onClick={handelClickSubmit}>送出成果資料</Button>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+          <Form.Group controlId="result">
+            <Form.Label>活動成果說明</Form.Label>
+            <Form.Control
+              as="textarea"
+              type="text"
+              required
+              className="mb-1"
+              rows={3}
+              onChange={(e) => resultChanged(e.target.value)}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請填寫活動成果
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="images">
+            <Form.Label>上傳活動圖片 (至少3張)</Form.Label>
+            <Form.Control
+              type="file"
+              multiple="multiple"
+              required
+              onChange={(e) => fileChange(e)}
+            ></Form.Control>
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請選擇活動照片
+            </Form.Control.Feedback>
+            {/* <Form>
+              <Form.File id="formcheck-api-regular">
+                <Form.File.Input
+                  multiple="multiple"
+                  onChange={(e) => fileChange(e)}
+                />
+              </Form.File>
+            </Form> */}
+          </Form.Group>
+          <Button type="submit">送出成果資料</Button>
+        </Form>
       </CreateEventContainer>
     </Container>
   );

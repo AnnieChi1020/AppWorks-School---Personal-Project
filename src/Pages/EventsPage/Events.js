@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getEvents, getEventsByTags } from "../../utils/firebase.js";
+import { getEvents } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
-import { Col, Card, DropdownButton, Dropdown } from "react-bootstrap";
+import { Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
@@ -34,12 +34,12 @@ const Filter = styled.div`
   }
 `;
 
-const Buttons = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-`;
+// const Buttons = styled.div`
+//   width: 100%;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-end;
+// `;
 
 const Tags = styled.div`
   margin-top: 0px;
@@ -169,18 +169,18 @@ const EventTitle = styled.div`
   }
 `;
 
-const Button = styled.button`
-  width: 120px;
-  height: 35px;
-  background-color: #0085ca;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  line-height: 20px;
-  margin-left: 20px;
-  cursor: pointer;
-`;
+// const Button = styled.button`
+//   width: 120px;
+//   height: 35px;
+//   background-color: #0085ca;
+//   color: white;
+//   border: none;
+//   border-radius: 5px;
+//   font-size: 16px;
+//   line-height: 20px;
+//   margin-left: 20px;
+//   cursor: pointer;
+// `;
 
 const ClearButton = styled.button`
   width: 140px;

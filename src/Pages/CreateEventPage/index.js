@@ -112,9 +112,9 @@ const Button = styled.button`
 function CreateEvent() {
   const dispatch = useDispatch();
   const hosterId = useSelector((state) => state.isLogged.userId);
-  const createEventData = useSelector((state) => state.createEvent);
+  // const createEventData = useSelector((state) => state.createEvent);
 
-  const [file, setFile] = useState(null);
+  // const [file, setFile] = useState(null);
 
   const getCurrentDate = () => {
     const currentYear = new Date().getFullYear();
@@ -157,14 +157,14 @@ function CreateEvent() {
     return `${currentHours()}:${currentMinutes()}`;
   };
 
-  const [startTime, setStartTime] = useState({
-    date: getCurrentDate(),
-    time: getCurrentTime(),
-  });
-  const [endTime, setEndTime] = useState({
-    date: getCurrentDate(),
-    time: getCurrentTime(),
-  });
+  // const [startTime, setStartTime] = useState({
+  //   date: getCurrentDate(),
+  //   time: getCurrentTime(),
+  // });
+  // const [endTime, setEndTime] = useState({
+  //   date: getCurrentDate(),
+  //   time: getCurrentTime(),
+  // });
 
   // const [address, setAddress] = useState("{
   //   city: "台北市",
@@ -180,24 +180,24 @@ function CreateEvent() {
     { name: "生態保護", id: "生態保護", select: false },
   ]);
 
-  const cityArray = [
-    "台北市",
-    "新北市",
-    "桃園市",
-    "新竹市",
-    "新竹縣",
-    "苗栗縣",
-    "台中市",
-    "彰化縣",
-    "雲林縣",
-    "嘉義縣",
-    "台南市",
-    "高雄市",
-    "屏東縣",
-    "宜蘭縣",
-    "花蓮縣",
-    "台東縣",
-  ];
+  // const cityArray = [
+  //   "台北市",
+  //   "新北市",
+  //   "桃園市",
+  //   "新竹市",
+  //   "新竹縣",
+  //   "苗栗縣",
+  //   "台中市",
+  //   "彰化縣",
+  //   "雲林縣",
+  //   "嘉義縣",
+  //   "台南市",
+  //   "高雄市",
+  //   "屏東縣",
+  //   "宜蘭縣",
+  //   "花蓮縣",
+  //   "台東縣",
+  // ];
 
   const getGeopoint = async (address) => {
     let location;
@@ -282,21 +282,21 @@ function CreateEvent() {
     console.log(getGeopoint(address));
   }, [address]);
 
-  async function handelClickSubmit() {
-    const imageUrl = await getImageURL(file);
-    const newEventRef = createNewDoc();
-    await dispatch({ type: "ADD_HOSTERID", data: hosterId });
-    await dispatch({ type: "ADD_ID", data: newEventRef.id });
-    await dispatch({ type: "ADD_COVERIMAGE", data: imageUrl });
+  // async function handelClickSubmit() {
+  //   const imageUrl = await getImageURL(file);
+  //   const newEventRef = createNewDoc();
+  //   await dispatch({ type: "ADD_HOSTERID", data: hosterId });
+  //   await dispatch({ type: "ADD_ID", data: newEventRef.id });
+  //   await dispatch({ type: "ADD_COVERIMAGE", data: imageUrl });
 
-    const eventDetail = createEventData;
-    eventDetail.hosterId = hosterId;
-    eventDetail.eventId = newEventRef.id;
-    eventDetail.eventCoverImage = imageUrl;
-    await postEventInfo(newEventRef, eventDetail);
-    alert("已創建志工活動");
-    history.push("/events");
-  }
+  //   const eventDetail = createEventData;
+  //   eventDetail.hosterId = hosterId;
+  //   eventDetail.eventId = newEventRef.id;
+  //   eventDetail.eventCoverImage = imageUrl;
+  //   await postEventInfo(newEventRef, eventDetail);
+  //   alert("已創建志工活動");
+  //   history.push("/events");
+  // }
 
   const constructEventData = async (inputs) => {
     const imageUrl = await getImageURL(inputs.coverImage.files[0]);
