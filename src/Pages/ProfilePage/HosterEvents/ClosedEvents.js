@@ -70,6 +70,17 @@ const Button = styled.button`
   background-color: #ebedef66;
 `;
 
+const ResultButton = styled.button`
+  width: 120px;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 8px;
+  margin-right: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #ebedef66;
+`;
+
 const NoEventText = styled.div`
   width: 100px;
   font-size: 16px;
@@ -138,6 +149,18 @@ function ClosedEvents() {
     history.push(`/events/${e}`);
   };
 
+  const renderResultButton = (event) => {
+    return !event.resultContent ? (
+      <ResultButton onClick={() => handleResultClick(event.eventId)}>
+        分享活動成果
+      </ResultButton>
+    ) : (
+      <ResultButton disabled style={{ opacity: ".9" }}>
+        已分享活動成果
+      </ResultButton>
+    );
+  };
+
   return (
     <EventsContainer>
       <Events>
@@ -169,9 +192,10 @@ function ClosedEvents() {
                   <Button onClick={() => handleParticipantClick(event.eventId)}>
                     管理參加者
                   </Button>
-                  <Button onClick={() => handleResultClick(event.eventId)}>
+                  {renderResultButton(event)}
+                  {/* <Button onClick={() => handleResultClick(event.eventId)}>
                     分享活動成果
-                  </Button>
+                  </Button> */}
                 </ManageEventContainer>
               </Card.Body>
             </Card>
