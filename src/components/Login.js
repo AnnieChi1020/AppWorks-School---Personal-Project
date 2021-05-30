@@ -28,23 +28,21 @@ const HeaderActive = styled.div`
   font-size: 20px;
   text-align: center;
   padding-bottom: 10px;
-  border-bottom: 2px solid #1190cb;
-  color: #1190cb;
   font-weight: 600;
 `;
 
 const ButtonContainer = styled.div`
   width: 100%;
   margin: 0 auto;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
 `;
 
 const SwitchButton = styled.button`
   width: 100%;
   height: 30px;
   margin-top: 20px;
-  margin: 20px 5px 0 10px;
   border-radius: 8px;
   border: solid 1px #dee2e6;
   padding: 0 10px;
@@ -54,7 +52,6 @@ const SubmitButton = styled.button`
   width: 100%;
   height: 30px;
   margin-top: 20px;
-  margin: 20px 10px 0 5px;
   border-radius: 8px;
   border: solid 1px #dee2e6;
   padding: 0 10px;
@@ -79,7 +76,6 @@ const styles = {
 };
 
 function Login() {
-  const [show, setShow] = useState(true);
   const loginModal = useSelector((state) => state.modal.login);
 
   const handleClose = () => dispatch({ type: "LOGIN", data: false });
@@ -94,26 +90,25 @@ function Login() {
     address: "",
   });
   const dispatch = useDispatch();
-  // const logStatus = useSelector((state) => state.isLogged);
 
-  const constructUserData = (userId) => {
+  const constructUserData = (userId, email, name) => {
     let userData = {
       id: userId,
       role: 0,
-      userEmail: signupInfo.email,
-      userName: signupInfo.name,
+      userEmail: email,
+      userName: name,
       userPhoto: "",
     };
     return userData;
   };
 
-  const constructHosterData = (userId) => {
+  const constructHosterData = (userId, email, name, phone) => {
     let hosterData = {
       id: userId,
       role: 1,
-      orgEmail: signupInfo.email,
-      orgName: signupInfo.name,
-      orgContact: signupInfo.phone,
+      orgEmail: email,
+      orgName: name,
+      orgContact: phone,
       orgPhoto: "",
     };
     return hosterData;
@@ -133,19 +128,24 @@ function Login() {
     setIdentity(e.target.id);
   };
 
-  const handleSignupButton = async () => {
-    const signupMessage = await createUserAuth(
-      signupInfo.email,
-      signupInfo.password
-    );
+  const signup = async (inputs) => {
+    const email = inputs.email.value;
+    const password = inputs.password.value;
+    const name = inputs.name.value;
+    const signupMessage = await createUserAuth(email, password);
     if (signupMessage === "auth/email-already-in-use") {
       alert("此Email已被註冊");
     } else {
       const userId = signupMessage;
       let userData;
       identity === "user"
-        ? (userData = constructUserData(userId))
-        : (userData = constructHosterData(userId));
+        ? (userData = constructUserData(userId, email, name))
+        : (userData = constructHosterData(
+            userId,
+            email,
+            name,
+            inputs.phone.value
+          ));
       await addNewUserInfo(userId, userData);
 
       dispatch({ type: "SIGN_IN", data: true });
@@ -160,11 +160,10 @@ function Login() {
     }
   };
 
-  const handleLoginButton = async () => {
-    const loginMessage = await userSignIn(
-      signupInfo.email,
-      signupInfo.password
-    );
+  const login = async (inputs) => {
+    const email = inputs.email.value;
+    const password = inputs.password.value;
+    const loginMessage = await userSignIn(email, password);
     if (loginMessage === "auth/user-not-found") {
       alert("尚未註冊喔");
     } else if (loginMessage === "auth/wrong-password") {
@@ -195,150 +194,258 @@ function Login() {
     }
   };
 
+  const [validated, setValidated] = useState(false);
+
+  const handleLoginSubmit = async (event) => {
+    const inputs = event.currentTarget;
+    event.preventDefault();
+    event.stopPropagation();
+    setValidated(true);
+    if (inputs.checkValidity() === true) {
+      login(inputs);
+    }
+  };
+
+  const handleSignupSubmit = async (event) => {
+    const inputs = event.currentTarget;
+    event.preventDefault();
+    event.stopPropagation();
+
+    setValidated(true);
+    if (inputs.checkValidity() === true) {
+      signup(inputs);
+    }
+  };
+
+  const renderModalHeader = () => {
+    return identity === "user" && action === "login" ? (
+      <Modal.Header style={styles.modalHeader} className="mx-2 pb-0">
+        <HeaderActive
+          id={"user"}
+          style={{ borderBottom: "2px solid #1190cb", color: "#1190cb" }}
+          onClick={(e) => handleIdentityChange(e)}
+        >
+          志工登入
+        </HeaderActive>
+        <Header id={"organization"} onClick={(e) => handleIdentityChange(e)}>
+          機構登入
+        </Header>
+      </Modal.Header>
+    ) : identity === "user" ? (
+      <Modal.Header style={styles.modalHeader} className="mx-2 pb-0">
+        <HeaderActive
+          id={"user"}
+          style={{ borderBottom: "2px solid #1190cb", color: "#1190cb" }}
+          onClick={(e) => handleIdentityChange(e)}
+        >
+          志工註冊
+        </HeaderActive>
+        <Header id={"organization"} onClick={(e) => handleIdentityChange(e)}>
+          機構註冊
+        </Header>
+      </Modal.Header>
+    ) : action === "login" ? (
+      <Modal.Header style={styles.modalHeader} className="mx-2 pb-0">
+        <Header id={"user"} onClick={(e) => handleIdentityChange(e)}>
+          志工登入
+        </Header>
+        <HeaderActive
+          id={"organization"}
+          onClick={(e) => handleIdentityChange(e)}
+          style={{ borderBottom: "2px solid #3E7054", color: "#3E7054" }}
+        >
+          機構登入
+        </HeaderActive>
+      </Modal.Header>
+    ) : (
+      <Modal.Header style={styles.modalHeader} className="mx-2 pb-0">
+        <Header id={"user"} onClick={(e) => handleIdentityChange(e)}>
+          志工註冊
+        </Header>
+        <HeaderActive
+          id={"organization"}
+          onClick={(e) => handleIdentityChange(e)}
+          style={{ borderBottom: "2px solid #3E7054", color: "#3E7054" }}
+        >
+          機構註冊
+        </HeaderActive>
+      </Modal.Header>
+    );
+  };
+
+  const userLogin = () => {
+    return (
+      <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
+        <Form.Group controlId="email">
+          <Form.Control type="email" placeholder="Email" required />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入正確的eamil
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Control type="password" placeholder="密碼" required />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入密碼
+          </Form.Control.Feedback>
+        </Form.Group>
+        <ButtonContainer>
+          <SwitchButton id="signup" onClick={(e) => handleActionChange(e)}>
+            立即註冊
+          </SwitchButton>
+          <SubmitButton type="submit">登入</SubmitButton>
+        </ButtonContainer>
+      </Form>
+    );
+  };
+
+  const organizationLogin = () => {
+    return (
+      <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
+        <Form.Group controlId="email">
+          <Form.Control type="email" placeholder="Email" required />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入正確的eamil
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Control type="password" placeholder="密碼" required />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入密碼
+          </Form.Control.Feedback>
+        </Form.Group>
+        <ButtonContainer>
+          <SwitchButton id="signup" onClick={(e) => handleActionChange(e)}>
+            立即註冊
+          </SwitchButton>
+          <SubmitButton type="submit" style={{ backgroundColor: "#3E7054" }}>
+            登入
+          </SubmitButton>
+        </ButtonContainer>
+      </Form>
+    );
+  };
+
+  const userSignup = () => {
+    return (
+      <Form noValidate validated={validated} onSubmit={handleSignupSubmit}>
+        <Form.Group controlId="name">
+          <Form.Control
+            type="name"
+            placeholder="姓名"
+            className="mb-1"
+            required
+          />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入姓名
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="email">
+          <Form.Control
+            type="email"
+            placeholder="Email"
+            className="mb-1"
+            required
+          />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入正確的email
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Control
+            type="password"
+            placeholder="密碼"
+            className="mb-1"
+            required
+          />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入密碼
+          </Form.Control.Feedback>
+        </Form.Group>
+        <ButtonContainer>
+          <SwitchButton id="login" onClick={(e) => handleActionChange(e)}>
+            立即登入
+          </SwitchButton>
+          <SubmitButton type="submit">註冊</SubmitButton>
+        </ButtonContainer>
+      </Form>
+    );
+  };
+
+  const organizationSignup = () => {
+    return (
+      <Form noValidate validated={validated} onSubmit={handleSignupSubmit}>
+        <Form.Group controlId="name">
+          <Form.Control
+            type="name"
+            placeholder="機構名稱"
+            className="mb-1"
+            required
+          />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入機構名稱
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="email">
+          <Form.Control
+            type="email"
+            placeholder="Email"
+            className="mb-1"
+            required
+          />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入正確的email
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Control
+            type="password"
+            placeholder="密碼"
+            className="mb-1"
+            required
+          />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入密碼
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="phone">
+          <Form.Control
+            type="number"
+            placeholder="連絡電話"
+            className="mb-1"
+            required
+          />
+          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
+            請輸入連絡電話
+          </Form.Control.Feedback>
+        </Form.Group>
+        <ButtonContainer>
+          <SwitchButton id="login" onClick={(e) => handleActionChange(e)}>
+            立即登入
+          </SwitchButton>
+          <SubmitButton type="submit">註冊</SubmitButton>
+        </ButtonContainer>
+      </Form>
+    );
+  };
+
   return (
     <Wrapper>
-      <Modal show={loginModal} onHide={handleClose} style={styles.modal}>
-        {identity === "user" && action === "login" ? (
-          <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
-            <HeaderActive id={"user"} onClick={(e) => handleIdentityChange(e)}>
-              志工登入
-            </HeaderActive>
-            <Header
-              id={"organization"}
-              onClick={(e) => handleIdentityChange(e)}
-            >
-              機構登入
-            </Header>
-          </Modal.Header>
-        ) : identity === "user" ? (
-          <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
-            <HeaderActive id={"user"} onClick={(e) => handleIdentityChange(e)}>
-              志工註冊
-            </HeaderActive>
-            <Header
-              id={"organization"}
-              onClick={(e) => handleIdentityChange(e)}
-            >
-              機構註冊
-            </Header>
-          </Modal.Header>
-        ) : action === "login" ? (
-          <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
-            <Header id={"user"} onClick={(e) => handleIdentityChange(e)}>
-              志工登入
-            </Header>
-            <HeaderActive
-              id={"organization"}
-              onClick={(e) => handleIdentityChange(e)}
-            >
-              機構登入
-            </HeaderActive>
-          </Modal.Header>
-        ) : (
-          <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
-            <Header id={"user"} onClick={(e) => handleIdentityChange(e)}>
-              志工註冊
-            </Header>
-            <HeaderActive
-              id={"organization"}
-              onClick={(e) => handleIdentityChange(e)}
-            >
-              機構註冊
-            </HeaderActive>
-          </Modal.Header>
-        )}
-        <Modal.Body className="mx-5 py-4">
-          {action === "login" ? (
-            <Form>
-              <Form.Group controlId="email">
-                <Form.Control
-                  type="email"
-                  placeholder="Email"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-              <Form.Group controlId="password">
-                <Form.Control
-                  type="password"
-                  placeholder="密碼"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-            </Form>
-          ) : identity === "user" ? (
-            <Form>
-              <Form.Group controlId="name">
-                <Form.Control
-                  type="name"
-                  placeholder="姓名"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-              <Form.Group controlId="email">
-                <Form.Control
-                  type="email"
-                  placeholder="Email"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-              <Form.Group controlId="password">
-                <Form.Control
-                  type="password"
-                  placeholder="密碼"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-            </Form>
-          ) : (
-            <Form>
-              <Form.Group controlId="name">
-                <Form.Control
-                  type="name"
-                  placeholder="機構名稱"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-              <Form.Group controlId="email">
-                <Form.Control
-                  type="email"
-                  placeholder="Email"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-              <Form.Group controlId="password">
-                <Form.Control
-                  type="password"
-                  placeholder="密碼"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-              <Form.Group controlId="phone">
-                <Form.Control
-                  type="password"
-                  placeholder="連絡電話"
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-            </Form>
-          )}
+      <Modal
+        show={loginModal}
+        onHide={handleClose}
+        style={styles.modal}
+        size="sm"
+      >
+        {renderModalHeader()}
+        <Modal.Body className="mx-2 py-4">
+          {action === "login" && identity === "user"
+            ? userLogin()
+            : action === "login" && identity === "organization"
+            ? organizationLogin()
+            : identity === "user"
+            ? userSignup()
+            : organizationSignup()}
         </Modal.Body>
-        <Modal.Footer className="mx-5 mb-4 pt-0" style={styles.modalFooter}>
-          {action === "login" ? (
-            <ButtonContainer>
-              <SwitchButton id="signup" onClick={(e) => handleActionChange(e)}>
-                立即註冊
-              </SwitchButton>
-              <SubmitButton onClick={handleLoginButton}>登入</SubmitButton>
-            </ButtonContainer>
-          ) : (
-            <ButtonContainer>
-              <SwitchButton id="login" onClick={(e) => handleActionChange(e)}>
-                立即登入
-              </SwitchButton>
-              <SubmitButton onClick={handleSignupButton}>註冊</SubmitButton>
-            </ButtonContainer>
-          )}
-        </Modal.Footer>
       </Modal>
     </Wrapper>
   );
