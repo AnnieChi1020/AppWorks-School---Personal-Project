@@ -126,7 +126,6 @@ function WaitingList() {
   const eventId = id;
 
   const [applicants, setApplicants] = useState([]);
-  const [click, setClick] = useState(false);
 
   const getApplicantsData = async () => {
     let applicantsArray = [];

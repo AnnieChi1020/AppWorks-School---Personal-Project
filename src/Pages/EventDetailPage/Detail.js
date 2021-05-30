@@ -220,10 +220,19 @@ function EventDetail() {
     orgContact: "",
   });
 
+  const checkEventPassed = (event) => {
+    const startT = event.startTime.seconds * 1000;
+    const currentT = new Date().getTime();
+    const eventPassed = startT < currentT;
+    return eventPassed;
+  };
+
   const getEventDetail = async () => {
     const data = await getEventInfo(eventId);
     const hosterInfo = await getUserProfile(data.hosterId);
     console.log(hosterInfo);
+    const passed = checkEventPassed(data);
+    console.log(passed);
     const address = data.eventAddress.formatted_address;
     const startDate = data.startTime.toDate().toLocaleDateString();
     const startTime = data.startTime.toDate().toLocaleTimeString("en-US", {
@@ -251,6 +260,7 @@ function EventDetail() {
       orgName: hosterInfo.orgName,
       orgEmail: hosterInfo.orgEmail,
       orgContact: hosterInfo.orgContact,
+      passed: passed,
     });
   };
 
@@ -272,6 +282,16 @@ function EventDetail() {
     alert("已送出報名資訊");
     const inputs = document.querySelectorAll("input");
     inputs.forEach((e) => (e.value = ""));
+  };
+
+  const renderButton = (e) => {
+    return !e.passed ? (
+      <Button onClick={handleShow}>我要報名</Button>
+    ) : (
+      <Button disabled style={{ opacity: ".6" }}>
+        報名已截止
+      </Button>
+    );
   };
 
   return (
@@ -323,7 +343,8 @@ function EventDetail() {
               <EventText>{event.orgContact}</EventText>
             </SubtitleTextContainer>
           </SubtitleContainer>
-          <Button onClick={handleShow}>我要報名</Button>
+          {renderButton(event)}
+          {/* <Button onClick={handleShow}>我要報名</Button> */}
           <MapContainer>
             <MapTitle>志工活動地圖</MapTitle>
           </MapContainer>
