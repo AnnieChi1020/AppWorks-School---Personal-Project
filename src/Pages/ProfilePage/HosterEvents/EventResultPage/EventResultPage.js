@@ -221,9 +221,6 @@ function EventResult() {
       alert("已上傳活動成果");
       history.push("/profile");
     }
-
-    // console.log(inputs.result.value);
-    // console.log(inputs.images.files);
   };
 
   return (

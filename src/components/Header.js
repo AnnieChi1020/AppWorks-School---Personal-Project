@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import Login from "./Login.js";
 import logo from "../images/logo.png";
 import menu from "../images/menu.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -96,6 +96,10 @@ function Header() {
   const [click, setClick] = useState(false);
   const isLogged = useSelector((state) => state.isLogged.isLogged);
   const userRole = useSelector((state) => state.isLogged.userRole);
+  const loginModal = useSelector((state) => state.modal.login);
+
+  const dispatch = useDispatch();
+
   const history = useHistory();
 
   const handleLogoClick = () => {
@@ -119,7 +123,13 @@ function Header() {
   };
 
   const handleLoginClick = () => {
-    click === false ? setClick(true) : setClick(false);
+    loginModal === false
+      ? dispatch({ type: "LOGIN", data: true })
+      : dispatch({ type: "LOGIN", data: false });
+  };
+
+  const renderLoginModal = () => {
+    return loginModal ? <Login></Login> : <div />;
   };
 
   return (
@@ -144,7 +154,7 @@ function Header() {
           </MenuContainer>
         </NavContent>
       </HeaderContent>
-      {click ? <Login></Login> : <div />}
+      {renderLoginModal()}
     </Container>
   );
 }

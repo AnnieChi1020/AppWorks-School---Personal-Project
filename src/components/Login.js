@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   createUserAuth,
   userSignIn,
@@ -80,9 +80,9 @@ const styles = {
 
 function Login() {
   const [show, setShow] = useState(true);
+  const loginModal = useSelector((state) => state.modal.login);
 
-  const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
+  const handleClose = () => dispatch({ type: "LOGIN", data: false });
 
   const [action, setAction] = useState("login");
   const [identity, setIdentity] = useState("user");
@@ -156,6 +156,7 @@ function Login() {
         : dispatch({ type: "GET_USERROLE", data: 1 });
 
       alert("已註冊成功");
+      dispatch({ type: "LOGIN", data: false });
     }
   };
 
@@ -178,11 +179,13 @@ function Login() {
           dispatch({ type: "GET_USERID", data: userId });
           dispatch({ type: "GET_USERROLE", data: 0 });
           alert("已登入");
+          dispatch({ type: "LOGIN", data: false });
         } else if (identity === "organization" && userData.role === 1) {
           dispatch({ type: "SIGN_IN", data: true });
           dispatch({ type: "GET_USERID", data: userId });
           dispatch({ type: "GET_USERROLE", data: 1 });
           alert("已登入");
+          dispatch({ type: "LOGIN", data: false });
         } else if (identity === "user") {
           alert("請以機構身分登入");
         } else {
@@ -194,7 +197,7 @@ function Login() {
 
   return (
     <Wrapper>
-      <Modal show={show} onHide={handleClose} style={styles.modal}>
+      <Modal show={loginModal} onHide={handleClose} style={styles.modal}>
         {identity === "user" && action === "login" ? (
           <Modal.Header style={styles.modalHeader} className="mx-5 pb-0">
             <HeaderActive id={"user"} onClick={(e) => handleIdentityChange(e)}>
