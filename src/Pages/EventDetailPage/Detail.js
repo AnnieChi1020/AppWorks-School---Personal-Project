@@ -2,11 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import {
-  getEventInfo,
-  getUserProfile,
-  postParticipantInfo,
-} from "../../utils/firebase.js";
+import { getEventInfo, getUserProfile } from "../../utils/firebase.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClock,
@@ -296,7 +292,6 @@ function EventDetail() {
   // };
 
   const renderButton = (e) => {
-    
     return e.status === 0 ? (
       <Button onClick={handleShow}>我要報名</Button>
     ) : (

@@ -166,10 +166,12 @@ function CreateEvent() {
     time: getCurrentTime(),
   });
 
-  const [address, setAddress] = useState({
-    city: "台北市",
-    location: "",
-  });
+  // const [address, setAddress] = useState("{
+  //   city: "台北市",
+  //   location: "",
+  // }");
+
+  const [address, setAddress] = useState("台灣");
 
   const [tags, setTags] = useState([
     { name: "社會福利", id: "社會福利", select: false },
@@ -197,35 +199,37 @@ function CreateEvent() {
     "台東縣",
   ];
 
-  const getGeopoint = (city, address) => {
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${city},${address}&key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18`
+  const getGeopoint = async (address) => {
+    let location;
+    await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18`
     )
       .then((res) => res.json())
       .then((result) => {
-        dispatch({ type: "ADD_ADDRESS", data: result.results[0] });
+        location = result.results[0];
       });
+    return location;
   };
 
   let history = useHistory();
 
-  const handleStartTimeChange = (e) => {
-    setStartTime({ ...startTime, [e.target.type]: e.target.value });
-  };
+  // const handleStartTimeChange = (e) => {
+  //   setStartTime({ ...startTime, [e.target.type]: e.target.value });
+  // };
 
-  useEffect(() => {
-    const newStartTime = new Date(startTime.date + " " + startTime.time);
-    dispatch({ type: "ADD_STARTTIME", data: newStartTime });
-  }, [startTime]);
+  // useEffect(() => {
+  //   const newStartTime = new Date(startTime.date + " " + startTime.time);
+  //   dispatch({ type: "ADD_STARTTIME", data: newStartTime });
+  // }, [startTime]);
 
-  const handleEndTimeChange = (e) => {
-    setEndTime({ ...endTime, [e.target.type]: e.target.value });
-  };
+  // const handleEndTimeChange = (e) => {
+  //   setEndTime({ ...endTime, [e.target.type]: e.target.value });
+  // };
 
-  useEffect(() => {
-    const newEndTime = new Date(endTime.date + " " + endTime.time);
-    dispatch({ type: "ADD_ENDTIME", data: newEndTime });
-  }, [endTime]);
+  // useEffect(() => {
+  //   const newEndTime = new Date(endTime.date + " " + endTime.time);
+  //   dispatch({ type: "ADD_ENDTIME", data: newEndTime });
+  // }, [endTime]);
 
   const handleTagClick = (tag) => {
     let selectedId = tag.target.id;
@@ -242,7 +246,11 @@ function CreateEvent() {
 
   const getSelectedTags = (tags) => {
     let selectedTags = [];
-    tags.forEach((tag) => {});
+    tags.forEach((tag) => {
+      if (tag.select === true) {
+        selectedTags.push(tag.name);
+      }
+    });
     return selectedTags;
   };
 
@@ -251,22 +259,27 @@ function CreateEvent() {
     dispatch({ type: "ADD_TAGS", data: selectedTags });
   }, [tags]);
 
-  const handleInputChange = (e) => {
-    dispatch({ type: `${e.target.id}`, data: e.target.value });
-  };
+  // const handleInputChange = (e) => {
+  //   dispatch({ type: `${e.target.id}`, data: e.target.value });
+  // };
 
-  const handleCityChange = (e) => {
-    const city = e.target.value;
-    setAddress({ ...address, city: city });
-  };
+  // const handleCityChange = (e) => {
+  //   const city = e.target.value;
+  //   setAddress({ ...address, city: city });
+  // };
 
-  const handleLocationChange = (e) => {
-    const location = e.target.value;
-    setAddress({ ...address, location: location });
+  // const handleLocationChange = (e) => {
+  //   const location = e.target.value;
+  //   setAddress({ ...address, location: location });
+  // };
+
+  const handleAddressChange = (e) => {
+    const address = e.target.value;
+    setAddress(address);
   };
 
   useEffect(() => {
-    getGeopoint(address.city, address.location);
+    console.log(getGeopoint(address));
   }, [address]);
 
   async function handelClickSubmit() {
@@ -285,66 +298,152 @@ function CreateEvent() {
     history.push("/events");
   }
 
+  const constructEventData = async (inputs) => {
+    const imageUrl = await getImageURL(inputs.coverImage.files[0]);
+    const geopoint = await getGeopoint(address);
+    console.log(geopoint);
+    const newEventRef = createNewDoc();
+    console.log(imageUrl);
+    const eventData = {
+      eventId: newEventRef.id,
+      eventTitle: inputs.title.value,
+      eventContent: inputs.content.value,
+      eventAddress: geopoint,
+      eventCoverImage: imageUrl,
+      startTime: new Date(
+        inputs.startTime[0].value + " " + inputs.startTime[1].value
+      ),
+      endTime: new Date(
+        inputs.endTime[0].value + " " + inputs.endTime[1].value
+      ),
+      eventStatus: 0,
+      eventTags: getSelectedTags(tags),
+      hosterId: hosterId,
+      resultImage: [],
+      resultContent: "",
+    };
+    return { id: newEventRef, data: eventData };
+  };
+
+  const [validated, setValidated] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const inputs = event.currentTarget;
+    setValidated(true);
+
+    if (inputs.checkValidity() === true) {
+      const eventData = await constructEventData(inputs);
+      console.log(eventData);
+      await postEventInfo(eventData.id, eventData.data);
+      alert("已創建志工活動");
+      history.push("/events");
+    }
+  };
+
   return (
     <Container className="container-xl">
-      <Background/>
-      <Mask/>
+      <Background />
+      <Mask />
       <CreateEventContainer>
-        <Form className="px-0 py-3 p-md-4">
-          <Form.Group>
+        <Form
+          className="px-0 py-3 p-md-4"
+          noValidate
+          validated={validated}
+          onSubmit={handleSubmit}
+        >
+          <Form.Group controlId="title">
             <Form.Label>活動名稱</Form.Label>
-            <Form.Control
-              type="input"
-              id="ADD_TITLE"
-              onChange={(e) => handleInputChange(e)}
-            />
+            <Form.Control type="text" required className="mb-1" />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入活動名稱
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="content">
             <Form.Label>活動內容</Form.Label>
             <Form.Control
               as="textarea"
+              type="text"
               rows={3}
-              id="ADD_CONTENT"
-              onChange={(e) => handleInputChange(e)}
+              required
+              className="mb-1"
             />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入活動內容
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="startTime">
             <Row>
               <Col>
                 <Form.Label>開始日期</Form.Label>
                 <Form.Control
                   type="date"
-                  defaultValue={startTime.date}
-                  onChange={(e) => handleStartTimeChange(e)}
+                  required
+                  defaultValue={getCurrentDate()}
+                  className="mb-1"
                 />
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ position: "inherit" }}
+                >
+                  請提供開始日期
+                </Form.Control.Feedback>
               </Col>
               <Col>
                 <Form.Label>時間</Form.Label>
                 <Form.Control
                   type="time"
-                  defaultValue={startTime.time}
-                  onChange={(e) => handleStartTimeChange(e)}
+                  required
+                  defaultValue={getCurrentTime()}
+                  className="mb-1"
                 />
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ position: "inherit" }}
+                >
+                  請提供開始時間
+                </Form.Control.Feedback>
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="endTime">
             <Row>
               <Col>
                 <Form.Label>結束日期</Form.Label>
                 <Form.Control
                   type="date"
-                  defaultValue={endTime.date}
-                  onChange={(e) => handleEndTimeChange(e)}
+                  required
+                  defaultValue={getCurrentDate()}
+                  className="mb-1"
                 />
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ position: "inherit" }}
+                >
+                  請提供結束日期
+                </Form.Control.Feedback>
               </Col>
               <Col>
                 <Form.Label>時間</Form.Label>
                 <Form.Control
                   type="time"
-                  defaultValue={endTime.time}
-                  onChange={(e) => handleEndTimeChange(e)}
+                  required
+                  defaultValue={getCurrentTime()}
+                  className="mb-1"
                 />
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ position: "inherit" }}
+                >
+                  請提供結束時間
+                </Form.Control.Feedback>
               </Col>
             </Row>
           </Form.Group>
@@ -373,7 +472,7 @@ function CreateEvent() {
             </Tags>
           </Form.Group>
           <Form.Group>
-            <Row>
+            {/* <Row>
               <Col className="col-12 col-sm-3 pr-sm-0">
                 <Form.Group controlId="formEventCity">
                   <Form.Label>活動縣市</Form.Label>
@@ -389,33 +488,42 @@ function CreateEvent() {
                 </Form.Group>
               </Col>
               <Col className="col-12 col-sm-9 ">
-                <Form.Group className="pl-0" controlId="formEventAddress">
-                  <Form.Label>地址</Form.Label>
-                  <Form.Control
-                    tyle="input"
-                    onChange={(e) => handleLocationChange(e)}
-                  />
-                </Form.Group>
+                <Form.Group className="pl-0" controlId="formEventAddress"> */}
+            <Form.Label>地址</Form.Label>
+            <Form.Control
+              type="text"
+              required
+              onChange={(e) => handleAddressChange(e)}
+              className="mb-1"
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請提供活動地址
+            </Form.Control.Feedback>
+            {/* </Form.Group>
               </Col>
-            </Row>
+            </Row> */}
           </Form.Group>
           <Form.Group>
             <Map
               src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
-    &q=${address.city}+${address.location}`}
+    &q=${address}`}
             ></Map>
           </Form.Group>
-          <Form.Group controlId="formEventCoverImage">
+          <Form.Group controlId="coverImage">
             <Form.Label>上傳活動封面</Form.Label>
-            <Form>
-              <Form.File id="formcheck-api-regular">
-                <Form.File.Input onChange={(e) => setFile(e.target.files[0])} />
-              </Form.File>
-            </Form>
+            <Form.Control type="file" required className="mb-1" />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請選擇封面圖片
+            </Form.Control.Feedback>
+            <Form></Form>
           </Form.Group>
-          <Button type="button" onClick={handelClickSubmit}>
-            創建活動
-          </Button>
+          <Button type="submit">創建活動</Button>
         </Form>
       </CreateEventContainer>
     </Container>
