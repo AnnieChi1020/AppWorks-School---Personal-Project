@@ -20,10 +20,10 @@ const Events = styled.div`
   grid-gap: 10px;
   margin: 0 auto;
   padding: 20px 0;
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     grid-template-columns: 1fr 1fr;
   }
-  @media (max-width: 576px) {
+  @media (max-width: 760px) {
     grid-template-columns: 1fr;
   }
 `;
