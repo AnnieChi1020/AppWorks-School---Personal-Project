@@ -202,7 +202,10 @@ function EventDetail() {
   let { id } = useParams();
   let eventId = id;
   const logStatus = useSelector((state) => state.isLogged);
-  const signupData = useSelector((state) => state.signup);
+  // const signupData = useSelector((state) => state.signup);
+  const signupModal = useSelector((state) => state.modal.signup);
+
+  console.log(signupModal);
 
   const dispatch = useDispatch();
 
@@ -269,24 +272,31 @@ function EventDetail() {
     getEventDetail();
   }, []);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const [show, setShow] = useState(false);
+  const handleClose = () => dispatch({ type: "SIGNUP", data: false });
+  const handleShow = () => {
+    console.log(logStatus);
+    if (logStatus.userRole === 0) {
+      dispatch({ type: "SIGNUP", data: true });
+    } else {
+      alert("請先登入志工帳號");
+    }
+  };
 
   useEffect(() => {
     dispatch({ type: "ADD_USERID", data: logStatus.userId });
   }, []);
 
-  const handleSubmitClick = async () => {
-    console.log(signupData);
-    await postParticipantInfo(eventId, logStatus.userId, signupData);
-    alert("已送出報名資訊");
-    const inputs = document.querySelectorAll("input");
-    inputs.forEach((e) => (e.value = ""));
-  };
+  // const handleSubmitClick = async () => {
+  //   console.log(signupData);
+  //   await postParticipantInfo(eventId, logStatus.userId, signupData);
+  //   alert("已送出報名資訊");
+  //   const inputs = document.querySelectorAll("input");
+  //   inputs.forEach((e) => (e.value = ""));
+  // };
 
   const renderButton = (e) => {
-    console.log(e);
+    
     return e.status === 0 ? (
       <Button onClick={handleShow}>我要報名</Button>
     ) : (
@@ -346,7 +356,6 @@ function EventDetail() {
             </SubtitleTextContainer>
           </SubtitleContainer>
           {renderButton(event)}
-          {/* <Button onClick={handleShow}>我要報名</Button> */}
           <MapContainer>
             <MapTitle>志工活動地圖</MapTitle>
           </MapContainer>
@@ -363,14 +372,14 @@ function EventDetail() {
         </HosterContainer> */}
       </EventMainContianer>
 
-      <Modal show={show} onHide={handleClose} style={styles.modal}>
+      <Modal show={signupModal} onHide={handleClose} style={styles.modal}>
         <Modal.Header style={styles.modalHeader} closeButton>
           {/* <Modal.Title style={styles.modalTitle}>請填寫個人資料</Modal.Title> */}
         </Modal.Header>
-        <Modal.Body style={styles.modalBody}>
+        <Modal.Body style={styles.modalBody} className="pb-5">
           <EventSignUp></EventSignUp>
         </Modal.Body>
-        <Modal.Footer style={styles.modalFooter}>
+        {/* <Modal.Footer style={styles.modalFooter}>
           <Button
             variant="primary"
             onClick={handleSubmitClick}
@@ -378,7 +387,7 @@ function EventDetail() {
           >
             送出報名資料
           </Button>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
     </Container>
   );
