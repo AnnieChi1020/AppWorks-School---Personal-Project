@@ -261,6 +261,7 @@ function EventDetail() {
       orgEmail: hosterInfo.orgEmail,
       orgContact: hosterInfo.orgContact,
       passed: passed,
+      status: data.eventStatus,
     });
   };
 
@@ -285,7 +286,8 @@ function EventDetail() {
   };
 
   const renderButton = (e) => {
-    return !e.passed ? (
+    console.log(e);
+    return e.status === 0 ? (
       <Button onClick={handleShow}>我要報名</Button>
     ) : (
       <Button disabled style={{ opacity: ".6" }}>
