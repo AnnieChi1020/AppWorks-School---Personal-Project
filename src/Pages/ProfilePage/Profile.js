@@ -33,9 +33,15 @@ const ProfileDiv = styled.div`
   align-items: center;
   justify-content: space-around;
   border-radius: 10px;
-  /* border-bottom: solid 1px #979797; */
   padding: 15px 8px;
   background-color: white;
+  @media (max-width: 760px) {
+    display: flex;
+    flex-direction: column;
+  }
+  @media (max-width: 540px) {
+    width: 100%;
+  }
 `;
 
 const LevelTextContainer = styled.div`
@@ -54,6 +60,9 @@ const LevelBarContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 15px;
+  @media (max-width: 760px) {
+    width: 100%;
+  }
 `;
 
 const LevelBarFirst = styled.div`
@@ -81,10 +90,17 @@ const ProfileImg = styled.img`
   margin: 20px;
   border-radius: 50%;
   background-color: grey;
+  @media (max-width: 760px) {
+    margin: 0 auto;
+  }
 `;
 
 const ProfileDetial = styled.div`
   margin: 10px;
+  @media (max-width: 760px) {
+    width: 60%;
+    min-width: 250px;
+  }
 `;
 
 const ProfileName = styled.div`

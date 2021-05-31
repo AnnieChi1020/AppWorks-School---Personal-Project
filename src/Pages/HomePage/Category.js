@@ -31,14 +31,18 @@ const MainContentContainer = styled.div`
 `;
 
 const CategoryHeader = styled.div`
-  width: 130px;
+  width: 100%;
   margin: 0 auto;
   margin-top: 30px;
-  padding: 10px 0;
-  font-size: 20px;
+  padding: 10px 20px;
+  font-size: 26px;
   font-weight: 600;
-  line-height: 24px;
-  border-bottom: 3px solid #1190cb;
+  line-height: 30px;
+  text-align: left;
+  /* border-bottom: 3px solid #1190cb; */
+  font-family: "Calisto MT", "Bookman Old Style", "Bookman", "Goudy Old Style",
+    Georgia, serif;
+  color: #404040;
 `;
 
 const CategoriesContainer = styled.div`
@@ -68,7 +72,7 @@ const CategoryCard = styled.div`
 const FrontCard = styled.div`
   width: 100%;
   height: 200px;
-  background-color: #89b2c461;
+  background-color: rgb(138 192 230);
   border-radius: 20px;
   padding: 50px;
   align-items: center;
@@ -143,7 +147,7 @@ function Category() {
   return (
     <CategoryContainer>
       <MainContentContainer>
-        <CategoryHeader>探索志工機會</CategoryHeader>
+        <CategoryHeader>Explore Opportunities</CategoryHeader>
         <CategoriesContainer>
           <CategoryCard onClick={(e) => handleCardClick("社會福利")}>
             <ReactCardFlipper width="100%" behavior="hover">

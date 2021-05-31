@@ -17,14 +17,18 @@ const MainContentContainer = styled.div`
 `;
 
 const TopEventsHeader = styled.div`
-  width: 130px;
+  width: 100%;
   margin: 0 auto;
   margin-top: 30px;
-  padding: 10px 0;
-  font-size: 20px;
+  padding: 10px 20px;
+  font-size: 26px;
   font-weight: 600;
-  line-height: 24px;
-  border-bottom: 3px solid #1190cb;
+  line-height: 30px;
+  text-align: left;
+  /* border-bottom: 3px solid #1190cb; */
+  font-family: "Calisto MT", "Bookman Old Style", "Bookman", "Goudy Old Style",
+    Georgia, serif;
+  color: #404040;
 `;
 
 const EventsContainer = styled.div`
@@ -109,7 +113,7 @@ function TopEvents() {
   return (
     <TopEventsContainer>
       <MainContentContainer>
-        <TopEventsHeader>熱門志工活動</TopEventsHeader>
+        <TopEventsHeader>Top Volunteer Events</TopEventsHeader>
         <EventsContainer>
           {topEvents.map((event, index) => (
             <Col className="p-1 h-100" style={styles.cardCol}>

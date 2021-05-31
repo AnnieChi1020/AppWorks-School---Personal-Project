@@ -9,9 +9,10 @@ const Container = styled.div`
 
 const FooterContent = styled.div`
   width: 100%;
-  height: 30px;
+  height: 50px;
   align-items: center;
-  background-color: #1190cb;
+  background-color: #87b3e5;
+  margin-top: 100px;
 `;
 
 function Header() {

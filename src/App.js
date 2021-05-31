@@ -10,7 +10,7 @@ import {
 import { useDispatch } from "react-redux";
 
 import Header from "./components/Header.js";
-// import Footer from "./components/Footer.js";
+import Footer from "./components/Footer.js";
 import HomePage from "./Pages/HomePage/index.js";
 import CreateEvent from "./Pages/CreateEventPage/index.js";
 import EventDetail from "./Pages/EventDetailPage/index.js";
@@ -81,7 +81,7 @@ function App() {
         <Route exact path="/profile/event-result/:id" component={EventResult} />
         <Route exact path="/profile/comments/:id" component={EventComments} />
         <Route exact path="/pastEvents" component={PastEvents} />
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </Router>
   );

@@ -116,16 +116,26 @@ function Login() {
 
   const handleActionChange = (e) => {
     setAction(e.target.id);
+    setValidated(false);
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+      input.value = "";
+    });
   };
 
-  const handleInputChange = (e) => {
-    setSignupInfo({ ...signupInfo, [e.target.id]: e.target.value });
-  };
+  // const handleInputChange = (e) => {
+  //   setSignupInfo({ ...signupInfo, [e.target.id]: e.target.value });
+  // };
 
   useEffect(() => {}, [signupInfo]);
 
   const handleIdentityChange = (e) => {
     setIdentity(e.target.id);
+    setValidated(false);
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+      input.value = "";
+    });
   };
 
   const signup = async (inputs) => {
@@ -277,13 +287,23 @@ function Login() {
     return (
       <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
         <Form.Group controlId="email">
-          <Form.Control type="email" placeholder="Email" required />
+          <Form.Control
+            type="email"
+            placeholder="Email"
+            className="mb-1"
+            required
+          />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入正確的eamil
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="password">
-          <Form.Control type="password" placeholder="密碼" required />
+          <Form.Control
+            type="password"
+            placeholder="密碼"
+            className="mb-1"
+            required
+          />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入密碼
           </Form.Control.Feedback>
@@ -302,13 +322,23 @@ function Login() {
     return (
       <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
         <Form.Group controlId="email">
-          <Form.Control type="email" placeholder="Email" required />
+          <Form.Control
+            type="email"
+            placeholder="Email"
+            className="mb-1"
+            required
+          />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入正確的eamil
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="password">
-          <Form.Control type="password" placeholder="密碼" required />
+          <Form.Control
+            type="password"
+            placeholder="密碼"
+            className="mb-1"
+            required
+          />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入密碼
           </Form.Control.Feedback>

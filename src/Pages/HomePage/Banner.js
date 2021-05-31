@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React from "react";
-import banner from "../../images/banner.png";
+import banner from "../../images/banner.svg";
 import { useHistory } from "react-router-dom";
 
 const BannerContainer = styled.div`
@@ -9,11 +9,13 @@ const BannerContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
-  background-color: #f9f8fd;
+  background: linear-gradient(130deg, #7f7fd5 0%, #86a8e7 50%, #91eae4 100%);
+
   position: absolute;
   top: 50px;
   left: 0;
-  padding-bottom: 50px;
+  padding-bottom: 25px;
+  padding-top: 25px;
   @media (max-width: 960px) {
     /* height: 700px; */
   }
@@ -52,8 +54,8 @@ const TextHeader = styled.div`
   font-weight: 700;
   line-height: 38px;
   padding: 5px 20px;
-  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
-    sans-serif;
+  font-family: "Jazz LET", "fantasy";
+  color: white;
   @media (max-width: 960px) {
     font-size: 30px;
     text-align: center;
@@ -73,6 +75,7 @@ const TextSubtitle = styled.div`
   padding: 5px 20px;
   font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
     sans-serif;
+  color: white;
   @media (max-width: 960px) {
     font-size: 16px;
     text-align: center;
@@ -106,9 +109,11 @@ const Button = styled.button`
   margin-left: 20px;
   padding: 5px 10px;
   border-radius: 10px;
-  background-color: #1190cb;
-  border: 1px solid white;
-  color: white;
+  background-color: white;
+  border: none;
+  font-weight: 600;
+  /* border: 1px solid white; */
+  color: #3c85b2;
   @media (max-width: 960px) {
     margin: 0 auto;
     margin-top: 20px;

@@ -14,6 +14,8 @@ const Container = styled.div`
   margin-top: 50px;
   display: flex;
   flex-direction: column;
+  min-height: calc(100vh - 200px);
+
 `;
 
 function HomePage() {
