@@ -36,12 +36,11 @@ const CategoryHeader = styled.div`
   margin-top: 30px;
   padding: 10px 20px;
   font-size: 26px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 30px;
   text-align: left;
   /* border-bottom: 3px solid #1190cb; */
-  font-family: "Calisto MT", "Bookman Old Style", "Bookman", "Goudy Old Style",
-    Georgia, serif;
+  font-family: "Noto Sans TC", sans-serif;
   color: #404040;
 `;
 

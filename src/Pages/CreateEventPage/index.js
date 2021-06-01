@@ -54,6 +54,7 @@ const CreateEventContainer = styled.div`
   background-color: white;
   border-radius: 8px;
   border: solid 1px #979797;
+  min-height: calc(100vh - 200px);
 `;
 
 const Tags = styled.div`

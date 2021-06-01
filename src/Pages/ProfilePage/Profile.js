@@ -16,28 +16,37 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
 
 const ProfileContainer = styled.div`
-  width: 100%;
+  width: 300px;
+  flex-grow: 0;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  margin-right: 20px;
+  @media (max-width: 960px) {
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 540px) {
+    width: 100%;
+  }
 `;
 
 const ProfileDiv = styled.div`
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
   padding: 10px 0;
-  display: grid;
-  grid-template-columns: 100px 1fr 100px;
+  display: flex;
+  /* grid-template-columns: 100px 1fr 100px; */
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
   border-radius: 10px;
   padding: 15px 8px;
   background-color: white;
-  @media (max-width: 760px) {
-    display: flex;
-    flex-direction: column;
+  @media (max-width: 960px) {
+    width: 100%;
   }
   @media (max-width: 540px) {
     width: 100%;
@@ -45,7 +54,7 @@ const ProfileDiv = styled.div`
 `;
 
 const LevelTextContainer = styled.div`
-  width: 90%;
+  width: 100%;
   font-size: 12px;
   line-height: 16px;
   display: grid;
@@ -55,7 +64,7 @@ const LevelTextContainer = styled.div`
 `;
 
 const LevelBarContainer = styled.div`
-  width: 90%;
+  width: 100%;
   height: 8px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -98,8 +107,8 @@ const ProfileImg = styled.img`
 const ProfileDetial = styled.div`
   margin: 10px;
   @media (max-width: 760px) {
-    width: 60%;
-    min-width: 250px;
+    width: 90%;
+    max-width: 300px;
   }
 `;
 
@@ -118,6 +127,8 @@ const ProfileText = styled.div`
 
 const Button = styled.button`
   margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
   border: 1px solid #ced4da;
   border-radius: 5px;
   background-color: #e9e9e9b3;

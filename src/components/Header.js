@@ -71,19 +71,26 @@ const NavItemsContainer = styled.div`
 `;
 
 const NavItem = styled.a`
-  color: black;
+  /* color: black; */
+  color: #cd6248;
   font-size: 16px;
+  font-weight: 500;
   line-height: 20px;
-  padding: 5px 0px;
+  padding: 5px 10px;
   margin-left: 30px;
   text-decoration: none;
   cursor: pointer;
   &:hover {
-    text-decoration: none;
+    /* text-decoration: none;
     color: black;
     font-weight: 600;
     color: #1190cb;
-    border-bottom: 2px solid #1190cb;
+    border-bottom: 2px solid #1190cb; */
+    line-height: 20px;
+    text-decoration: none;
+    background-color: #cd6248;
+    border-radius: 20px;
+    color: white;
   }
 `;
 
@@ -91,6 +98,19 @@ const Img = styled.img`
   height: 30px;
   cursor: pointer;
 `;
+
+const styles = {
+  loginBtn: {
+    textDecoration: "none",
+    backgroundColor: "#CD6248",
+    borderRadius: "20px",
+    color: "white",
+    fontSize: "16px",
+    fontWeight: "500",
+    lineHeight: "20px",
+    padding: "5px 10px",
+  },
+};
 
 function Header() {
   const [click, setClick] = useState(false);
@@ -137,16 +157,26 @@ function Header() {
       <HeaderContent>
         <NavContent>
           <LogoContainer>
-            <Img src={logo} onClick={handleLogoClick} />
+            <Img
+              // src={logo}
+              onClick={handleLogoClick}
+            />
           </LogoContainer>
           <NavItemsContainer>
             <NavItem onClick={handleEventsClick}>我要當志工</NavItem>
             <NavItem onClick={handleCreateEventClick}>招募志工</NavItem>
             <NavItem onClick={handlePastEventsClick}>活動成果</NavItem>
             {isLogged === true ? (
-              <NavItem onClick={handleProfileClick}>我的活動</NavItem>
+              <NavItem onClick={handleProfileClick} style={styles.loginBtn}>
+                我的活動
+              </NavItem>
             ) : (
-              <NavItem onClick={() => handleLoginClick()}>登入 / 註冊</NavItem>
+              <NavItem
+                onClick={() => handleLoginClick()}
+                style={styles.loginBtn}
+              >
+                登入 / 註冊
+              </NavItem>
             )}
           </NavItemsContainer>
           <MenuContainer>

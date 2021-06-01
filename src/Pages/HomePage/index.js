@@ -11,11 +11,9 @@ import TopEvents from "./TopEvents.js";
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 200px);
-
 `;
 
 function HomePage() {

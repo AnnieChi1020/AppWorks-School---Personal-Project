@@ -9,13 +9,13 @@ const BannerContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
-  background: linear-gradient(130deg, #7f7fd5 0%, #86a8e7 50%, #91eae4 100%);
-
+  /* background: linear-gradient(130deg, #7f7fd5 0%, #86a8e7 50%, #91eae4 100%); */
+  background-color: #f6efe6;
   position: absolute;
-  top: 50px;
+  /* top: 50px; */
   left: 0;
   padding-bottom: 25px;
-  padding-top: 25px;
+  padding-top: 75px;
   @media (max-width: 960px) {
     /* height: 700px; */
   }
@@ -51,11 +51,11 @@ const TextContainer = styled.div`
 const TextHeader = styled.div`
   width: 100%;
   font-size: 36px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 38px;
   padding: 5px 20px;
-  font-family: "Jazz LET", "fantasy";
-  color: white;
+  font-family: "Noto Sans TC", sans-serif;
+  color: #363636;
   @media (max-width: 960px) {
     font-size: 30px;
     text-align: center;
@@ -75,7 +75,7 @@ const TextSubtitle = styled.div`
   padding: 5px 20px;
   font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
     sans-serif;
-  color: white;
+  color: #898989;
   @media (max-width: 960px) {
     font-size: 16px;
     text-align: center;
@@ -109,11 +109,11 @@ const Button = styled.button`
   margin-left: 20px;
   padding: 5px 10px;
   border-radius: 10px;
-  background-color: white;
+  background-color: #cd6248;
   border: none;
   font-weight: 600;
   /* border: 1px solid white; */
-  color: #3c85b2;
+  color: white;
   @media (max-width: 960px) {
     margin: 0 auto;
     margin-top: 20px;

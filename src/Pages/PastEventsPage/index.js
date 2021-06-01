@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import PastEvents from "./PastEvents.js";
 import LeaderBoard from "./LeaderBoard.js";
+import whiteWall from "../../images/white_wall.jpg";
 
 // import { getHosterEvents } from "../../utils/firebase.js";
 // import { useHistory, useParams } from "react-router-dom";
@@ -16,7 +17,9 @@ const Container = styled.div`
 const Background = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #80808012;
+  background-image: url(${whiteWall});
+  filter: sepia(10%);
+  /* background-color: #80808012; */
   position: fixed;
   top: 0;
   left: 0;
@@ -25,9 +28,8 @@ const Background = styled.div`
 
 const MainContent = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 220px;
-  grid-column-gap: 10px;
+  display: flex;
+  flex-direction: row;
 `;
 
 function PastEventsPage() {

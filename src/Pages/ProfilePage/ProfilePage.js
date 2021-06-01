@@ -9,8 +9,13 @@ import { useHistory } from "react-router-dom";
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 80px;
   min-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: row;
+  @media (max-width: 960px) {
+    flex-direction: column;
+  }
 `;
 
 const Background = styled.div`

@@ -6,7 +6,8 @@ import CompletedEvents from "./CompletedEvents.js";
 import CancelledEvents from "./CancelledEvents.js";
 
 const TabsContainer = styled.div`
-  width: 90%;
+  width: 800px;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -14,6 +15,9 @@ const TabsContainer = styled.div`
   padding-bottom: 20px;
   border-radius: 10px;
   margin-bottom: 50px;
+  @media (max-width: 960px) {
+    width: 90%;
+  }
   @media (max-width: 540px) {
     width: 100%;
   }

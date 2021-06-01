@@ -40,6 +40,7 @@ const Container = styled.div`
   width: 100%;
   margin: 0 auto;
   margin-top: 0px;
+  min-height: calc(100vh - 200px);
 `;
 
 const CommentContainer = styled.div`
