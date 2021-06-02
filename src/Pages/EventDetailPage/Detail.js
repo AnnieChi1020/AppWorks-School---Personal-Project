@@ -1,11 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import {
-  getEventInfo,
-  getUserProfile,
-  postParticipantInfo,
-} from "../../utils/firebase.js";
+import { getEventInfo, getUserProfile } from "../../utils/firebase.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClock,
@@ -56,6 +53,10 @@ const Subtitle = styled.div`
   line-height: 20px;
   font-weight: 700;
   margin-bottom: 5px;
+  @media (max-width: 540px) {
+    font-size: 14px;
+    line-height: 20px;
+  }
 `;
 
 const SubtitleIconContainer = styled.div`
@@ -77,6 +78,12 @@ const EventTitle = styled.h2`
   margin-bottom: 15px;
   font-weight: 600;
   color: #3e3e3e;
+  @media (max-width: 540px) {
+    font-size: 20px;
+    line-height: 28px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
 `;
 
 const EventText = styled.h2`
@@ -85,44 +92,32 @@ const EventText = styled.h2`
   font-weight: 400;
   margin: 5px 0;
   color: #3e3e3e;
+  @media (max-width: 540px) {
+    font-size: 12px;
+    line-height: 18px;
+  }
 `;
 
-const HosterContainer = styled.div`
-  width: 250px;
-  margin-top: 20px;
-  margin-left: 20px;
-  border: solid 1px #979797;
-  border-radius: 20px;
-  padding: 20px;
-`;
-
-const HosterName = styled.div`
-  width: 100%;
-  font-size: 16px;
-  line-height: 20px;
-`;
-
-const HosterDetail = styled.div`
-  width: 100%;
-  font-size: 16px;
-  line-height: 20px;
-  margin-top: 10px;
-`;
-
-// const WorkContentContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   margin-top: 30px;
-//   position: relative;
+// const HosterContainer = styled.div`
+//   width: 250px;
+//   margin-top: 20px;
+//   margin-left: 20px;
+//   border: solid 1px #979797;
+//   border-radius: 20px;
+//   padding: 20px;
 // `;
 
-// const WorkContentTitle = styled.div`
-//   font-size: 18px;
-//   line-height: 22px;
+// const HosterName = styled.div`
 //   width: 100%;
-//   padding-bottom: 10px;
-//   border-bottom: 1px solid #b9b9b9;
-//   margin-bottom: 10px;
+//   font-size: 16px;
+//   line-height: 20px;
+// `;
+
+// const HosterDetail = styled.div`
+//   width: 100%;
+//   font-size: 16px;
+//   line-height: 20px;
+//   margin-top: 10px;
 // `;
 
 const MapContainer = styled.div`
@@ -139,6 +134,10 @@ const MapTitle = styled.div`
   padding-bottom: 10px;
   border-bottom: 1px solid #b9b9b9;
   margin-bottom: 10px;
+  @media (max-width: 540px) {
+    font-size: 16px;
+    line-height: 20px;
+  }
 `;
 
 const Map = styled.iframe`
@@ -157,6 +156,11 @@ const Button = styled.button`
   padding: 5px 10px;
   margin: 0 auto;
   margin-top: 20px;
+  @media (max-width: 540px) {
+    font-size: 14px;
+    line-height: 20px;
+    width: 100px;
+  }
 `;
 
 const styles = {
@@ -194,7 +198,10 @@ function EventDetail() {
   let { id } = useParams();
   let eventId = id;
   const logStatus = useSelector((state) => state.isLogged);
-  const signupData = useSelector((state) => state.signup);
+  // const signupData = useSelector((state) => state.signup);
+  const signupModal = useSelector((state) => state.modal.signup);
+
+  console.log(signupModal);
 
   const dispatch = useDispatch();
 
@@ -212,10 +219,19 @@ function EventDetail() {
     orgContact: "",
   });
 
+  const checkEventPassed = (event) => {
+    const startT = event.startTime.seconds * 1000;
+    const currentT = new Date().getTime();
+    const eventPassed = startT < currentT;
+    return eventPassed;
+  };
+
   const getEventDetail = async () => {
     const data = await getEventInfo(eventId);
     const hosterInfo = await getUserProfile(data.hosterId);
     console.log(hosterInfo);
+    const passed = checkEventPassed(data);
+    console.log(passed);
     const address = data.eventAddress.formatted_address;
     const startDate = data.startTime.toDate().toLocaleDateString();
     const startTime = data.startTime.toDate().toLocaleTimeString("en-US", {
@@ -243,6 +259,8 @@ function EventDetail() {
       orgName: hosterInfo.orgName,
       orgEmail: hosterInfo.orgEmail,
       orgContact: hosterInfo.orgContact,
+      passed: passed,
+      status: data.eventStatus,
     });
   };
 
@@ -250,20 +268,37 @@ function EventDetail() {
     getEventDetail();
   }, []);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const [show, setShow] = useState(false);
+  const handleClose = () => dispatch({ type: "SIGNUP", data: false });
+  const handleShow = () => {
+    console.log(logStatus);
+    if (logStatus.userRole === 0) {
+      dispatch({ type: "SIGNUP", data: true });
+    } else {
+      alert("請先登入志工帳號");
+    }
+  };
 
   useEffect(() => {
     dispatch({ type: "ADD_USERID", data: logStatus.userId });
   }, []);
 
-  const handleSubmitClick = async () => {
-    console.log(signupData);
-    await postParticipantInfo(eventId, logStatus.userId, signupData);
-    alert("已送出報名資訊");
-    const inputs = document.querySelectorAll("input");
-    inputs.forEach((e) => (e.value = ""));
+  // const handleSubmitClick = async () => {
+  //   console.log(signupData);
+  //   await postParticipantInfo(eventId, logStatus.userId, signupData);
+  //   alert("已送出報名資訊");
+  //   const inputs = document.querySelectorAll("input");
+  //   inputs.forEach((e) => (e.value = ""));
+  // };
+
+  const renderButton = (e) => {
+    return e.status === 0 ? (
+      <Button onClick={handleShow}>我要報名</Button>
+    ) : (
+      <Button disabled style={{ opacity: ".6" }}>
+        報名已截止
+      </Button>
+    );
   };
 
   return (
@@ -315,7 +350,7 @@ function EventDetail() {
               <EventText>{event.orgContact}</EventText>
             </SubtitleTextContainer>
           </SubtitleContainer>
-          <Button onClick={handleShow}>我要報名</Button>
+          {renderButton(event)}
           <MapContainer>
             <MapTitle>志工活動地圖</MapTitle>
           </MapContainer>
@@ -332,14 +367,14 @@ function EventDetail() {
         </HosterContainer> */}
       </EventMainContianer>
 
-      <Modal show={show} onHide={handleClose} style={styles.modal}>
+      <Modal show={signupModal} onHide={handleClose} style={styles.modal}>
         <Modal.Header style={styles.modalHeader} closeButton>
           {/* <Modal.Title style={styles.modalTitle}>請填寫個人資料</Modal.Title> */}
         </Modal.Header>
-        <Modal.Body style={styles.modalBody}>
+        <Modal.Body style={styles.modalBody} className="pb-5">
           <EventSignUp></EventSignUp>
         </Modal.Body>
-        <Modal.Footer style={styles.modalFooter}>
+        {/* <Modal.Footer style={styles.modalFooter}>
           <Button
             variant="primary"
             onClick={handleSubmitClick}
@@ -347,7 +382,7 @@ function EventDetail() {
           >
             送出報名資料
           </Button>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
     </Container>
   );

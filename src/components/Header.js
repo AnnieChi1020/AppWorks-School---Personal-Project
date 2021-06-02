@@ -1,15 +1,18 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
-import {
-  getEvents,
-  updateEvent,
-  checkAuthStatus,
-  getUserProfile,
-} from "../utils/firebase.js";
+import React, { useState } from "react";
+// import {
+//   getEvents,
+//   updateEvent,
+//   checkAuthStatus,
+//   getUserProfile,
+// } from "../utils/firebase.js";
 import Login from "./Login.js";
 import logo from "../images/logo.png";
-import { useSelector, useDispatch } from "react-redux";
+import menu from "../images/menu.svg";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   width: 100%;
@@ -37,26 +40,59 @@ const NavContent = styled.div`
   justify-content: space-between;
 `;
 
-const NavItems = styled.div`
+const MenuContainer = styled.div`
+  display: none;
+  @media (max-width: 720px) {
+    display: block;
+    font-size: 12px;
+    line-height: 16px;
+    color: green;
+    position: fixed;
+    z-index: 10;
+  }
+`;
+
+const LogoContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  @media (max-width: 720px) {
+    margin: 0 auto;
+  }
+`;
+
+const NavItemsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  @media (max-width: 720px) {
+    display: none;
+  }
 `;
 
 const NavItem = styled.a`
-  color: black;
+  /* color: black; */
+  display: flex;
+  align-items: center;
+  color: #cd6248;
   font-size: 16px;
+  font-weight: 500;
   line-height: 20px;
-  padding: 5px 0px;
+  padding: 5px 10px;
   margin-left: 30px;
   text-decoration: none;
   cursor: pointer;
+  border-radius: 30px;
   &:hover {
-    text-decoration: none;
+    /* text-decoration: none;
     color: black;
     font-weight: 600;
     color: #1190cb;
-    border-bottom: 2px solid #1190cb;
+    border-bottom: 2px solid #1190cb; */
+    line-height: 20px;
+    text-decoration: none;
+    background-color: #cd6248;
+    color: white;
   }
 `;
 
@@ -65,27 +101,28 @@ const Img = styled.img`
   cursor: pointer;
 `;
 
+const styles = {
+  loginBtn: {
+    textDecoration: "none",
+    backgroundColor: "#CD6248",
+    borderRadius: "30px",
+    color: "white",
+    fontSize: "16px",
+    fontWeight: "500",
+    lineHeight: "20px",
+    padding: "5px 10px",
+  },
+};
+
 function Header() {
   const [click, setClick] = useState(false);
   const isLogged = useSelector((state) => state.isLogged.isLogged);
   const userRole = useSelector((state) => state.isLogged.userRole);
+  const loginModal = useSelector((state) => state.modal.login);
+
   const dispatch = useDispatch();
 
   const history = useHistory();
-
-  const updatePassedEvent = async () => {
-    const activeEvents = await getEvents(0);
-    activeEvents.map((event) => {
-      const startT = event.startTime.seconds * 1000;
-      const currentT = new Date().getTime();
-      if (startT < currentT) {
-        event.eventStatus = 1;
-        updateEvent(event.eventId, event);
-      }
-      return true;
-    });
-  };
-  updatePassedEvent();
 
   const handleLogoClick = () => {
     history.push("/");
@@ -108,44 +145,48 @@ function Header() {
   };
 
   const handleLoginClick = () => {
-    click === false ? setClick(true) : setClick(false);
+    loginModal === false
+      ? dispatch({ type: "LOGIN", data: true })
+      : dispatch({ type: "LOGIN", data: false });
   };
 
-  const checkLoginStatus = async () => {
-    const userId = await checkAuthStatus();
-    const userProfile = await getUserProfile(userId);
-    if (userId) {
-      dispatch({ type: "SIGN_IN", data: true });
-      dispatch({ type: "GET_USERID", data: userId });
-      dispatch({ type: "GET_USERROLE", data: userProfile.role });
-    }
-    return;
+  const renderLoginModal = () => {
+    return loginModal ? <Login></Login> : <div />;
   };
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
 
   return (
     <Container>
       <HeaderContent>
-        <NavContent className="container-xl mb-5">
-          <NavItems>
-            <Img src={logo} onClick={handleLogoClick} />
-          </NavItems>
-          <NavItems>
+        <NavContent>
+          <LogoContainer>
+            <Img
+              // src={logo}
+              onClick={handleLogoClick}
+            />
+          </LogoContainer>
+          <NavItemsContainer>
             <NavItem onClick={handleEventsClick}>我要當志工</NavItem>
             <NavItem onClick={handleCreateEventClick}>招募志工</NavItem>
             <NavItem onClick={handlePastEventsClick}>活動成果</NavItem>
             {isLogged === true ? (
-              <NavItem onClick={handleProfileClick}>我的活動</NavItem>
+              <NavItem onClick={handleProfileClick} style={styles.loginBtn}>
+                我的活動
+              </NavItem>
             ) : (
-              <NavItem onClick={() => handleLoginClick()}>登入 / 註冊</NavItem>
+              <NavItem
+                onClick={() => handleLoginClick()}
+                style={styles.loginBtn}
+              >
+                登入 / 註冊
+              </NavItem>
             )}
-          </NavItems>
+          </NavItemsContainer>
+          <MenuContainer>
+            <Img src={menu} />
+          </MenuContainer>
         </NavContent>
       </HeaderContent>
-      {click ? <Login></Login> : <div />}
+      {renderLoginModal()}
     </Container>
   );
 }

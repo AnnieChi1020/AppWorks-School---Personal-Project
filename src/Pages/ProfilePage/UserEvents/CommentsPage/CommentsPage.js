@@ -7,11 +7,11 @@ import { useHistory } from "react-router-dom";
 import background from "../../../../images/background.jpg";
 import {
   getEventInfo,
-  getCurrentStatus,
-  updateNewStatus,
+  getParticipantInfo,
+  updateParticipantStatus,
 } from "../../../../utils/firebase.js";
-import { Form} from "react-bootstrap";
-import { useSelector, } from "react-redux";
+import { Form } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const Background = styled.div`
   width: 100%;
@@ -40,6 +40,7 @@ const Container = styled.div`
   width: 100%;
   margin: 0 auto;
   margin-top: 0px;
+  min-height: calc(100vh - 200px);
 `;
 
 const CommentContainer = styled.div`
@@ -53,19 +54,46 @@ const CommentContainer = styled.div`
   background-color: white;
   border-radius: 8px;
   border: solid 1px #979797;
+  @media (max-width: 760px) {
+    width: 95%;
+  }
 `;
 
 const Event = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+`;
+
+const EventTitle = styled.div`
+  font-size: 20px;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  @media (max-width: 760px) {
+    font-size: 16px;
+    line-height: 20px;
+  }
 `;
 
 const EventInfo = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   line-height: 24px;
   color: rgba(0, 0, 0, 0.6);
-  margin-top: 10px;
+  @media (max-width: 760px) {
+    font-size: 14px;
+    line-height: 18px;
+  }
+`;
+
+const FormLabel = styled.div`
+  margin-bottom: 0.5rem;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
 `;
 
 const SubmitButton = styled.button`
@@ -145,10 +173,10 @@ function Comments() {
 
   let history = useHistory();
   const handelClickSubmit = async () => {
-    const currentStatus = await getCurrentStatus(eventInfo.id, participantId);
+    const currentStatus = await getParticipantInfo(eventInfo.id, participantId);
     currentStatus.participantInfo.participantComment = comment;
     currentStatus.participantInfo.participantRating = rating;
-    await updateNewStatus(eventInfo.id, participantId, currentStatus);
+    await updateParticipantStatus(eventInfo.id, participantId, currentStatus);
     alert("已送出評價");
     history.goBack();
   };
@@ -159,27 +187,25 @@ function Comments() {
       <Mask></Mask>
       <CommentContainer>
         <Event>
-          <EventInfo>活動名稱 | {eventInfo.title}</EventInfo>
+          <EventTitle>{eventInfo.title}</EventTitle>
           <EventInfo>
-            活動時間 | {`${eventInfo.startTime} - ${eventInfo.endTime}`}
+            {`${eventInfo.startTime} - ${eventInfo.endTime}`}
           </EventInfo>
-          <EventInfo>活動地點 | {eventInfo.address}</EventInfo>
+          <EventInfo>{eventInfo.address}</EventInfo>
         </Event>
-
         <Form>
           <Form.Group>
-            <Form.Label>活動評分</Form.Label>
+            <FormLabel className="mb-0">活動評分</FormLabel>
             <ReactStars
               count={5}
               onChange={ratingChanged}
               size={24}
               height={"20px"}
               activeColor="#ffd700"
-              style={{ lineHeight: "1.5" }}
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>活動評價</Form.Label>
+            <FormLabel>活動評價</FormLabel>
             <Form.Control
               as="textarea"
               rows={3}

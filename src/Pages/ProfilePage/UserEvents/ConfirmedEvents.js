@@ -4,8 +4,8 @@ import styled from "styled-components";
 import {
   getUserEvents,
   getEventInfo,
-  getCurrentStatus,
-  updateNewStatus,
+  getParticipantInfo,
+  updateParticipantStatus,
 } from "../../../utils/firebase.js";
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
@@ -25,10 +25,10 @@ const Events = styled.div`
   grid-gap: 10px;
   margin: 0 auto;
   padding: 20px 0;
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     grid-template-columns: 1fr 1fr;
   }
-  @media (max-width: 576px) {
+  @media (max-width: 760px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -152,9 +152,9 @@ function UserConfirmedEvents() {
   };
 
   const handleCancelClick = async (eventId, userId) => {
-    let currentStatus = await getCurrentStatus(eventId, userId);
+    let currentStatus = await getParticipantInfo(eventId, userId);
     currentStatus.participantInfo.participantStatus = 9;
-    updateNewStatus(eventId, userId, currentStatus);
+    updateParticipantStatus(eventId, userId, currentStatus);
   };
 
   // const handleCommentClick = (id) => {

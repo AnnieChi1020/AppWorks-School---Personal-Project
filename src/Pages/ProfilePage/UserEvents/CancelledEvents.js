@@ -20,10 +20,10 @@ const Events = styled.div`
   grid-gap: 10px;
   margin: 0 auto;
   padding: 20px 0;
-  @media (max-width: 768px) {
+  @media (max-width: 960px) {
     grid-template-columns: 1fr 1fr;
   }
-  @media (max-width: 576px) {
+  @media (max-width: 760px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -92,19 +92,46 @@ const styles = {
 
 function UserCancelledEvents() {
   const [events, setEvents] = useState("");
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
   const userId = useSelector((state) => state.isLogged.userId);
 
-  const getApplyingEventsId = async () => {
+  const checkEventPassed = (event) => {
+    const startT = event.startTime.seconds * 1000;
+    const currentT = new Date().getTime();
+    const eventPassed = startT < currentT;
+    return eventPassed;
+  };
+
+  const getCancelledEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 9);
     return applyingEvents;
   };
 
+  const getApplyingEventsId = async () => {
+    const applyingEvents = await getUserEvents(userId, 0);
+    return applyingEvents;
+  };
+
   const getApplyingEventsInfo = async () => {
-    const eventIdArray = await getApplyingEventsId();
+    const applyingIdArray = await getApplyingEventsId();
     let eventInfoArray = [];
-    if (eventIdArray.length > 0) {
-      await eventIdArray.map(async (id) => {
+    await applyingIdArray.map(async (id) => {
+      const event = await getEventInfo(id);
+      console.log(event);
+      const eventPassed = checkEventPassed(event);
+      console.log(eventPassed);
+      if (eventPassed) {
+        event.passed = true;
+        eventInfoArray.push(event);
+        setEvents([eventInfoArray]);
+      }
+    });
+    const cancelledIdArray = await getCancelledEventsId();
+    if (cancelledIdArray.length > 0) {
+      await cancelledIdArray.map(async (id) => {
         const event = await getEventInfo(id);
         eventInfoArray.push(event);
         setEvents([eventInfoArray]);
@@ -156,7 +183,11 @@ function UserCancelledEvents() {
         {events[0].map((event, index) => (
           <Col className="p-0" style={styles.cardCol} key={index}>
             <Card style={{ height: "100%" }}>
-              <CurrentStatus>已取消報名</CurrentStatus>
+              {event.passed ? (
+                <CurrentStatus>未報名成功</CurrentStatus>
+              ) : (
+                <CurrentStatus>已取消報名</CurrentStatus>
+              )}
               <Card.Img
                 variant="top"
                 src={event.eventCoverImage}

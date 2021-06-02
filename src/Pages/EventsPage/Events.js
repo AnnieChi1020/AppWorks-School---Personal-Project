@@ -1,14 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getEvents, getEventsWithTag } from "../../utils/firebase.js";
+import { getEvents } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
-import { Col, Card, DropdownButton, Dropdown } from "react-bootstrap";
+import { Col, Card } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
+  padding-top: 20px;
 `;
 
 const FilterContainer = styled.div`
@@ -16,19 +19,39 @@ const FilterContainer = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 `;
 
-const Tags = styled.div`
+const Filter = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+// const Buttons = styled.div`
+//   width: 100%;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-end;
+// `;
+
+const Tags = styled.div`
   margin-top: 0px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  flex-grow: 0;
+  align-items: center;
 `;
 
 const Tag = styled.div`
+  width: 100px;
   font-size: 16px;
   line-height: 20px;
   padding: 5px 15px;
@@ -36,9 +59,17 @@ const Tag = styled.div`
   border-radius: 20px;
   margin-right: 5px;
   cursor: pointer;
+  text-align: center;
+  @media (max-width: 720px) {
+    width: 80px;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 5px 5px;
+  }
 `;
 
 const TagSelected = styled.div`
+  width: 100px;
   font-size: 16px;
   line-height: 20px;
   padding: 5px 15px;
@@ -48,6 +79,42 @@ const TagSelected = styled.div`
   background: #1190cb;
   color: white;
   cursor: pointer;
+  text-align: center;
+  @media (max-width: 720px) {
+    width: 80px;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 5px 5px;
+  }
+`;
+
+const SelectContainer = styled.div`
+  margin-left: 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  @media (max-width: 720px) {
+    width: 250px;
+    margin-top: 10px;
+    margin-left: 0px;
+  }
+`;
+
+const Selector = styled.select`
+  width: 120px;
+  height: 32px;
+  border: solid 1px #979797;
+  border-radius: 10px;
+  padding: 0 10px;
+  color: #4f4f4f;
+  font-size: 16px;
+
+  @media (max-width: 720px) {
+    height: 28px;
+    font-size: 14px;
+    line-height: 16px;
+  }
 `;
 
 const Events = styled.div`
@@ -102,6 +169,38 @@ const EventTitle = styled.div`
   }
 `;
 
+// const Button = styled.button`
+//   width: 120px;
+//   height: 35px;
+//   background-color: #0085ca;
+//   color: white;
+//   border: none;
+//   border-radius: 5px;
+//   font-size: 16px;
+//   line-height: 20px;
+//   margin-left: 20px;
+//   cursor: pointer;
+// `;
+
+const ClearButton = styled.button`
+  width: 140px;
+  height: 32px;
+  background-color: #97979740;
+  color: #3e3e3e;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  line-height: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  @media (max-width: 720px) {
+    width: 100px;
+    font-size: 14px;
+    line-height: 16px;
+    height: 28px;
+  }
+`;
+
 const styles = {
   cardImage: {
     objectFit: "cover",
@@ -111,13 +210,13 @@ const styles = {
 };
 
 function AllEvents() {
+  const [rawEvents, setRawEvents] = useState([]);
   const [events, setEvents] = useState([]);
-  const [tags, setTags] = useState([
-    { name: "社會福利", id: "社會福利", select: false },
-    { name: "文化教育", id: "文化教育", select: false },
-    { name: "環境保護", id: "環境保護", select: false },
-    { name: "生態保護", id: "生態保護", select: false },
-  ]);
+  const [filter, setFilter] = useState({
+    tag: "",
+    city: "",
+  });
+
   const cityArray = [
     "台北市",
     "新北市",
@@ -136,6 +235,9 @@ function AllEvents() {
     "花蓮縣",
     "台東縣",
   ];
+  const tagArray = ["社會福利", "文化教育", "環境保護", "生態保護"];
+  let selectedTag = useSelector((state) => state.filter.tag);
+  const dispatch = useDispatch();
 
   const getAllEvents = async () => {
     const newEvents = await getEvents(0);
@@ -145,6 +247,8 @@ function AllEvents() {
       event.eventAddress = getAdministrativeArea(event);
       return true;
     });
+
+    setRawEvents(newEvents);
     setEvents(newEvents);
   };
 
@@ -164,47 +268,66 @@ function AllEvents() {
 
   useEffect(() => {
     getAllEvents();
+    setFilter({ ...filter, tag: selectedTag });
   }, []);
+
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
   let history = useHistory();
   const handleEventClick = (id) => {
     history.push(`/events/${id}`);
   };
 
-  const handleTagClick = async (tag) => {
-    const selectedTag = tag.target.id;
-    setTags(
-      tags.map((tag) =>
-        tag.id === selectedTag && tag.select === false
-          ? { ...tag, select: true }
-          : tag.id === selectedTag && tag.select === true
-          ? { ...tag, select: false }
-          : { ...tag, select: false }
-      )
-    );
+  const handleTagClick = async (e) => {
+    const newTag = e.target.textContent;
+    if (newTag !== selectedTag) {
+      dispatch({ type: "ADD_TAG", data: newTag });
+      setFilter({ ...filter, tag: newTag });
+    } else {
+      dispatch({ type: "ADD_TAG", data: "" });
+      setFilter({ ...filter, tag: "" });
+    }
   };
 
-  const getEventsWithTagData = async () => {
-    let tagExist = false;
-    let selectedTag;
-    let eventData;
-    tags.forEach(async (tag) => {
-      if (tag.select === true) {
-        selectedTag = tag.id;
-        tagExist = true;
-      }
-      if (tagExist) {
-        eventData = await getEventsWithTag(selectedTag);
-        eventData.map((event) => {
-          event.startTime = reformatTimestamp(event.startTime);
-          event.endTime = reformatTimestamp(event.endTime);
-          event.eventAddress = getAdministrativeArea(event);
-          return true;
-        });
-        setEvents(eventData);
-      }
-    });
-    return;
+  const handleCitySelect = async (e) => {
+    console.log(e.target.value);
+    const newCity = e.target.value;
+    setFilter({ ...filter, city: newCity });
+  };
+
+  useEffect(() => {
+    console.log(filter);
+    getFilteredEvents(filter.tag, filter.city);
+  }, [filter.tag, filter.city]);
+
+  const getFilteredEvents = async (tag, city) => {
+    console.log(tag);
+    let eventArray = rawEvents;
+    console.log(rawEvents);
+    let filteredEvents = [];
+
+    if (tag && city) {
+      eventArray.forEach((event) => {
+        if (event.eventTags.includes(tag) && event.eventAddress.match(city)) {
+          filteredEvents.push(event);
+        }
+      });
+    } else if (tag) {
+      eventArray.forEach((event) => {
+        if (event.eventTags.includes(tag)) {
+          filteredEvents.push(event);
+        }
+      });
+    } else if (city) {
+      eventArray.forEach((event) => {
+        if (event.eventAddress.match(city)) {
+          filteredEvents.push(event);
+        }
+      });
+    }
+    setEvents(filteredEvents);
   };
 
   const getAdministrativeArea = (event) => {
@@ -217,75 +340,54 @@ function AllEvents() {
     return area;
   };
 
-  useEffect(() => {
-    getEventsWithTagData();
-  }, [tags]);
-
-  // const getTagName = (tagId) => {
-  //   let name;
-  //   const array = [
-  //     { name: "社會福利", id: "socialWelfare" },
-  //     { name: "文化教育", id: "cultureEducation" },
-  //     { name: "環境保護", id: "environment" },
-  //     { name: "生態保護", id: "conservation" },
-  //   ];
-  //   array.forEach((e) => {
-  //     if (tagId === e.id) {
-  //       name = e.name;
-  //     }
-  //   });
-  //   return name;
-  // };
-
-  const handleAreaChange = async (city) => {
-    let eventArray = [];
-    const events = await getEvents(0);
-    events.forEach((event) => {
-      if (event.eventAddress.formatted_address.match(city)) {
-        event.startTime = reformatTimestamp(event.startTime);
-        event.endTime = reformatTimestamp(event.endTime);
-        event.eventAddress = getAdministrativeArea(event);
-        eventArray.push(event);
-      }
-    });
-    setEvents(eventArray);
+  const handleClearButton = () => {
+    setEvents(rawEvents);
+    dispatch({ type: "ADD_TAG", data: "" });
+    dispatch({ type: "ADD_CITY", data: "" });
+    document.getElementById("citySelector").value = "default";
   };
+
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
   return (
     <Container>
       <FilterContainer>
-        <Tags>
-          {tags.map((tag, index) =>
-            tag.select === true ? (
-              <TagSelected
-                onClick={(e) => handleTagClick(e)}
-                id={tag.id}
-                key={index}
-              >
-                {tag.name}
-              </TagSelected>
-            ) : (
-              <Tag onClick={(e) => handleTagClick(e)} id={tag.id} key={index}>
-                {tag.name}
-              </Tag>
-            )
-          )}
-        </Tags>
-        <DropdownButton
-          variant="secondary"
-          id="dropdown-basic-button"
-          title="找尋所在地的活動"
-        >
-          {cityArray.map((city, index) => (
-            <Dropdown.Item
-              key={index}
-              eventKey={city}
-              onSelect={handleAreaChange}
+        <Filter>
+          <Tags>
+            {tagArray.map((tag, index) =>
+              selectedTag === tag ? (
+                <TagSelected onClick={(e) => handleTagClick(e)} key={index}>
+                  {tag}
+                </TagSelected>
+              ) : (
+                <Tag onClick={(e) => handleTagClick(e)} key={index}>
+                  {tag}
+                </Tag>
+              )
+            )}
+          </Tags>
+          <SelectContainer>
+            <Selector
+              id="citySelector"
+              data-default-value="default"
+              onChange={(e) => handleCitySelect(e)}
             >
-              {city}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
+              <option value="default" selected disabled hidden>
+                活動縣市
+              </option>
+              {cityArray.map((city, index) => (
+                <option value={city}>{city}</option>
+              ))}
+            </Selector>
+            <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
+          </SelectContainer>
+        </Filter>
+        {/* <Buttons>
+          <Button>搜尋活動</Button>
+          <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
+        </Buttons> */}
       </FilterContainer>
       <Events>
         {events.map((event, index) => (

@@ -6,10 +6,21 @@ import CompletedEvents from "./CompletedEvents.js";
 import CancelledEvents from "./CancelledEvents.js";
 
 const TabsContainer = styled.div`
-  width: 90%;
+  width: 800px;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  background-color: white;
+  padding-bottom: 20px;
+  border-radius: 10px;
+  margin-bottom: 50px;
+  @media (max-width: 960px) {
+    width: 90%;
+  }
+  @media (max-width: 540px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.div`
@@ -17,7 +28,7 @@ const Title = styled.div`
   font-size: 20px;
   line-height: 30px;
   margin: 0 auto;
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 20px;
   font-weight: bold;
 `;
@@ -38,6 +49,15 @@ const Tab = styled.div`
   border: 1px solid #ced4da;
   border-radius: 20px;
   cursor: pointer;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  @media (max-width: 540px) {
+    font-size: 14px;
+    line-height: 16px;
+    padding: 5px 10px;
+    margin-right: 5px;
+  }
 `;
 
 const TabActive = styled.div`
@@ -50,6 +70,12 @@ const TabActive = styled.div`
   background-color: #1190cb;
   color: white;
   cursor: pointer;
+  @media (max-width: 540px) {
+    font-size: 14px;
+    line-height: 16px;
+    padding: 5px 10px;
+    margin-right: 5px;
+  }
 `;
 
 function UserEvents() {
@@ -72,7 +98,6 @@ function UserEvents() {
     },
   ]);
 
-  // const userId = useSelector((state) => state.isLogged.userId);
   const [participateStatus, setParticipateStatus] = useState("申請中");
 
   const handleTabClick = (tabId) => {

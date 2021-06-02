@@ -1,51 +1,133 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getEventInfo, getEvents, getUserList } from "../../utils/firebase.js";
+import {
+  getEventInfo,
+  getEvents,
+  getParticipants,
+} from "../../utils/firebase.js";
 // import { useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import { Modal } from "react-bootstrap";
 
+const PastEventsContainer = styled.div`
+  width: calc(100% - 20px);
+  margin-top: 20px;
+  margin-right: 20px;
+  padding: 20px 20px;
+  border-radius: 10px;
+`;
+
+const PastEvent = styled.div`
+  width: 33%;
+  display: inline-block;
+  margin-top: 20px;
+  filter: sepia(50%);
+  & :before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    transition: all 0.35s;
+  }
+  & :hover {
+    filter: none;
+    transform: scale(1, 1) rotate(0deg) !important;
+    transition: all 0.35s;
+  }
+`;
+
 const Wrapper = styled.div`
-  width: 80%;
+  width: 100%;
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
-  margin: 0 auto;
-  margin-top: 20px;
-  padding: 10px 0;
+  justify-content: center;
+  & ${PastEvent}:nth-of-type(n) {
+    transform: scale(0.85, 0.85) rotate(0deg);
+    transition: all 0.35s;
+  }
+  & ${PastEvent}:nth-of-type(5n+1) {
+    transform: scale(0.85, 0.85) rotate(5deg);
+    transition: all 0.35s;
+  }
+  & ${PastEvent}:nth-of-type(5n+2) {
+    transform: scale(0.85, 0.85) rotate(-5deg);
+    transition: all 0.35s;
+  }
+  & ${PastEvent}:nth-of-type(5n+3) {
+    transform: scale(0.85, 0.85) rotate(3deg);
+    transition: all 0.35s;
+  }
+  & ${PastEvent}:nth-of-type(5n+4) {
+    transform: scale(0.85, 0.85) rotate(-3deg);
+    transition: all 0.35s;
+  }
+  & ${PastEvent}:hover {
+    filter: none;
+    transform: scale(1, 1) rotate(0deg) !important;
+    transition: all 0.35s;
+  }
 `;
 
-const Event = styled.div`
-  height: 15vw;
-  max-height: 200px;
-  min-width: 30%;
-  flex-grow: 1;
-  margin: 5px;
-  position: relative;
+const PolaroidImage = styled.img`
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
 `;
 
-const EventImage = styled.img`
-  max-height: 100%;
-  min-width: 100%;
-  object-fit: cover;
-  vertical-align: bottom;
-  cursor: pointer;
+const Polaroid = styled.div`
+  background-color: white;
+  padding: 1rem;
+  box-shadow: 0 0.2rem 1.2rem rgb(0, 0, 0, 0.2);
 `;
+
+const PolaroidCaption = styled.div`
+  font-size: 20px;
+  text-align: center;
+  line-height: 24px;
+  font-weight: 500;
+`;
+
+// const Event = styled.div`
+//   height: 15vw;
+//   max-height: 200px;
+//   min-width: 30%;
+//   flex-grow: 1;
+//   margin: 5px;
+//   position: relative;
+// `;
+
+// const EventContainer = styled.div`
+//   width: 300px;
+//   padding: 10px 10px 30px 10px;
+//   background-color: white;
+//   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
+//   border-radius: 3px;
+// `;
+
+// const EventImage = styled.img`
+//   max-height: 100%;
+//   min-width: 100%;
+//   object-fit: cover;
+//   vertical-align: bottom;
+//   cursor: pointer;
+//   border-radius: 5px;
+// `;
 
 // const EventTime = styled.div`
 //   font-size: 12px;
 //   margin-top: 5px;
 // `;
 
-const EventTitle = styled.div`
-  font-size: 16px;
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  color: white;
-  padding: 5px 10px;
-  background-color: #b3b3b35e;
-`;
+// const EventTitle = styled.div`
+//   font-size: 16px;
+//   position: absolute;
+//   bottom: 10px;
+//   right: 10px;
+//   color: white;
+//   padding: 5px 10px;
+//   background-color: #b3b3b35e;
+// `;
 
 const PastEventTitle = styled.div`
   font-size: 20px;
@@ -61,8 +143,8 @@ const PastEventImages = styled.div`
 `;
 
 const PastEventImage = styled.img`
-  height: 10vw;
-  max-height: 120px;
+  height: 15vw;
+  max-height: 150px;
   min-width: 40%;
   flex-grow: 1;
   margin: 5px;
@@ -179,7 +261,7 @@ function PastEvents() {
   };
 
   const getUserFeedbacks = async (id) => {
-    const userData = await getUserList(id, 1);
+    const userData = await getParticipants(id, 1);
     let currentFeedback = [];
     userData.map((e) => {
       if (e.participantInfo.participantRating !== 0) {
@@ -196,20 +278,32 @@ function PastEvents() {
 
   return (
     <div>
-      <Wrapper>
-        {events.map((event, index) => (
+      <PastEventsContainer>
+        <Wrapper>
+          {events.map((event, index) => (
+            <PastEvent>
+              <Polaroid>
+                <PolaroidImage
+                  src={event.image}
+                  onClick={() => handleEventClick(event.id)}
+                />
+                <PolaroidCaption>{event.title}</PolaroidCaption>
+              </Polaroid>
+            </PastEvent>
+          ))}
+          {/* {events.map((event, index) => (
           <Event key={index}>
             <EventImage
               src={event.image}
               onClick={() => handleEventClick(event.id)}
             ></EventImage>
-            {/* <EventTitle>{event.startTime}</EventTitle> */}
             <EventTitle>{event.title}</EventTitle>
           </Event>
-        ))}
-      </Wrapper>
+        ))} */}
+        </Wrapper>
+      </PastEventsContainer>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
           <Modal.Title className="pl-2">活動成果</Modal.Title>
         </Modal.Header>
@@ -261,7 +355,7 @@ function PastEvents() {
         </Modal.Footer>
       </Modal>
 
-      {/* <Wrapper>
+      {/* <PastEventsContainer>
         {eventResult && (
           <PastEvent>
             <PastEventImages>
@@ -301,7 +395,7 @@ function PastEvents() {
             </UserFeedbacks>
           </PastEvent>
         )}
-      </Wrapper> */}
+      </PastEventsContainer> */}
     </div>
   );
 }

@@ -7,7 +7,8 @@ import { useEffect } from "react";
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 70px;
+  margin-top: 50px;
+  min-height: calc(100vh - 200px);
 `;
 
 function EventsPage() {

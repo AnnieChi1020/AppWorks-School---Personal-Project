@@ -5,8 +5,8 @@ import {
   getHosterEvents,
   getEventInfo,
   updateEvent,
-  getUserList,
-  updateNewStatus,
+  getParticipants,
+  updateParticipantStatus,
 } from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -76,6 +76,15 @@ const Button = styled.button`
   background-color: #ebedef66;
 `;
 
+const NoEventText = styled.div`
+  width: 100px;
+  font-size: 16px;
+  line-height: 20px;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 80px;
+`;
+
 const styles = {
   cardImage: {
     objectFit: "cover",
@@ -124,16 +133,16 @@ function ActiveEvents() {
     const eventData = await getEventInfo(id);
     eventData.eventStatus = 9;
     updateEvent(id, eventData);
-    const applyingUserData = await getUserList(id, 0);
-    const confirmedUserData = await getUserList(id, 1);
+    const applyingUserData = await getParticipants(id, 0);
+    const confirmedUserData = await getParticipants(id, 1);
     applyingUserData.map((user) => {
       user.participantInfo.participantStatus = 9;
-      updateNewStatus(id, user.participantInfo.participantId, user);
+      updateParticipantStatus(id, user.participantInfo.participantId, user);
       return true;
     });
     confirmedUserData.map((user) => {
       user.participantInfo.participantStatus = 9;
-      updateNewStatus(id, user.participantInfo.participantId, user);
+      updateParticipantStatus(id, user.participantInfo.participantId, user);
       return true;
     });
     e.target.textContent = "已取消";
@@ -215,6 +224,7 @@ function ActiveEvents() {
           // </Event>
         ))}
       </Events>
+      {/* {events.length === 0 ? <NoEventText>沒有活動喔</NoEventText> : <div />} */}
     </EventsContainer>
   );
 }
