@@ -5,6 +5,12 @@ import { useHistory } from "react-router-dom";
 import background from "../../images/background.jpg";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
+import PlacesAutocomplete from "react-places-autocomplete";
+import {
+  geocodeByAddress,
+  geocodeByPlaceId,
+  getLatLng,
+} from "react-places-autocomplete";
 
 import {
   createNewDoc,
@@ -473,23 +479,6 @@ function CreateEvent() {
             </Tags>
           </Form.Group>
           <Form.Group>
-            {/* <Row>
-              <Col className="col-12 col-sm-3 pr-sm-0">
-                <Form.Group controlId="formEventCity">
-                  <Form.Label>活動縣市</Form.Label>
-                  <Form.Control
-                    as="select"
-                    defaultValue="選擇所在縣市"
-                    onChange={(e) => handleCityChange(e)}
-                  >
-                    {cityArray.map((city, cityId) => (
-                      <option key={cityId}>{city}</option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col className="col-12 col-sm-9 ">
-                <Form.Group className="pl-0" controlId="formEventAddress"> */}
             <Form.Label>地址</Form.Label>
             <Form.Control
               type="text"
@@ -503,9 +492,6 @@ function CreateEvent() {
             >
               請提供活動地址
             </Form.Control.Feedback>
-            {/* </Form.Group>
-              </Col>
-            </Row> */}
           </Form.Group>
           <Form.Group>
             <Map
@@ -524,6 +510,49 @@ function CreateEvent() {
             </Form.Control.Feedback>
             <Form></Form>
           </Form.Group>
+          {/* <PlacesAutocomplete
+          // value={this.state.address}
+          // onChange={this.handleChange}
+          // onSelect={this.handleSelect}
+          >
+            {({
+              getInputProps,
+              suggestions,
+              getSuggestionItemProps,
+              loading,
+            }) => (
+              <div>
+                <input
+                  {...getInputProps({
+                    placeholder: "Search Places ...",
+                    className: "location-search-input",
+                  })}
+                />
+                <div className="autocomplete-dropdown-container">
+                  {loading && <div>Loading...</div>}
+                  {suggestions.map((suggestion) => {
+                    const className = suggestion.active
+                      ? "suggestion-item--active"
+                      : "suggestion-item";
+                    // inline style for demonstration purpose
+                    const style = suggestion.active
+                      ? { backgroundColor: "#fafafa", cursor: "pointer" }
+                      : { backgroundColor: "#ffffff", cursor: "pointer" };
+                    return (
+                      <div
+                        {...getSuggestionItemProps(suggestion, {
+                          className,
+                          style,
+                        })}
+                      >
+                        <span>{suggestion.description}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </PlacesAutocomplete> */}
           <Button type="submit">創建活動</Button>
         </Form>
       </CreateEventContainer>

@@ -72,6 +72,8 @@ const NavItemsContainer = styled.div`
 
 const NavItem = styled.a`
   /* color: black; */
+  display: flex;
+  align-items: center;
   color: #cd6248;
   font-size: 16px;
   font-weight: 500;
@@ -80,6 +82,7 @@ const NavItem = styled.a`
   margin-left: 30px;
   text-decoration: none;
   cursor: pointer;
+  border-radius: 30px;
   &:hover {
     /* text-decoration: none;
     color: black;
@@ -89,7 +92,6 @@ const NavItem = styled.a`
     line-height: 20px;
     text-decoration: none;
     background-color: #cd6248;
-    border-radius: 20px;
     color: white;
   }
 `;
@@ -103,7 +105,7 @@ const styles = {
   loginBtn: {
     textDecoration: "none",
     backgroundColor: "#CD6248",
-    borderRadius: "20px",
+    borderRadius: "30px",
     color: "white",
     fontSize: "16px",
     fontWeight: "500",
