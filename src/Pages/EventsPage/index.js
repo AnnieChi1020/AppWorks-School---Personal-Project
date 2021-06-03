@@ -11,6 +11,16 @@ const Container = styled.div`
   min-height: calc(100vh - 200px);
 `;
 
+const Background = styled.div`
+  height: calc(100vh - 70px);
+  width: 100%;
+  background-color: #fffaee;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+`;
+
 function EventsPage() {
   // const logStatus = useSelector((state) => state.isLogged);
   // const dispatch = useDispatch();
@@ -30,6 +40,7 @@ function EventsPage() {
 
   return (
     <Container className="container-xl mb-5">
+      <Background />
       <Events />
     </Container>
   );

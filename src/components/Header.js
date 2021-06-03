@@ -7,7 +7,7 @@ import React, { useState } from "react";
 //   getUserProfile,
 // } from "../utils/firebase.js";
 import Login from "./Login.js";
-import logo from "../images/logo.png";
+import logo from "../images/logo_3.png";
 import menu from "../images/menu.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -72,14 +72,15 @@ const NavItemsContainer = styled.div`
 
 const NavItem = styled.a`
   /* color: black; */
+  height: 32px;
   display: flex;
   align-items: center;
-  color: #cd6248;
+  color: #3d3d3d;
   font-size: 16px;
   font-weight: 500;
   line-height: 20px;
-  padding: 5px 10px;
-  margin-left: 30px;
+  padding: 5px 13px;
+  margin-left: 20px;
   text-decoration: none;
   cursor: pointer;
   border-radius: 30px;
@@ -91,26 +92,28 @@ const NavItem = styled.a`
     border-bottom: 2px solid #1190cb; */
     line-height: 20px;
     text-decoration: none;
-    background-color: #cd6248;
+    background-color: #57bc90;
     color: white;
   }
 `;
 
 const Img = styled.img`
-  height: 30px;
+  height: 40px;
   cursor: pointer;
 `;
 
 const styles = {
   loginBtn: {
+    height: "32px",
     textDecoration: "none",
-    backgroundColor: "#CD6248",
+    backgroundColor: "#57bc90",
     borderRadius: "30px",
     color: "white",
     fontSize: "16px",
     fontWeight: "500",
     lineHeight: "20px",
-    padding: "5px 10px",
+    padding: "5px 13px",
+    marginLeft: "30px",
   },
 };
 
@@ -159,10 +162,7 @@ function Header() {
       <HeaderContent>
         <NavContent>
           <LogoContainer>
-            <Img
-              // src={logo}
-              onClick={handleLogoClick}
-            />
+            <Img src={logo} onClick={handleLogoClick} />
           </LogoContainer>
           <NavItemsContainer>
             <NavItem onClick={handleEventsClick}>我要當志工</NavItem>

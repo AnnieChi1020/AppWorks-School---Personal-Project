@@ -52,7 +52,7 @@ const Title = styled.div`
   padding: 8px 5px 8px 5px;
   margin: 0 auto;
   margin-bottom: 10px;
-  background-color: #dd8143;
+  background-color: #66ab8c;
   border-radius: 10px 10px 0 0;
   text-align: center;
   color: white;

@@ -19,16 +19,15 @@ const MainContentContainer = styled.div`
 const TopEventsHeader = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 100px;
   padding: 10px 20px;
-  font-size: 26px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 500;
   line-height: 30px;
-  text-align: left;
+  text-align: center;
   /* border-bottom: 3px solid #1190cb; */
-  font-family: "Calisto MT", "Bookman Old Style", "Bookman", "Goudy Old Style",
-    Georgia, serif;
-  color: #404040;
+  font-family: "Noto Sans TC", sans-serif;
+  color: #676565;
 `;
 
 const EventsContainer = styled.div`

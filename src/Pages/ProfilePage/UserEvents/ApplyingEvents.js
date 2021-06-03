@@ -107,6 +107,7 @@ const styles = {
 
 function UserApplyingEvents() {
   const [events, setEvents] = useState([]);
+  const [eventExist, setEventExist] = useState(false);
 
   const userId = useSelector((state) => state.isLogged.userId);
 
