@@ -1,18 +1,10 @@
 import styled from "styled-components";
 import React, { useState } from "react";
-// import {
-//   getEvents,
-//   updateEvent,
-//   checkAuthStatus,
-//   getUserProfile,
-// } from "../utils/firebase.js";
 import Login from "./Login.js";
 import logo from "../images/logo_3.png";
 import menu from "../images/menu.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   width: 100%;
@@ -24,7 +16,8 @@ const HeaderContent = styled.div`
   height: 50px;
   align-items: center;
   background-color: white;
-  box-shadow: 0 0 1rem rgb(0 0 0 / 15%);
+  /* box-shadow: 0 0 1rem rgb(0 0 0 / 15%); */
+  box-shadow: inset 0px -1px 0px #f3f3f4;
   position: fixed;
   top: 0;
   z-index: 5;
@@ -67,6 +60,14 @@ const NavItemsContainer = styled.div`
   align-items: center;
   @media (max-width: 720px) {
     display: none;
+
+    flex-direction: column;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background-color: white;
   }
 `;
 
@@ -95,10 +96,20 @@ const NavItem = styled.a`
     background-color: #57bc90;
     color: white;
   }
+  @media (max-width: 720px) {
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 30px;
+  }
 `;
 
-const Img = styled.img`
-  height: 40px;
+const MenuImage = styled.img`
+  height: 30px;
+  cursor: pointer;
+`;
+
+const LogoImage = styled.img`
+  height: 35px;
   cursor: pointer;
 `;
 
@@ -157,14 +168,18 @@ function Header() {
     return loginModal ? <Login></Login> : <div />;
   };
 
+  const handleMenuClick = () => {
+    document.querySelector("#navItemsContainer").style.display = "flex";
+  };
+
   return (
     <Container>
       <HeaderContent>
         <NavContent>
           <LogoContainer>
-            <Img src={logo} onClick={handleLogoClick} />
+            <LogoImage src={logo} onClick={handleLogoClick} />
           </LogoContainer>
-          <NavItemsContainer>
+          <NavItemsContainer id="navItemsContainer">
             <NavItem onClick={handleEventsClick}>我要當志工</NavItem>
             <NavItem onClick={handleCreateEventClick}>招募志工</NavItem>
             <NavItem onClick={handlePastEventsClick}>活動成果</NavItem>
@@ -182,7 +197,7 @@ function Header() {
             )}
           </NavItemsContainer>
           <MenuContainer>
-            <Img src={menu} />
+            <MenuImage src={menu} onClick={() => handleMenuClick()} />
           </MenuContainer>
         </NavContent>
       </HeaderContent>

@@ -185,6 +185,7 @@ const Button = styled.button`
   font-weight: 600;
   /* border: 1px solid white; */
   color: white;
+
   @media (max-width: 960px) {
     margin: 0 auto;
     margin-top: 20px;
@@ -204,32 +205,9 @@ function Banner() {
       <MainContentContainer className="container-xl">
         <TextContainer>
           <Slogan src={slogan} />
-          {/* <TextHeader>Together</TextHeader>
-          <TextHeader>We Can Make A Difference</TextHeader> */}
           <TextSubtitle>加入志工的行列，一起改變世界！</TextSubtitle>
           <Button onClick={handleButtonClick}>我要報名</Button>
-          {/* <Categories>
-            <Category>
-              <CategoryImage src={animal} />
-              <CategoryText>生態保護</CategoryText>
-            </Category>
-            <Category>
-              <CategoryImage src={environment} />
-              <CategoryText>環境保護</CategoryText>
-            </Category>
-            <Category>
-              <CategoryImage src={welfare} />
-              <CategoryText>社會福利</CategoryText>
-            </Category>
-            <Category>
-              <CategoryImage src={education} />
-              <CategoryText>文化教育</CategoryText>
-            </Category>
-          </Categories> */}
         </TextContainer>
-        {/* <ImageContainer>
-          <Image src={banner} />
-        </ImageContainer> */}
       </MainContentContainer>
     </BannerContainer>
   );

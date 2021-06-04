@@ -19,10 +19,7 @@ const MainContentContainer = styled.div`
   margin-top: 900px;
   text-align: center;
   @media (max-width: 960px) {
-    margin-top: 720px;
-  }
-  @media (max-width: 540px) {
-    margin-top: calc(400px + 70vw);
+    margin-top: 900px;
   }
 `;
 

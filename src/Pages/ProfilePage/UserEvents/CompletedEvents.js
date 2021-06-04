@@ -9,6 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import NoEvent from "./components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -52,16 +53,6 @@ const EventText = styled.div`
   line-height: 20px;
   margin-top: 5px;
 `;
-
-// const NoEvent = styled.div`
-//   width: 90%;
-//   margin: 0 auto;
-//   padding: 10px 0;
-//   font-size: 16px;
-//   line-height: 24px;
-//   margin-top: 20px;
-//   text-align: center;
-// `;
 
 const CurrentStatus = styled.div`
   font-size: 14px;
@@ -107,6 +98,7 @@ const styles = {
 function UserCompletedEvents() {
   const userId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
+  const [noEvent, setNoEvent] = useState(false);
 
   const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 1);
@@ -115,27 +107,38 @@ function UserCompletedEvents() {
 
   const getApplyingEventsInfo = async () => {
     const eventIdArray = await getApplyingEventsId();
+    if (eventIdArray.length === 0) {
+      setNoEvent(true);
+    }
     let eventInfoArray = [];
-    await eventIdArray.map(async (id) => {
-      const event = await getEventInfo(id);
-      if (event.eventStatus === 1) {
-        const userDetail = await getParticipantInfo(id, userId);
-        const userRate = userDetail.participantInfo.participantRating;
-        const userAttend = userDetail.participantInfo.participantAttended;
-        event.userRate = userRate;
-        event.userAttend = userAttend;
-
-        eventInfoArray.push(event);
-      }
-      setEvents([eventInfoArray]);
-    });
+    await Promise.all(
+      eventIdArray.map(async (id) => {
+        const event = await getEventInfo(id);
+        if (event.eventStatus === 1) {
+          const userDetail = await getParticipantInfo(id, userId);
+          const userRate = userDetail.participantInfo.participantRating;
+          const userAttend = userDetail.participantInfo.participantAttended;
+          event.userRate = userRate;
+          event.userAttend = userAttend;
+          eventInfoArray.push(event);
+        }
+        setEvents([eventInfoArray]);
+        return eventInfoArray;
+      })
+    );
+    console.log(eventInfoArray);
+    if (eventInfoArray.length === 0) {
+      setNoEvent(true);
+    }
   };
 
   useEffect(() => {
     getApplyingEventsInfo();
   }, []);
 
-  useEffect(() => {}, [events]);
+  useEffect(() => {
+    console.log(noEvent);
+  }, [noEvent]);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
@@ -160,75 +163,74 @@ function UserCompletedEvents() {
     history.push(`profile/comments/${id}`);
   };
 
-  if (events.length === 0) {
-    return null;
-  }
-
-  // if (events[0].length === 0) {
-  //   return (
-  //     <EventsContainer>
-  //       <NoEvent>沒有活動喔</NoEvent>
-  //     </EventsContainer>
-  //   );
-  // }
+  const renderNoEventMessage = () => {
+    console.log("Hi");
+    if (noEvent) {
+      console.log("noooo");
+      return <NoEvent></NoEvent>;
+    }
+  };
 
   return (
     <EventsContainer>
-      <Events>
-        {events[0].map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
-            <Card style={{ height: "100%" }}>
-              {event.userAttend === false ? (
-                <CurrentStatus>待確認出席</CurrentStatus>
-              ) : (
-                <CurrentStatus>已確認出席</CurrentStatus>
-              )}
-              <Card.Img
-                variant="top"
-                src={event.eventCoverImage}
-                style={styles.cardImage}
-                onClick={() => handleEventClick(event.eventId)}
-              />
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {event.eventTitle}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{`${reformatTimestamp(
-                      event.startTime
-                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                    <EventText>
-                      {event.eventAddress.formatted_address}
-                    </EventText>
-                  </Card.Text>
-                </EventInfo>
-                <EventStatus>
-                  {event.userAttend === false ? (
-                    <RateButton disabled>評價活動</RateButton>
-                  ) : (
-                    <div />
-                  )}
-                  {event.userAttend === true && event.userRate === 0 ? (
-                    <RateButton
-                      onClick={() => handleCommentClick(event.eventId)}
-                    >
-                      評價活動
-                    </RateButton>
-                  ) : (
-                    <div />
-                  )}
-                  {event.userAttend === true && event.userRate !== 0 ? (
-                    <RateButton disabled>已評價活動</RateButton>
-                  ) : (
-                    <div />
-                  )}
-                </EventStatus>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
+      {events.length > 0 && (
+        <Events>
+          {events[0].map((event, index) => (
+            <Col className="p-0" style={styles.cardCol} key={index}>
+              <Card style={{ height: "100%" }}>
+                {event.userAttend === false ? (
+                  <CurrentStatus>待確認出席</CurrentStatus>
+                ) : (
+                  <CurrentStatus>已確認出席</CurrentStatus>
+                )}
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {event.eventTitle}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  <EventStatus>
+                    {event.userAttend === false ? (
+                      <RateButton disabled>評價活動</RateButton>
+                    ) : (
+                      <div />
+                    )}
+                    {event.userAttend === true && event.userRate === 0 ? (
+                      <RateButton
+                        onClick={() => handleCommentClick(event.eventId)}
+                      >
+                        評價活動
+                      </RateButton>
+                    ) : (
+                      <div />
+                    )}
+                    {event.userAttend === true && event.userRate !== 0 ? (
+                      <RateButton disabled>已評價活動</RateButton>
+                    ) : (
+                      <div />
+                    )}
+                  </EventStatus>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
     </EventsContainer>
   );
 }

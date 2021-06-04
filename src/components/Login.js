@@ -9,6 +9,7 @@ import {
   getUserProfile,
 } from "../utils/firebase.js";
 import { Modal, Form } from "react-bootstrap";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 const Wrapper = styled.div`
   width: 50%;
@@ -187,13 +188,12 @@ function Login() {
           dispatch({ type: "SIGN_IN", data: true });
           dispatch({ type: "GET_USERID", data: userId });
           dispatch({ type: "GET_USERROLE", data: 0 });
-          alert("已登入");
           dispatch({ type: "LOGIN", data: false });
+          // return <SweetAlert title="" 登入成功 />;
         } else if (identity === "organization" && userData.role === 1) {
           dispatch({ type: "SIGN_IN", data: true });
           dispatch({ type: "GET_USERID", data: userId });
           dispatch({ type: "GET_USERROLE", data: 1 });
-          alert("已登入");
           dispatch({ type: "LOGIN", data: false });
         } else if (identity === "user") {
           alert("請以機構身分登入");
