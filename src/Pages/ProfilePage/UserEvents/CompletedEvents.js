@@ -100,13 +100,15 @@ function UserCompletedEvents() {
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
 
-  const getApplyingEventsId = async () => {
+  
+
+  const getCompletedEventIds = async () => {
     const applyingEvents = await getUserEvents(userId, 1);
     return applyingEvents;
   };
 
-  const getApplyingEventsInfo = async () => {
-    const eventIdArray = await getApplyingEventsId();
+  const getCompletedEventsInfo = async () => {
+    const eventIdArray = await getCompletedEventIds();
     if (eventIdArray.length === 0) {
       setNoEvent(true);
     }
@@ -133,12 +135,12 @@ function UserCompletedEvents() {
   };
 
   useEffect(() => {
-    getApplyingEventsInfo();
+    getCompletedEventsInfo();
   }, []);
 
   useEffect(() => {
-    console.log(noEvent);
-  }, [noEvent]);
+    console.log(events);
+  }, [events]);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
