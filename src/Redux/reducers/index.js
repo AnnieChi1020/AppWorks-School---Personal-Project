@@ -3,6 +3,7 @@ import signupReducer from "./signup.js";
 import createEventReducer from "./createEvent";
 import filterReducer from "./filter";
 import modalReducer from "./modal";
+import alertReducer from "./alert";
 
 import { combineReducers } from "redux";
 
@@ -12,6 +13,7 @@ const allReducers = combineReducers({
   createEvent: createEventReducer,
   filter: filterReducer,
   modal: modalReducer,
+  alert: alertReducer,
 });
 
 export default allReducers;

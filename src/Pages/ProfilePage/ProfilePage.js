@@ -11,10 +11,14 @@ const Container = styled.div`
   margin: 0 auto;
   margin-top: 80px;
   min-height: calc(100vh - 200px);
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-gap: 20px;
+
   @media (max-width: 960px) {
+    display: flex;
     flex-direction: column;
+    grid-gap: 0px;
   }
 `;
 

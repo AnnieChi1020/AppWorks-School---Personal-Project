@@ -12,7 +12,7 @@ const FooterContent = styled.div`
   height: 100px;
   align-items: center;
   background-color: white;
-  margin-top: 50px;
+  margin-top: 80px;
   border-top: 1px solid #f5f5f5;
 `;
 

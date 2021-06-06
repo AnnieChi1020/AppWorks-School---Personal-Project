@@ -11,6 +11,7 @@ import {
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
+import NoEvent from "../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -66,23 +67,41 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-const Button = styled.button`
+const PrimaryButton = styled.button`
   font-size: 14px;
   line-height: 20px;
-  padding: 3px 8px;
-  margin-right: 5px;
+  padding: 3px 5px;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  background-color: #ebedef66;
+  background-color: #80ae7f;
+  color: white;
 `;
 
-const NoEventText = styled.div`
-  width: 100px;
+const SecondaryButton = styled.button`
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 5px;
+  margin-left: 5px;
+  border: 1px solid #89b485;
+  border-radius: 5px;
+  background-color: white;
+  color: #719b6d;
+`;
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
+const ActionButton = styled.button`
   font-size: 16px;
   line-height: 20px;
-  margin: 0 auto;
-  margin-top: 20px;
-  margin-bottom: 80px;
+  padding: 5px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #80ae7f;
+  color: white;
 `;
 
 const styles = {
@@ -108,10 +127,15 @@ const styles = {
 function ActiveEvents() {
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
+  const [noEvent, setNoEvent] = useState(false);
+  let history = useHistory();
 
   const getHosterEventsData = async () => {
     const newEvents = await getHosterEvents(hosterId, 0);
     setEvents(newEvents);
+    if (newEvents.length === 0) {
+      setNoEvent(true);
+    }
   };
 
   useEffect(() => {
@@ -120,7 +144,6 @@ function ActiveEvents() {
 
   useEffect(() => {}, [events]);
 
-  let history = useHistory();
   const handleParticipantClick = (id) => {
     history.push(`profile/manage-participants/${id}`);
   };
@@ -166,65 +189,77 @@ function ActiveEvents() {
     history.push(`/events/${e}`);
   };
 
+  const handleActionClick = () => {
+    history.push(`/createEvent`);
+  };
+
+  const renderNoEventMessage = () => {
+    if (noEvent) {
+      console.log("noooo");
+      return (
+        <div>
+          <NoEvent></NoEvent>
+          <ButtonContainer>
+            <ActionButton onClick={handleActionClick}>創建新活動</ActionButton>
+          </ButtonContainer>
+        </div>
+      );
+    }
+  };
+
   return (
     <EventsContainer>
-      <Events>
-        {events.map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
-            <Card style={{ height: "100%" }}>
-              <CurrentStatus>招募中</CurrentStatus>
-              <Card.Img
-                variant="top"
-                src={event.eventCoverImage}
-                style={styles.cardImage}
-                onClick={() => handleEventClick(event.eventId)}
-              />
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {event.eventTitle}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{`${reformatTimestamp(
-                      event.startTime
-                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                    <EventText>
-                      {event.eventAddress.formatted_address}
-                    </EventText>
-                  </Card.Text>
-                </EventInfo>
-                <ManageEventContainer>
-                  <Button onClick={() => handleEditClick(event.eventId)}>
-                    編輯活動
-                  </Button>
-                  <Button onClick={() => handleParticipantClick(event.eventId)}>
-                    管理參加者
-                  </Button>
-                  <Button onClick={(e) => handleCancelClick(event.eventId, e)}>
-                    取消活動
-                  </Button>
-                </ManageEventContainer>
-              </Card.Body>
-            </Card>
-          </Col>
-          // <Event key={index}>
-          //   <EventImage src={event.eventCoverImage} />
-          //   <EventDetail>
-          //     <EventTitle>{event.eventTitle}</EventTitle>
-          //   </EventDetail>
-          //   <Button onClick={() => handleEditClick(event.eventId)}>
-          //     編輯活動
-          //   </Button>
-          //   <Button onClick={() => handleParticipantClick(event.eventId)}>
-          //     管理參加者
-          //   </Button>
-          //   <Button onClick={() => handleCancelClick(event.eventId)}>
-          //     取消活動
-          //   </Button>
-          // </Event>
-        ))}
-      </Events>
-      {/* {events.length === 0 ? <NoEventText>沒有活動喔</NoEventText> : <div />} */}
+      {events.length > 0 && (
+        <Events>
+          {events.map((event, index) => (
+            <Col className="p-0" style={styles.cardCol} key={index}>
+              <Card style={{ height: "100%" }}>
+                <CurrentStatus>招募中</CurrentStatus>
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {event.eventTitle}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  <ManageEventContainer>
+                    <PrimaryButton
+                      onClick={() => handleParticipantClick(event.eventId)}
+                    >
+                      管理參加者
+                    </PrimaryButton>
+                    <SecondaryButton
+                      onClick={() => handleEditClick(event.eventId)}
+                    >
+                      編輯活動
+                    </SecondaryButton>
+
+                    <SecondaryButton
+                      onClick={(e) => handleCancelClick(event.eventId, e)}
+                    >
+                      取消活動
+                    </SecondaryButton>
+                  </ManageEventContainer>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
     </EventsContainer>
   );
 }

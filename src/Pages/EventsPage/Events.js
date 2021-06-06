@@ -5,13 +5,15 @@ import { getEvents } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
+import noEventImage from "../../images/noEvent.png";
 
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  padding-top: 20px;
+  margin-top: 80px;
+  padding: 20px;
 `;
 
 const FilterContainer = styled.div`
@@ -21,6 +23,7 @@ const FilterContainer = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  margin-bottom: 10px;
 `;
 
 const Filter = styled.div`
@@ -42,7 +45,6 @@ const Filter = styled.div`
 // `;
 
 const Tags = styled.div`
-  margin-top: 0px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -60,6 +62,7 @@ const Tag = styled.div`
   margin-right: 5px;
   cursor: pointer;
   text-align: center;
+  background-color: white;
   @media (max-width: 720px) {
     width: 80px;
     font-size: 14px;
@@ -73,10 +76,10 @@ const TagSelected = styled.div`
   font-size: 16px;
   line-height: 20px;
   padding: 5px 15px;
-  border: solid 1px #979797;
+  border: solid 1px #4b9b7a;
   border-radius: 20px;
   margin-right: 5px;
-  background: #1190cb;
+  background: #57bb92;
   color: white;
   cursor: pointer;
   text-align: center;
@@ -147,10 +150,22 @@ const EventTag = styled.div`
   border-radius: 20px;
   margin-right: 5px;
   color: #4f4f4f;
+
   @media (max-width: 1024px) {
     font-size: 12px;
   }
 `;
+
+// const TagIcon = styled.div`
+//   width: 20px;
+//   height: 20px;
+//   background-color: white;
+//   position: absolute;
+//   border: 1px solid grey;
+//   border-radius: 50%;
+//   top: -10px;
+//   right: 10px;
+// `;
 
 const EventTime = styled.div`
   font-size: 12px;
@@ -201,6 +216,30 @@ const ClearButton = styled.button`
   }
 `;
 
+const NoEvent = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 20px 0;
+  text-align: center;
+`;
+
+const NoEventImage = styled.img`
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+`;
+
+const NoEventText = styled.div`
+  width: 100%;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 600;
+  margin-top: 20px;
+  padding: 10px;
+  color: #656565; ;
+`;
+
 const styles = {
   cardImage: {
     objectFit: "cover",
@@ -210,12 +249,14 @@ const styles = {
 };
 
 function AllEvents() {
+  let selectedTag = useSelector((state) => state.filter.tag);
+  let selectedCity = useSelector((state) => state.filter.city);
+  const dispatch = useDispatch();
+
   const [rawEvents, setRawEvents] = useState([]);
   const [events, setEvents] = useState([]);
-  const [filter, setFilter] = useState({
-    tag: "",
-    city: "",
-  });
+
+  const [noEvent, setNoEvent] = useState(false);
 
   const cityArray = [
     "台北市",
@@ -236,8 +277,6 @@ function AllEvents() {
     "台東縣",
   ];
   const tagArray = ["社會福利", "文化教育", "環境保護", "生態保護"];
-  let selectedTag = useSelector((state) => state.filter.tag);
-  const dispatch = useDispatch();
 
   const getAllEvents = async () => {
     const newEvents = await getEvents(0);
@@ -247,9 +286,9 @@ function AllEvents() {
       event.eventAddress = getAdministrativeArea(event);
       return true;
     });
-
     setRawEvents(newEvents);
     setEvents(newEvents);
+    console.log(selectedTag);
   };
 
   const getDay = (day) => {
@@ -267,13 +306,13 @@ function AllEvents() {
   };
 
   useEffect(() => {
-    getAllEvents();
-    setFilter({ ...filter, tag: selectedTag });
-  }, []);
+    setNoEvent(false);
+    getFilteredEvents(selectedTag, "");
+  }, [rawEvents]);
 
   useEffect(() => {
-    console.log(events);
-  }, [events]);
+    getAllEvents();
+  }, []);
 
   let history = useHistory();
   const handleEventClick = (id) => {
@@ -284,29 +323,24 @@ function AllEvents() {
     const newTag = e.target.textContent;
     if (newTag !== selectedTag) {
       dispatch({ type: "ADD_TAG", data: newTag });
-      setFilter({ ...filter, tag: newTag });
     } else {
       dispatch({ type: "ADD_TAG", data: "" });
-      setFilter({ ...filter, tag: "" });
     }
   };
 
   const handleCitySelect = async (e) => {
-    console.log(e.target.value);
     const newCity = e.target.value;
-    setFilter({ ...filter, city: newCity });
+    dispatch({ type: "ADD_CITY", data: newCity });
   };
 
   useEffect(() => {
-    console.log(filter);
-    getFilteredEvents(filter.tag, filter.city);
-  }, [filter.tag, filter.city]);
+    getFilteredEvents(selectedTag, selectedCity);
+  }, [selectedTag, selectedCity]);
 
   const getFilteredEvents = async (tag, city) => {
-    console.log(tag);
     let eventArray = rawEvents;
-    console.log(rawEvents);
     let filteredEvents = [];
+    setNoEvent(false);
 
     if (tag && city) {
       eventArray.forEach((event) => {
@@ -316,6 +350,7 @@ function AllEvents() {
       });
     } else if (tag) {
       eventArray.forEach((event) => {
+        console.log("here");
         if (event.eventTags.includes(tag)) {
           filteredEvents.push(event);
         }
@@ -326,6 +361,12 @@ function AllEvents() {
           filteredEvents.push(event);
         }
       });
+    } else {
+      filteredEvents = rawEvents;
+    }
+    console.log(filteredEvents.length);
+    if (rawEvents.length > 0 && filteredEvents.length === 0) {
+      setNoEvent(true);
     }
     setEvents(filteredEvents);
   };
@@ -341,15 +382,10 @@ function AllEvents() {
   };
 
   const handleClearButton = () => {
-    setEvents(rawEvents);
     dispatch({ type: "ADD_TAG", data: "" });
     dispatch({ type: "ADD_CITY", data: "" });
     document.getElementById("citySelector").value = "default";
   };
-
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
 
   return (
     <Container>
@@ -358,7 +394,10 @@ function AllEvents() {
           <Tags>
             {tagArray.map((tag, index) =>
               selectedTag === tag ? (
-                <TagSelected onClick={(e) => handleTagClick(e)} key={index}>
+                <TagSelected
+                // onClick={(e) => handleTagClick(e)}
+                // key={index}
+                >
                   {tag}
                 </TagSelected>
               ) : (
@@ -389,6 +428,7 @@ function AllEvents() {
           <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
         </Buttons> */}
       </FilterContainer>
+
       <Events>
         {events.map((event, index) => (
           <Col className="p-0" style={styles.cardCol} key={index}>
@@ -404,7 +444,8 @@ function AllEvents() {
                   style={styles.cardImage}
                 ></Card.Img>
               </div>
-              <Card.Body className="py-2 px-3">
+              <Card.Body className="py-2 px-3" style={{ position: "relative" }}>
+                {/* <TagIcon></TagIcon> */}
                 <EventTagContianer>
                   {event.eventTags.map((tag, index) => (
                     <EventTag key={index}>{tag}</EventTag>
@@ -418,6 +459,14 @@ function AllEvents() {
           </Col>
         ))}
       </Events>
+      {noEvent ? (
+        <NoEvent>
+          <NoEventImage src={noEventImage} />
+          <NoEventText>目前沒有活動哦</NoEventText>
+        </NoEvent>
+      ) : (
+        <div />
+      )}
     </Container>
   );
 }

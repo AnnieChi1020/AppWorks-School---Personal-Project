@@ -1,14 +1,10 @@
 import styled from "styled-components";
 import React from "react";
-import animal from "../../images/animal.png";
-import welfare from "../../images/welfare.png";
-import environment from "../../images/environment.png";
-import education from "../../images/education.png";
-import animalBackground from "../../images/animal_background.jpg";
-import welfareBackground from "../../images/welfare.jpg";
-import environmentBackground from "../../images/environment.jpg";
-import educationBackground from "../../images/education.jpg";
-import ReactCardFlipper from "react-card-flipper";
+import animal from "../../images/animal.svg";
+import welfare from "../../images/welfare.svg";
+import environment from "../../images/environment.svg";
+import education from "../../images/education.svg";
+
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -20,13 +16,10 @@ const CategoryContainer = styled.div`
 
 const MainContentContainer = styled.div`
   width: 100%;
-  margin-top: 570px;
+  margin-top: 900px;
   text-align: center;
   @media (max-width: 960px) {
-    margin-top: 720px;
-  }
-  @media (max-width: 540px) {
-    margin-top: calc(400px + 70vw);
+    margin-top: 900px;
   }
 `;
 
@@ -35,109 +28,75 @@ const CategoryHeader = styled.div`
   margin: 0 auto;
   margin-top: 30px;
   padding: 10px 20px;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 500;
   line-height: 30px;
-  text-align: left;
+  text-align: center;
   /* border-bottom: 3px solid #1190cb; */
   font-family: "Noto Sans TC", sans-serif;
-  color: #404040;
+  color: #676565;
 `;
 
-const CategoriesContainer = styled.div`
+// const CategoriesContainer = styled.div`
+//   width: 100%;
+//   margin: 0 auto;
+//   margin-top: 30px;
+//   padding: 0 20px;
+//   display: grid;
+//   grid-template-columns: 1fr 1fr 1fr 1fr;
+//   grid-gap: 20px;
+//   align-items: center;
+//   @media (max-width: 720px) {
+//     grid-template-columns: 1fr 1fr;
+//   }
+// `;
+
+const Categories = styled.div`
   width: 100%;
+  height: auto;
   margin: 0 auto;
-  margin-top: 30px;
-  padding: 0 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 20px;
-  align-items: center;
-  @media (max-width: 720px) {
-    grid-template-columns: 1fr 1fr;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  & div + div {
+    border-left: 1px solid rgb(200, 200, 200);
   }
 `;
 
-const CategoryCard = styled.div`
+const CategoryDiv = styled.div`
   width: 100%;
-  height: 220px;
-  flex-shrink: 1;
-  cursor: pointer;
-  @media (max-width: 720px) {
-    height: 160px;
-  }
-`;
-
-const FrontCard = styled.div`
-  width: 100%;
-  height: 200px;
-  background-color: rgb(138 192 230);
-  border-radius: 20px;
-  padding: 50px;
-  align-items: center;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-  @media (max-width: 960px) {
-    height: 150px;
-  }
+  padding: 0 15px;
+  cursor: pointer;
 `;
 
-const BackCard = styled.div`
-  width: 100%;
-  height: 200px;
-  background-color: #89b2c461;
-  border-radius: 20px;
-  align-items: center;
-  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-  @media (max-width: 960px) {
-    height: 150px;
-  }
+const CategoryImage = styled.img`
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  transition: all 0.3s;
 `;
 
-const FrontImage = styled.img`
-  width: 80px;
-  height: 80px;
-`;
-
-const BackImage = styled.img`
+const CategoryText = styled.div`
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
-`;
-
-const BackMask = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: rgb(251, 251, 251, 0.4);
-  border-radius: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
-
-const BackText = styled.span`
-  width: 100%;
-  color: white;
-  font-size: 24px;
+  margin: 0 auto;
+  text-align: center;
+  color: #666666;
+  font-size: 18px;
+  line-height: 20px;
   font-weight: 600;
-  letter-spacing: 4px;
-  line-height: 24px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  text-shadow: 0.1em 0.1em 0.2em black;
+  margin-top: 20px;
 `;
 
 function Category() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleCardClick = (e) => {
+  const handleCategoryClick = (e) => {
     console.log(e);
     history.push(`/events`);
     dispatch({ type: "ADD_TAG", data: e });
@@ -147,8 +106,25 @@ function Category() {
     <CategoryContainer>
       <MainContentContainer>
         <CategoryHeader>Explore Opportunities</CategoryHeader>
-        <CategoriesContainer>
-          <CategoryCard onClick={(e) => handleCardClick("社會福利")}>
+        <Categories>
+          <CategoryDiv onClick={() => handleCategoryClick("生態保護")}>
+            <CategoryImage src={animal} />
+            <CategoryText>生態保護</CategoryText>
+          </CategoryDiv>
+          <CategoryDiv onClick={() => handleCategoryClick("環境保護")}>
+            <CategoryImage src={environment} />
+            <CategoryText>環境保護</CategoryText>
+          </CategoryDiv>
+          <CategoryDiv onClick={() => handleCategoryClick("社會福利")}>
+            <CategoryImage src={welfare} />
+            <CategoryText>社會福利</CategoryText>
+          </CategoryDiv>
+          <CategoryDiv onClick={() => handleCategoryClick("文化教育")}>
+            <CategoryImage src={education} />
+            <CategoryText>文化教育</CategoryText>
+          </CategoryDiv>
+
+          {/* <CategoryCard onClick={(e) => handleCardClick("社會福利")}>
             <ReactCardFlipper width="100%" behavior="hover">
               <FrontCard>
                 <FrontImage src={welfare} />
@@ -195,8 +171,8 @@ function Category() {
                 <BackMask />
               </BackCard>
             </ReactCardFlipper>
-          </CategoryCard>
-        </CategoriesContainer>
+          </CategoryCard> */}
+        </Categories>
       </MainContentContainer>
     </CategoryContainer>
   );

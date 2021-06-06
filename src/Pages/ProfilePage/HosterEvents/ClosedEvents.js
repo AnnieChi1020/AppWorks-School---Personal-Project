@@ -5,6 +5,7 @@ import { getHosterEvents } from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
+import NoEvent from "../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -51,7 +52,7 @@ const ManageEventContainer = styled.div`
   flex-direction: row;
   margin-top: 10px;
   padding-top: 15px;
-  justify-content: flex-start;
+  justify-content: center;
 `;
 
 const EventText = styled.div`
@@ -60,34 +61,27 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-const Button = styled.button`
+const PrimaryButton = styled.button`
+  width: 50%;
   font-size: 14px;
   line-height: 20px;
-  padding: 3px 8px;
-  margin-right: 5px;
+  padding: 3px 5px;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  background-color: #ebedef66;
+  background-color: #80ae7f;
+  color: white;
 `;
 
-const ResultButton = styled.button`
-  width: 120px;
+const SecondaryButton = styled.button`
+  width: 50%;
   font-size: 14px;
   line-height: 20px;
-  padding: 3px 8px;
-  margin-right: 5px;
-  border: 1px solid #ced4da;
+  padding: 3px 5px;
+  margin-left: 5px;
+  border: 1px solid #89b485;
   border-radius: 5px;
-  background-color: #ebedef66;
-`;
-
-const NoEventText = styled.div`
-  width: 100px;
-  font-size: 16px;
-  line-height: 20px;
-  margin: 0 auto;
-  margin-top: 20px;
-  margin-bottom: 80px;
+  background-color: white;
+  color: #719b6d;
 `;
 
 const styles = {
@@ -113,10 +107,14 @@ const styles = {
 function ClosedEvents() {
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
+  const [noEvent, setNoEvent] = useState(false);
 
   const getHosterEventsData = async () => {
     const newEvents = await getHosterEvents(hosterId, 1);
     setEvents(newEvents);
+    if (newEvents.length === 0) {
+      setNoEvent(true);
+    }
   };
 
   useEffect(() => {
@@ -151,77 +149,67 @@ function ClosedEvents() {
 
   const renderResultButton = (event) => {
     return !event.resultContent ? (
-      <ResultButton onClick={() => handleResultClick(event.eventId)}>
+      <SecondaryButton onClick={() => handleResultClick(event.eventId)}>
         分享活動成果
-      </ResultButton>
+      </SecondaryButton>
     ) : (
-      <ResultButton disabled style={{ opacity: ".9" }}>
-        已分享活動成果
-      </ResultButton>
+      <SecondaryButton disabled style={{ opacity: ".5" }}>
+        已分享成果
+      </SecondaryButton>
     );
+  };
+
+  const renderNoEventMessage = () => {
+    if (noEvent) {
+      console.log("noooo");
+      return <NoEvent></NoEvent>;
+    }
   };
 
   return (
     <EventsContainer>
-      <Events>
-        {events.map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
-            <Card style={{ height: "100%" }}>
-              <CurrentStatus>已結束</CurrentStatus>
-              <Card.Img
-                variant="top"
-                src={event.eventCoverImage}
-                style={styles.cardImage}
-                onClick={() => handleEventClick(event.eventId)}
-              />
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {event.eventTitle}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{`${reformatTimestamp(
-                      event.startTime
-                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                    <EventText>
-                      {event.eventAddress.formatted_address}
-                    </EventText>
-                  </Card.Text>
-                </EventInfo>
-                <ManageEventContainer>
-                  <Button onClick={() => handleParticipantClick(event.eventId)}>
-                    管理參加者
-                  </Button>
-                  {renderResultButton(event)}
-                  {/* <Button onClick={() => handleResultClick(event.eventId)}>
-                    分享活動成果
-                  </Button> */}
-                </ManageEventContainer>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
-      {/* {events.length === 0 ? <NoEventText>沒有活動喔</NoEventText> : <div />} */}
+      {events.length > 0 && (
+        <Events>
+          {events.map((event, index) => (
+            <Col className="p-0" style={styles.cardCol} key={index}>
+              <Card style={{ height: "100%" }}>
+                <CurrentStatus>已結束</CurrentStatus>
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {event.eventTitle}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  <ManageEventContainer>
+                    <PrimaryButton
+                      onClick={() => handleParticipantClick(event.eventId)}
+                    >
+                      管理參加者
+                    </PrimaryButton>
+                    {renderResultButton(event)}
+                  </ManageEventContainer>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
     </EventsContainer>
-    // <Wrapper>
-    //   {events.map((event, index) => (
-    //     <Event key={index}>
-    //       <EventImage src={event.eventCoverImage} />
-    //       <EventDetail>
-    //         <EventTitle>{event.eventTitle}</EventTitle>
-    //       </EventDetail>
-    //       {/* <Button>編輯活動</Button> */}
-    //       <Button onClick={() => handleParticipantClick(event.eventId)}>
-    //         管理參加者
-    //       </Button>
-    //       <Button onClick={() => handleResultClick(event.eventId)}>
-    //         分享活動成果
-    //       </Button>
-
-    //     </Event>
-    //   ))}
-    // </Wrapper>
   );
 }
 

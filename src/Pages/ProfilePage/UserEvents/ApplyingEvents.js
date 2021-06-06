@@ -10,6 +10,7 @@ import {
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import NoEvent from "../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -54,16 +55,6 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-// const NoEvent = styled.div`
-//   width: 90%;
-//   margin: 0 auto;
-//   padding: 10px 0;
-//   font-size: 16px;
-//   line-height: 24px;
-//   margin-top: 20px;
-//   text-align: center;
-// `;
-
 const CurrentStatus = styled.div`
   font-size: 14px;
   line-height: 20px;
@@ -80,9 +71,11 @@ const CancelButton = styled.button`
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
-  border: 1px solid #ced4da;
+  border: 1px solid #9dc7d8;
+  color: #7b9fac;
   border-radius: 5px;
-  background-color: #ebedef66;
+  background-color: white;
+  margin: 0 auto;
 `;
 
 const styles = {
@@ -107,6 +100,7 @@ const styles = {
 
 function UserApplyingEvents() {
   const [events, setEvents] = useState([]);
+  const [noEvent, setNoEvent] = useState(false);
 
   const userId = useSelector((state) => state.isLogged.userId);
 
@@ -125,15 +119,23 @@ function UserApplyingEvents() {
   const getApplyingEventsInfo = async () => {
     const eventIdArray = await getApplyingEventsId();
     let eventInfoArray = [];
-    await eventIdArray.map(async (id) => {
-      const event = await getEventInfo(id);
-      const eventPassed = checkEventPassed(event);
-      console.log(eventPassed);
-      if (!eventPassed) {
-        eventInfoArray.push(event);
-        setEvents([eventInfoArray]);
-      }
-    });
+    await Promise.all(
+      eventIdArray.map(async (id) => {
+        const event = await getEventInfo(id);
+        const eventPassed = checkEventPassed(event);
+
+        if (!eventPassed) {
+          eventInfoArray.push(event);
+          console.log(event);
+          setEvents([eventInfoArray]);
+        }
+        return eventInfoArray;
+      })
+    );
+    if (eventInfoArray.length === 0) {
+      setNoEvent(true);
+    }
+
     return eventInfoArray;
   };
 
@@ -167,59 +169,57 @@ function UserApplyingEvents() {
     return reformatedTime;
   };
 
-  if (events.length === 0) {
-    return null;
-  }
-
-  // if (events[0].length === 0) {
-  //   return (
-  //     <EventsContainer>
-  //       <NoEvent>沒有活動喔</NoEvent>
-  //     </EventsContainer>
-  //   );
-  // }
+  const renderNoEventMessage = () => {
+    if (noEvent) {
+      console.log("noooo");
+      return <NoEvent></NoEvent>;
+    }
+  };
 
   return (
     <EventsContainer>
-      <Events>
-        {events[0].map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
-            <Card style={{ height: "100%" }}>
-              <CurrentStatus>等待確認</CurrentStatus>
-              <Card.Img
-                variant="top"
-                src={event.eventCoverImage}
-                style={styles.cardImage}
-                onClick={() => handleEventClick(event.eventId)}
-              />
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {event.eventTitle}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{`${reformatTimestamp(
-                      event.startTime
-                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                    <EventText>
-                      {event.eventAddress.formatted_address}
-                    </EventText>
-                  </Card.Text>
-                </EventInfo>
-                <EventStatus>
-                  <CancelButton
-                    onClick={(e) => {
-                      handleCancelClick(event.eventId, userId, e);
-                    }}
-                  >
-                    取消報名
-                  </CancelButton>
-                </EventStatus>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
+      {events.length > 0 && (
+        <Events>
+          {events[0].map((event, index) => (
+            <Col className="p-0" style={styles.cardCol} key={index}>
+              <Card style={{ height: "100%" }}>
+                <CurrentStatus>等待確認</CurrentStatus>
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {event.eventTitle}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  <EventStatus>
+                    <CancelButton
+                      onClick={(e) => {
+                        handleCancelClick(event.eventId, userId, e);
+                      }}
+                    >
+                      取消報名
+                    </CancelButton>
+                  </EventStatus>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
     </EventsContainer>
   );
 }

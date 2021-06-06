@@ -6,15 +6,16 @@ import CompletedEvents from "./CompletedEvents.js";
 import CancelledEvents from "./CancelledEvents.js";
 
 const TabsContainer = styled.div`
-  width: 800px;
-  flex-grow: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   background-color: white;
   padding-bottom: 20px;
   border-radius: 10px;
-  margin-bottom: 50px;
+  /* margin-bottom: 50px; */
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
+
   @media (max-width: 960px) {
     width: 90%;
   }
@@ -67,7 +68,7 @@ const TabActive = styled.div`
   padding: 5px 15px;
   border: 1px solid #ced4da;
   border-radius: 20px;
-  background-color: #1190cb;
+  background-color: #67aeca;
   color: white;
   cursor: pointer;
   @media (max-width: 540px) {

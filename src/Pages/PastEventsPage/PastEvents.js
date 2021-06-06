@@ -88,47 +88,6 @@ const PolaroidCaption = styled.div`
   font-weight: 500;
 `;
 
-// const Event = styled.div`
-//   height: 15vw;
-//   max-height: 200px;
-//   min-width: 30%;
-//   flex-grow: 1;
-//   margin: 5px;
-//   position: relative;
-// `;
-
-// const EventContainer = styled.div`
-//   width: 300px;
-//   padding: 10px 10px 30px 10px;
-//   background-color: white;
-//   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
-//   border-radius: 3px;
-// `;
-
-// const EventImage = styled.img`
-//   max-height: 100%;
-//   min-width: 100%;
-//   object-fit: cover;
-//   vertical-align: bottom;
-//   cursor: pointer;
-//   border-radius: 5px;
-// `;
-
-// const EventTime = styled.div`
-//   font-size: 12px;
-//   margin-top: 5px;
-// `;
-
-// const EventTitle = styled.div`
-//   font-size: 16px;
-//   position: absolute;
-//   bottom: 10px;
-//   right: 10px;
-//   color: white;
-//   padding: 5px 10px;
-//   background-color: #b3b3b35e;
-// `;
-
 const PastEventTitle = styled.div`
   font-size: 20px;
   line-height: 30px;

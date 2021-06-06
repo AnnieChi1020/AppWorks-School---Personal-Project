@@ -6,9 +6,11 @@ import {
   getEventInfo,
   getParticipantInfo,
 } from "../../../utils/firebase.js";
-import { useSelector } from "react-redux";
-import { Col, Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Col, Card, Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import NoEvent from "../components/NoEvent.js";
+import Comments from "./CommentsPage/CommentsPage.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -53,16 +55,6 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-// const NoEvent = styled.div`
-//   width: 90%;
-//   margin: 0 auto;
-//   padding: 10px 0;
-//   font-size: 16px;
-//   line-height: 24px;
-//   margin-top: 20px;
-//   text-align: center;
-// `;
-
 const CurrentStatus = styled.div`
   font-size: 14px;
   line-height: 20px;
@@ -81,7 +73,9 @@ const RateButton = styled.button`
   padding: 3px 5px;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  background-color: #ebedef66;
+  background-color: #67aeca;
+  color: white;
+  margin: 0 auto;
 `;
 
 const styles = {
@@ -102,40 +96,62 @@ const styles = {
   cardCol: {
     overflow: "hidden",
   },
+  modal: {
+    marginTop: "50px",
+  },
+  modalHeader: {
+    border: "none",
+  },
+  modalBody: {
+    padding: "0 40px 40px 40px",
+  },
 };
+
+const Styles = styled.div``;
 
 function UserCompletedEvents() {
   const userId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
+  const [noEvent, setNoEvent] = useState(false);
+  const showFeedbackModal = useSelector((state) => state.modal.feedback);
 
-  const getApplyingEventsId = async () => {
+  const dispatch = useDispatch();
+
+  const getCompletedEventIds = async () => {
     const applyingEvents = await getUserEvents(userId, 1);
     return applyingEvents;
   };
 
-  const getApplyingEventsInfo = async () => {
-    const eventIdArray = await getApplyingEventsId();
+  const getCompletedEventsInfo = async () => {
+    const eventIdArray = await getCompletedEventIds();
+    if (eventIdArray.length === 0) {
+      setNoEvent(true);
+    }
     let eventInfoArray = [];
-    await eventIdArray.map(async (id) => {
-      const event = await getEventInfo(id);
-      if (event.eventStatus === 1) {
-        const userDetail = await getParticipantInfo(id, userId);
-        const userRate = userDetail.participantInfo.participantRating;
-        const userAttend = userDetail.participantInfo.participantAttended;
-        event.userRate = userRate;
-        event.userAttend = userAttend;
-
-        eventInfoArray.push(event);
-      }
-      setEvents([eventInfoArray]);
-    });
+    await Promise.all(
+      eventIdArray.map(async (id) => {
+        const event = await getEventInfo(id);
+        if (event.eventStatus === 1) {
+          const userDetail = await getParticipantInfo(id, userId);
+          const userRate = userDetail.participantInfo.participantRating;
+          const userAttend = userDetail.participantInfo.participantAttended;
+          event.userRate = userRate;
+          event.userAttend = userAttend;
+          eventInfoArray.push(event);
+        }
+        setEvents([eventInfoArray]);
+        return eventInfoArray;
+      })
+    );
+    console.log(eventInfoArray);
+    if (eventInfoArray.length === 0) {
+      setNoEvent(true);
+    }
   };
 
   useEffect(() => {
-    getApplyingEventsInfo();
+    getCompletedEventsInfo();
   }, []);
-
-  useEffect(() => {}, [events]);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
@@ -156,79 +172,91 @@ function UserCompletedEvents() {
     history.push(`/events/${e}`);
   };
 
-  const handleCommentClick = (id) => {
-    history.push(`profile/comments/${id}`);
+  // const handleCommentClick = (id) => {
+  //   history.push(`profile/comments/${id}`);
+  // };
+
+  const renderNoEventMessage = () => {
+    console.log("Hi");
+    if (noEvent) {
+      return <NoEvent></NoEvent>;
+    }
   };
 
-  if (events.length === 0) {
-    return null;
-  }
-
-  // if (events[0].length === 0) {
-  //   return (
-  //     <EventsContainer>
-  //       <NoEvent>沒有活動喔</NoEvent>
-  //     </EventsContainer>
-  //   );
-  // }
+  const handleClose = () => dispatch({ type: "SHOW_FEEDBACK", data: false });
+  const handleShow = (eventId) => {
+    dispatch({ type: "SHOW_FEEDBACK", data: true });
+    dispatch({ type: "SET_EVENTID", data: eventId });
+  };
 
   return (
     <EventsContainer>
-      <Events>
-        {events[0].map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
-            <Card style={{ height: "100%" }}>
-              {event.userAttend === false ? (
-                <CurrentStatus>待確認出席</CurrentStatus>
-              ) : (
-                <CurrentStatus>已確認出席</CurrentStatus>
-              )}
-              <Card.Img
-                variant="top"
-                src={event.eventCoverImage}
-                style={styles.cardImage}
-                onClick={() => handleEventClick(event.eventId)}
-              />
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {event.eventTitle}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{`${reformatTimestamp(
-                      event.startTime
-                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                    <EventText>
-                      {event.eventAddress.formatted_address}
-                    </EventText>
-                  </Card.Text>
-                </EventInfo>
-                <EventStatus>
-                  {event.userAttend === false ? (
-                    <RateButton disabled>評價活動</RateButton>
-                  ) : (
-                    <div />
-                  )}
-                  {event.userAttend === true && event.userRate === 0 ? (
-                    <RateButton
-                      onClick={() => handleCommentClick(event.eventId)}
-                    >
-                      評價活動
-                    </RateButton>
-                  ) : (
-                    <div />
-                  )}
-                  {event.userAttend === true && event.userRate !== 0 ? (
-                    <RateButton disabled>已評價活動</RateButton>
-                  ) : (
-                    <div />
-                  )}
-                </EventStatus>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
+      {events.length > 0 && (
+        <Events>
+          {events[0].map((event, index) => (
+            <Col className="p-0" style={styles.cardCol} key={index}>
+              <Card style={{ height: "100%" }}>
+                {event.userAttend === false ? (
+                  <CurrentStatus>待確認出席</CurrentStatus>
+                ) : (
+                  <CurrentStatus>已確認出席</CurrentStatus>
+                )}
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {event.eventTitle}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  <EventStatus>
+                    {event.userAttend === false ? (
+                      <RateButton disabled style={{ opacity: ".5" }}>
+                        評價活動
+                      </RateButton>
+                    ) : (
+                      <div />
+                    )}
+                    {event.userAttend === true && event.userRate === 0 ? (
+                      <RateButton onClick={() => handleShow(event.eventId)}>
+                        評價活動
+                      </RateButton>
+                    ) : (
+                      <div />
+                    )}
+                    {event.userAttend === true && event.userRate !== 0 ? (
+                      <RateButton disabled style={{ opacity: ".5" }}>
+                        已評價活動
+                      </RateButton>
+                    ) : (
+                      <div />
+                    )}
+                  </EventStatus>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
+      <Modal show={showFeedbackModal} onHide={handleClose} style={styles.modal}>
+        <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
+        <Modal.Body style={styles.modalBody}>
+          <Comments></Comments>
+        </Modal.Body>
+      </Modal>
     </EventsContainer>
   );
 }

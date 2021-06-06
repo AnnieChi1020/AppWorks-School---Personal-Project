@@ -10,6 +10,7 @@ import {
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import NoEvent from "../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -54,16 +55,6 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-// const NoEvent = styled.div`
-//   width: 90%;
-//   margin: 0 auto;
-//   padding: 10px 0;
-//   font-size: 16px;
-//   line-height: 24px;
-//   margin-top: 20px;
-//   text-align: center;
-// `;
-
 const CurrentStatus = styled.div`
   font-size: 14px;
   line-height: 20px;
@@ -80,9 +71,11 @@ const CancelButton = styled.button`
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
-  border: 1px solid #ced4da;
+  border: 1px solid #9dc7d8;
+  color: #7b9fac;
   border-radius: 5px;
-  background-color: #ebedef66;
+  background-color: white;
+  margin: 0 auto;
 `;
 
 const styles = {
@@ -107,7 +100,8 @@ const styles = {
 
 function UserConfirmedEvents() {
   const userId = useSelector((state) => state.isLogged.userId);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState("");
+  const [noEvent, setNoEvent] = useState(false);
 
   const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 1);
@@ -117,16 +111,25 @@ function UserConfirmedEvents() {
   const getApplyingEventsInfo = async () => {
     const eventIdArray = await getApplyingEventsId();
     let eventInfoArray = [];
-    await eventIdArray.map(async (id) => {
-      const event = await getEventInfo(id);
-      if (event.eventStatus === 0) {
-        eventInfoArray.push(event);
-      }
-      setEvents([eventInfoArray]);
-    });
-
-    return eventInfoArray;
+    await Promise.all(
+      eventIdArray.map(async (id) => {
+        const event = await getEventInfo(id);
+        if (event.eventStatus === 0) {
+          eventInfoArray.push(event);
+        }
+        setEvents([eventInfoArray]);
+        return eventInfoArray;
+      })
+    );
+    console.log(eventInfoArray);
+    if (eventInfoArray.length === 0) {
+      setNoEvent(true);
+    }
   };
+
+  useEffect(() => {
+    console.log(noEvent);
+  }, [noEvent]);
 
   useEffect(() => {
     getApplyingEventsInfo();
@@ -157,64 +160,58 @@ function UserConfirmedEvents() {
     updateParticipantStatus(eventId, userId, currentStatus);
   };
 
-  // const handleCommentClick = (id) => {
-  //   history.push(`profile/comments/${id}`);
-  // };
-
-  if (events.length === 0) {
-    return null;
-  }
-
-  // if (events[0].length === 0) {
-  //   return (
-  //     <EventsContainer>
-  //       <NoEvent>沒有活動喔</NoEvent>
-  //     </EventsContainer>
-  //   );
-  // }
+  const renderNoEventMessage = () => {
+    if (noEvent) {
+      console.log("noooo");
+      return <NoEvent></NoEvent>;
+    }
+  };
 
   return (
     <EventsContainer className="applying-events">
-      <Events>
-        {events[0].map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
-            <Card style={{ height: "100%" }}>
-              <CurrentStatus>已確認報名</CurrentStatus>
-              <Card.Img
-                variant="top"
-                src={event.eventCoverImage}
-                style={styles.cardImage}
-                onClick={() => handleEventClick(event.eventId)}
-              />
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {event.eventTitle}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{`${reformatTimestamp(
-                      event.startTime
-                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                    <EventText>
-                      {event.eventAddress.formatted_address}
-                    </EventText>
-                  </Card.Text>
-                </EventInfo>
-                <EventStatus>
-                  <CancelButton
-                    onClick={(e) => {
-                      handleCancelClick(event.eventId, userId);
-                      e.target.textContent = "已取消";
-                    }}
-                  >
-                    取消報名
-                  </CancelButton>
-                </EventStatus>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
+      {events.length > 0 && (
+        <Events>
+          {events[0].map((event, index) => (
+            <Col className="p-0" style={styles.cardCol} key={index}>
+              <Card style={{ height: "100%" }}>
+                <CurrentStatus>已確認報名</CurrentStatus>
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {event.eventTitle}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  <EventStatus>
+                    <CancelButton
+                      onClick={(e) => {
+                        handleCancelClick(event.eventId, userId);
+                        e.target.textContent = "已取消";
+                      }}
+                    >
+                      取消報名
+                    </CancelButton>
+                  </EventStatus>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
     </EventsContainer>
   );
 }

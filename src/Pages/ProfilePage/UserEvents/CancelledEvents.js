@@ -5,6 +5,7 @@ import { getUserEvents, getEventInfo } from "../../../utils/firebase.js";
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import NoEvent from "../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -92,6 +93,8 @@ const styles = {
 
 function UserCancelledEvents() {
   const [events, setEvents] = useState("");
+  const [noEvent, setNoEvent] = useState(false);
+
   useEffect(() => {
     console.log(events);
   }, [events]);
@@ -118,26 +121,32 @@ function UserCancelledEvents() {
   const getApplyingEventsInfo = async () => {
     const applyingIdArray = await getApplyingEventsId();
     let eventInfoArray = [];
-    await applyingIdArray.map(async (id) => {
-      const event = await getEventInfo(id);
-      console.log(event);
-      const eventPassed = checkEventPassed(event);
-      console.log(eventPassed);
-      if (eventPassed) {
-        event.passed = true;
-        eventInfoArray.push(event);
-        setEvents([eventInfoArray]);
-      }
-    });
+    await Promise.all(
+      await applyingIdArray.map(async (id) => {
+        const event = await getEventInfo(id);
+        console.log(event);
+        const eventPassed = checkEventPassed(event);
+        console.log(eventPassed);
+        if (eventPassed) {
+          event.passed = true;
+          eventInfoArray.push(event);
+          setEvents([eventInfoArray]);
+        }
+      })
+    );
     const cancelledIdArray = await getCancelledEventsId();
     if (cancelledIdArray.length > 0) {
-      await cancelledIdArray.map(async (id) => {
-        const event = await getEventInfo(id);
-        eventInfoArray.push(event);
-        setEvents([eventInfoArray]);
-      });
+      await Promise.all(
+        await cancelledIdArray.map(async (id) => {
+          const event = await getEventInfo(id);
+          eventInfoArray.push(event);
+          setEvents([eventInfoArray]);
+        })
+      );
     }
-    return eventInfoArray;
+    if (eventInfoArray.length === 0) {
+      setNoEvent(true);
+    }
   };
 
   let history = useHistory();
@@ -165,50 +174,47 @@ function UserCancelledEvents() {
     return reformatedTime;
   };
 
-  if (!events) {
-    return null;
-  }
-
-  // if (events.length === 0) {
-  //   return (
-  //     <EventsContainer>
-  //       <NoEvent>沒有活動喔</NoEvent>
-  //     </EventsContainer>
-  //   );
-  // }
+  const renderNoEventMessage = () => {
+    console.log("Hi");
+    if (noEvent) {
+      console.log("noooo");
+      return <NoEvent></NoEvent>;
+    }
+  };
 
   return (
     <EventsContainer className="applying-events">
-      <Events>
-        {events[0].map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
-            <Card style={{ height: "100%" }}>
-              {event.passed ? (
-                <CurrentStatus>未報名成功</CurrentStatus>
-              ) : (
-                <CurrentStatus>已取消報名</CurrentStatus>
-              )}
-              <Card.Img
-                variant="top"
-                src={event.eventCoverImage}
-                style={styles.cardImage}
-                onClick={() => handleEventClick(event.eventId)}
-              />
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {event.eventTitle}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{`${reformatTimestamp(
-                      event.startTime
-                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                    <EventText>
-                      {event.eventAddress.formatted_address}
-                    </EventText>
-                  </Card.Text>
-                </EventInfo>
-                {/* <EventStatus>
+      {events.length > 0 && (
+        <Events>
+          {events[0].map((event, index) => (
+            <Col className="p-0" style={styles.cardCol} key={index}>
+              <Card style={{ height: "100%" }}>
+                {event.passed ? (
+                  <CurrentStatus>未報名成功</CurrentStatus>
+                ) : (
+                  <CurrentStatus>已取消報名</CurrentStatus>
+                )}
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {event.eventTitle}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  {/* <EventStatus>
                   <CancelButton
                     onClick={(e) => {
                       handleCancelClick(event.eventId, userId);
@@ -218,11 +224,13 @@ function UserCancelledEvents() {
                     取消報名
                   </CancelButton>
                 </EventStatus> */}
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
     </EventsContainer>
   );
 }

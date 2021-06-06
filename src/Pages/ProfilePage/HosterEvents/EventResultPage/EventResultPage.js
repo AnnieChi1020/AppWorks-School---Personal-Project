@@ -11,6 +11,9 @@ import {
 import background from "../../../../images/background.jpg";
 import { Form } from "react-bootstrap";
 
+import { toast } from "react-toastify";
+import { successAlertText } from "../../../../components/Alert.js";
+
 const Background = styled.div`
   width: 100%;
   height: 100%;
@@ -218,7 +221,10 @@ function EventResult() {
       eventData.resultImage = imageUrl;
       console.log(eventData);
       await updateEvent(eventId, eventData);
-      alert("已上傳活動成果");
+      toast.success(successAlertText("已上傳活動成果"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      history.push("/profile");
       history.push("/profile");
     }
   };

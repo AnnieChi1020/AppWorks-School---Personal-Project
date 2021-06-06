@@ -13,6 +13,9 @@ import {
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
+import { toast } from "react-toastify";
+import { successAlertText } from "../../../../components/Alert.js";
+
 const Background = styled.div`
   width: 100%;
   height: 100%;
@@ -143,25 +146,6 @@ function EditEvent() {
     { name: "生態保護", id: "生態保護", select: false },
   ]);
 
-  // const cityArray = [
-  //   "台北市",
-  //   "新北市",
-  //   "桃園市",
-  //   "新竹市",
-  //   "新竹縣",
-  //   "苗栗縣",
-  //   "台中市",
-  //   "彰化縣",
-  //   "雲林縣",
-  //   "嘉義縣",
-  //   "台南市",
-  //   "高雄市",
-  //   "屏東縣",
-  //   "宜蘭縣",
-  //   "花蓮縣",
-  //   "台東縣",
-  // ];
-
   const getCurrentEventInfo = async () => {
     let eventInfo = await getEventInfo(eventId);
 
@@ -173,26 +157,6 @@ function EditEvent() {
       date: getReformatedDate(eventInfo.endTime.toDate()),
       time: getReformatedTime(eventInfo.endTime.toDate()),
     };
-
-    // const addressText = () => {
-    //   const addressComponents = eventInfo.eventAddress.address_components;
-    //   let addressText = "";
-    //   for (let i = addressComponents.length - 4; i > -1; i--) {
-    //     addressText += addressComponents[i].short_name;
-    //   }
-    //   return addressText;
-    // };
-
-    // const addressCity = () => {
-    //   const addressComponents = eventInfo.eventAddress.address_components;
-    //   const location = addressComponents.length - 3;
-    //   return addressComponents[location].short_name;
-    // };
-
-    // const reformatedAddress = {
-    //   city: addressCity(),
-    //   address: addressText(),
-    // };
 
     setEvent({
       eventId: eventInfo.eventId,
@@ -369,7 +333,9 @@ function EditEvent() {
 
     await updateEvent(event.eventId, updatedEventDetail);
 
-    alert("已更新志工活動資訊");
+    toast.success(successAlertText("已更新活動資訊"), {
+      position: toast.POSITION.TOP_CENTER,
+    });
     history.push("/profile");
   };
 
