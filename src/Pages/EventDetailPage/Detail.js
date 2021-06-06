@@ -335,7 +335,7 @@ function EventDetail() {
 
       <Modal show={signupModal} onHide={handleClose} style={styles.modal}>
         <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
-        <Modal.Body style={styles.modalBody} className="pb-5">
+        <Modal.Body style={styles.modalBody} className="pb-5 px-5">
           <EventSignUp></EventSignUp>
         </Modal.Body>
       </Modal>

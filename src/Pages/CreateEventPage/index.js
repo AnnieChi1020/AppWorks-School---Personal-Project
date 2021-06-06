@@ -19,7 +19,7 @@ import {
 } from "../../utils/firebase.js";
 
 import { toast } from "react-toastify";
-import { successAlertText } from "../../components/Alert.js";
+import { successAlertText, errorAlertText } from "../../components/Alert.js";
 
 const Background = styled.div`
   width: 100%;
@@ -51,10 +51,11 @@ const Container = styled.div`
 `;
 
 const CreateEventContainer = styled.div`
-  width: 80%;
+  max-width: 600px;
+  width: 95%;
   display: flex;
   margin: 0 auto;
-  margin-top: 120px;
+  margin-top: 100px;
   margin-bottom: 100px;
   flex-direction: column;
   padding: 10px 20px;
@@ -81,6 +82,11 @@ const Option = styled.div`
   margin-bottom: 10px;
   text-align: center;
   color: #495057;
+  @media (max-width: 760px) {
+    font-size: 14px;
+    padding: 5px 15px;
+    margin-right: 5px;
+  }
 `;
 
 const OptionSelected = styled.div`
@@ -99,7 +105,7 @@ const OptionSelected = styled.div`
 const Map = styled.iframe`
   width: 100%;
   height: 30vw;
-  max-height: 500px;
+  max-height: 300px;
   border-radius: 10px;
 `;
 
@@ -117,53 +123,62 @@ const Button = styled.button`
   margin-bottom: 20px;
 `;
 
+const Styles = styled.div`
+  .form-label {
+    @media (max-width: 760px) {
+      font-size: 14px;
+    }
+  }
+  .form-control {
+    @media (max-width: 760px) {
+      font-size: 14px;
+    }
+  }
+  .form-control-file {
+    @media (max-width: 760px) {
+      font-size: 14px;
+    }
+  }
+  .form-control .is-invalid {
+    background-image: none;
+  }
+`;
+
 function CreateEvent() {
   const dispatch = useDispatch();
   const hosterId = useSelector((state) => state.isLogged.userId);
-  // const createEventData = useSelector((state) => state.createEvent);
 
-  // const [file, setFile] = useState(null);
-
-  const getCurrentDate = () => {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = () => {
-      const month = new Date().getMonth();
-      if (month < 10) {
-        return `0${month + 1}`;
-      } else {
-        return `${month + 1}`;
-      }
-    };
-    const currentDate = () => {
-      const date = new Date().getDate();
-      if (date < 10) {
-        return `0${date}`;
-      } else {
-        return `${date}`;
-      }
-    };
-    return `${currentYear}-${currentMonth()}-${currentDate()}`;
-  };
+  const [timeIsInvalid, setTimeIsInvalid] = useState(false);
+  const [titleIsInvalid, setTitleIsInvalid] = useState(false);
+  const [contentIsInvalid, setContentIsInvalid] = useState(false);
+  const [addressIsInvalid, setAddressIsInvalid] = useState(false);
+  const [imageIsInvalid, setImageIsInvalid] = useState(false);
 
   const getCurrentTime = () => {
-    const currentHours = () => {
-      const hours = new Date().getHours();
-      if (hours < 10) {
-        return `0${hours}`;
-      } else {
-        return `${hours}`;
-      }
-    };
-    const currentMinutes = () => {
-      const minutes = new Date().getMinutes();
-      if (minutes < 10) {
-        return `0${minutes}`;
-      } else {
-        return `${minutes}`;
-      }
-    };
-    return `${currentHours()}:${currentMinutes()}`;
+    const tzoffset = new Date().getTimezoneOffset() * 60000;
+    const localISOTime = new Date(Date.now() - tzoffset)
+      .toISOString()
+      .slice(0, -1);
+    const localDate = localISOTime.split("T")[0];
+    const localTime = localISOTime.split("T")[1].slice(0, 5);
+    return { date: localDate, time: localTime };
   };
+
+  const getTomorrow = () => {
+    const tzoffset = new Date().getTimezoneOffset() * 60000;
+    const localISOTime = new Date(Date.now() + 43200000 - tzoffset)
+      .toISOString()
+      .slice(0, -1);
+    const localDate = localISOTime.split("T")[0];
+    return localDate;
+  };
+
+  const [eventTime, setEventTime] = useState({
+    startDate: getTomorrow(),
+    startTime: getCurrentTime().time,
+    endDate: getTomorrow(),
+    endTime: getCurrentTime().time,
+  });
 
   const [address, setAddress] = useState("台灣");
 
@@ -248,15 +263,70 @@ function CreateEvent() {
     return { id: newEventRef, data: eventData };
   };
 
-  const [validated, setValidated] = useState(false);
+  const handleTimeChange = (input, value) => {
+    if (input === "startDate") {
+      setEventTime({ ...eventTime, startDate: value });
+    } else if (input === "startTime") {
+      setEventTime({ ...eventTime, startTime: value });
+    } else if (input === "endDate") {
+      setEventTime({ ...eventTime, endDate: value });
+    } else {
+      setEventTime({ ...eventTime, endTime: value });
+    }
+  };
+
+  useEffect(() => {
+    setTimeIsInvalid(false);
+  }, []);
+
+  const checkIfTimeIsInvalid = () => {
+    const start = new Date(
+      eventTime.startDate + " " + eventTime.startTime
+    ).valueOf();
+    const end = new Date(eventTime.endDate + " " + eventTime.endTime).valueOf();
+    console.log(start < end);
+    if (start >= end) {
+      setTimeIsInvalid(true);
+    } else {
+      setTimeIsInvalid(false);
+    }
+  };
+
+  // const [validated, setValidated] = useState(false);
 
   const handleSubmit = async (event) => {
+    const inputs = event.currentTarget;
+
+    if (!inputs.title.value) {
+      setTitleIsInvalid(true);
+    } else {
+      setTitleIsInvalid(false);
+    }
+
+    if (!inputs.content.value) {
+      setContentIsInvalid(true);
+    } else {
+      setContentIsInvalid(false);
+    }
+
+    checkIfTimeIsInvalid();
+
+    if (!inputs.address.value) {
+      setAddressIsInvalid(true);
+    } else {
+      setAddressIsInvalid(false);
+    }
+
+    if (!inputs.coverImage.files[0]) {
+      setImageIsInvalid(true);
+    } else {
+      setImageIsInvalid(false);
+    }
+
     event.preventDefault();
     event.stopPropagation();
-    const inputs = event.currentTarget;
-    setValidated(true);
 
-    if (inputs.checkValidity() === true) {
+    if (inputs.checkValidity() === true && !timeIsInvalid) {
       const eventData = await constructEventData(inputs);
       console.log(eventData);
       await postEventInfo(eventData.id, eventData.data);
@@ -264,171 +334,198 @@ function CreateEvent() {
         position: toast.POSITION.TOP_CENTER,
       });
       history.push("/events");
+    } else {
+      toast.error(errorAlertText("請確認活動資料"));
     }
   };
 
   return (
-    <Container className="container-xl">
-      <Background />
-      <Mask />
-      <CreateEventContainer>
-        <Form
-          className="px-0 py-3 p-md-4"
-          noValidate
-          validated={validated}
-          onSubmit={handleSubmit}
-        >
-          <Form.Group controlId="title">
-            <Form.Label>活動名稱</Form.Label>
-            <Form.Control type="text" required className="mb-1" />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
-              請輸入活動名稱
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="content">
-            <Form.Label>活動內容</Form.Label>
-            <Form.Control
-              as="textarea"
-              type="text"
-              rows={3}
-              required
-              className="mb-1"
-            />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
-              請輸入活動內容
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="startTime">
-            <Row>
-              <Col>
-                <Form.Label>開始日期</Form.Label>
-                <Form.Control
-                  type="date"
-                  required
-                  defaultValue={getCurrentDate()}
-                  className="mb-1"
-                />
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ position: "inherit" }}
-                >
-                  請提供開始日期
-                </Form.Control.Feedback>
-              </Col>
-              <Col>
-                <Form.Label>時間</Form.Label>
-                <Form.Control
-                  type="time"
-                  required
-                  defaultValue={getCurrentTime()}
-                  className="mb-1"
-                />
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ position: "inherit" }}
-                >
-                  請提供開始時間
-                </Form.Control.Feedback>
-              </Col>
-            </Row>
-          </Form.Group>
-          <Form.Group controlId="endTime">
-            <Row>
-              <Col>
-                <Form.Label>結束日期</Form.Label>
-                <Form.Control
-                  type="date"
-                  required
-                  defaultValue={getCurrentDate()}
-                  className="mb-1"
-                />
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ position: "inherit" }}
-                >
-                  請提供結束日期
-                </Form.Control.Feedback>
-              </Col>
-              <Col>
-                <Form.Label>時間</Form.Label>
-                <Form.Control
-                  type="time"
-                  required
-                  defaultValue={getCurrentTime()}
-                  className="mb-1"
-                />
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ position: "inherit" }}
-                >
-                  請提供結束時間
-                </Form.Control.Feedback>
-              </Col>
-            </Row>
-          </Form.Group>
-          <Form.Group controlId="formEventCoverImage">
-            <Form.Label>活動類型</Form.Label>
-            <Tags>
-              {tags.map((tag, index) =>
-                tag.select === true ? (
-                  <OptionSelected
-                    id={tag.id}
-                    key={index}
-                    onClick={(e) => handleTagClick(e)}
+    <Styles>
+      <Container className="container-xl">
+        <Background />
+        <Mask />
+        <CreateEventContainer>
+          <Form
+            className="px-0 py-3 p-4"
+            noValidate
+            // validated={validated}
+            onSubmit={handleSubmit}
+          >
+            <Form.Group controlId="title">
+              <Form.Label>活動名稱</Form.Label>
+              <Form.Control
+                type="text"
+                required
+                isInvalid={titleIsInvalid}
+                className="mb-1"
+              />
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ position: "inherit" }}
+              >
+                請輸入活動名稱
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="content">
+              <Form.Label>活動內容</Form.Label>
+              <Form.Control
+                as="textarea"
+                type="text"
+                rows={3}
+                required
+                isInvalid={contentIsInvalid}
+                className="mb-1"
+              />
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ position: "inherit" }}
+              >
+                請輸入活動內容
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="startTime">
+              <Row>
+                <Col>
+                  <Form.Label>開始日期</Form.Label>
+                  <Form.Control
+                    type="date"
+                    defaultValue={getTomorrow()}
+                    min={getTomorrow()}
+                    className="mb-1"
+                    isInvalid={timeIsInvalid}
+                    onChange={(e) => {
+                      handleTimeChange("startDate", e.target.value);
+                    }}
+                  />
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ position: "inherit" }}
                   >
-                    {tag.name}
-                  </OptionSelected>
-                ) : (
-                  <Option
-                    id={tag.id}
-                    key={index}
-                    onClick={(e) => handleTagClick(e)}
-                  >
-                    {tag.name}
-                  </Option>
-                )
-              )}
-            </Tags>
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>地址</Form.Label>
-            <Form.Control
-              type="text"
-              required
-              onChange={(e) => handleAddressChange(e)}
-              className="mb-1"
-            />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
-              請提供活動地址
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group>
-            <Map
-              src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
+                    開始時間需早於結束時間
+                  </Form.Control.Feedback>
+                  <Form.Control.Feedback
+                    type="valid"
+                    style={{ display: "none" }}
+                  ></Form.Control.Feedback>
+                </Col>
+                <Col>
+                  <Form.Label>時間</Form.Label>
+                  <Form.Control
+                    type="time"
+                    defaultValue={getCurrentTime().time}
+                    className="mb-1"
+                    isInvalid={timeIsInvalid}
+                    onChange={(e) => {
+                      handleTimeChange("startTime", e.target.value);
+                    }}
+                  />
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ position: "inherit" }}
+                  ></Form.Control.Feedback>
+                </Col>
+              </Row>
+            </Form.Group>
+            <Form.Group controlId="endTime">
+              <Row>
+                <Col>
+                  <Form.Label>結束日期</Form.Label>
+                  <Form.Control
+                    type="date"
+                    defaultValue={getTomorrow()}
+                    min={eventTime.startDate}
+                    isInvalid={timeIsInvalid}
+                    className="mb-1"
+                    onChange={(e) => {
+                      handleTimeChange("endDate", e.target.value);
+                    }}
+                  />
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ position: "inherit" }}
+                  ></Form.Control.Feedback>
+                </Col>
+                <Col>
+                  <Form.Label>時間</Form.Label>
+                  <Form.Control
+                    type="time"
+                    defaultValue={getCurrentTime().time}
+                    isInvalid={timeIsInvalid}
+                    className="mb-1"
+                    onChange={(e) => {
+                      handleTimeChange("endTime", e.target.value);
+                    }}
+                  />
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ position: "inherit" }}
+                  ></Form.Control.Feedback>
+                </Col>
+              </Row>
+            </Form.Group>
+            <Form.Group controlId="formEventCoverImage">
+              <Form.Label>活動類型</Form.Label>
+              <Tags>
+                {tags.map((tag, index) =>
+                  tag.select === true ? (
+                    <OptionSelected
+                      id={tag.id}
+                      key={index}
+                      onClick={(e) => handleTagClick(e)}
+                    >
+                      {tag.name}
+                    </OptionSelected>
+                  ) : (
+                    <Option
+                      id={tag.id}
+                      key={index}
+                      onClick={(e) => handleTagClick(e)}
+                    >
+                      {tag.name}
+                    </Option>
+                  )
+                )}
+              </Tags>
+            </Form.Group>
+            <Form.Group controlId="address">
+              <Form.Label>地址</Form.Label>
+              <Form.Control
+                type="text"
+                required
+                onChange={(e) => handleAddressChange(e)}
+                isInvalid={addressIsInvalid}
+                className="mb-1"
+              />
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ position: "inherit" }}
+              >
+                請填寫正確地址
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group>
+              <Map
+                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
     &q=${address}`}
-            ></Map>
-          </Form.Group>
-          <Form.Group controlId="coverImage">
-            <Form.Label>上傳活動封面</Form.Label>
-            <Form.Control type="file" required className="mb-1" />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
-              請選擇封面圖片
-            </Form.Control.Feedback>
-            <Form></Form>
-          </Form.Group>
-          {/* <PlacesAutocomplete
+              ></Map>
+            </Form.Group>
+            <Form.Group controlId="coverImage">
+              <Form.Label>上傳活動封面</Form.Label>
+              <Form.Control
+                type="file"
+                required
+                className="mb-1"
+                isInvalid={imageIsInvalid}
+              />
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ position: "inherit" }}
+              >
+                請選擇封面圖片
+              </Form.Control.Feedback>
+              <Form></Form>
+            </Form.Group>
+            {/* <PlacesAutocomplete
           // value={this.state.address}
           // onChange={this.handleChange}
           // onSelect={this.handleSelect}
@@ -471,10 +568,11 @@ function CreateEvent() {
               </div>
             )}
           </PlacesAutocomplete> */}
-          <Button type="submit">創建活動</Button>
-        </Form>
-      </CreateEventContainer>
-    </Container>
+            <Button type="submit">創建活動</Button>
+          </Form>
+        </CreateEventContainer>
+      </Container>
+    </Styles>
   );
 }
 

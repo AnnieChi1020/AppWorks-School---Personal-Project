@@ -6,10 +6,11 @@ import {
   getEventInfo,
   getParticipantInfo,
 } from "../../../utils/firebase.js";
-import { useSelector } from "react-redux";
-import { Col, Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Col, Card, Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import NoEvent from "../components/NoEvent.js";
+import Comments from "./CommentsPage/CommentsPage.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -72,7 +73,9 @@ const RateButton = styled.button`
   padding: 3px 5px;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  background-color: #ebedef66;
+  background-color: #67aeca;
+  color: white;
+  margin: 0 auto;
 `;
 
 const styles = {
@@ -93,14 +96,26 @@ const styles = {
   cardCol: {
     overflow: "hidden",
   },
+  modal: {
+    marginTop: "50px",
+  },
+  modalHeader: {
+    border: "none",
+  },
+  modalBody: {
+    padding: "0 40px 40px 40px",
+  },
 };
+
+const Styles = styled.div``;
 
 function UserCompletedEvents() {
   const userId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
+  const showFeedbackModal = useSelector((state) => state.modal.feedback);
 
-  
+  const dispatch = useDispatch();
 
   const getCompletedEventIds = async () => {
     const applyingEvents = await getUserEvents(userId, 1);
@@ -138,10 +153,6 @@ function UserCompletedEvents() {
     getCompletedEventsInfo();
   }, []);
 
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
-
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
     return dayArray[day];
@@ -161,16 +172,21 @@ function UserCompletedEvents() {
     history.push(`/events/${e}`);
   };
 
-  const handleCommentClick = (id) => {
-    history.push(`profile/comments/${id}`);
-  };
+  // const handleCommentClick = (id) => {
+  //   history.push(`profile/comments/${id}`);
+  // };
 
   const renderNoEventMessage = () => {
     console.log("Hi");
     if (noEvent) {
-      console.log("noooo");
       return <NoEvent></NoEvent>;
     }
+  };
+
+  const handleClose = () => dispatch({ type: "SHOW_FEEDBACK", data: false });
+  const handleShow = (eventId) => {
+    dispatch({ type: "SHOW_FEEDBACK", data: true });
+    dispatch({ type: "SET_EVENTID", data: eventId });
   };
 
   return (
@@ -207,21 +223,23 @@ function UserCompletedEvents() {
                   </EventInfo>
                   <EventStatus>
                     {event.userAttend === false ? (
-                      <RateButton disabled>評價活動</RateButton>
+                      <RateButton disabled style={{ opacity: ".5" }}>
+                        評價活動
+                      </RateButton>
                     ) : (
                       <div />
                     )}
                     {event.userAttend === true && event.userRate === 0 ? (
-                      <RateButton
-                        onClick={() => handleCommentClick(event.eventId)}
-                      >
+                      <RateButton onClick={() => handleShow(event.eventId)}>
                         評價活動
                       </RateButton>
                     ) : (
                       <div />
                     )}
                     {event.userAttend === true && event.userRate !== 0 ? (
-                      <RateButton disabled>已評價活動</RateButton>
+                      <RateButton disabled style={{ opacity: ".5" }}>
+                        已評價活動
+                      </RateButton>
                     ) : (
                       <div />
                     )}
@@ -233,6 +251,12 @@ function UserCompletedEvents() {
         </Events>
       )}
       {renderNoEventMessage()}
+      <Modal show={showFeedbackModal} onHide={handleClose} style={styles.modal}>
+        <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
+        <Modal.Body style={styles.modalBody}>
+          <Comments></Comments>
+        </Modal.Body>
+      </Modal>
     </EventsContainer>
   );
 }

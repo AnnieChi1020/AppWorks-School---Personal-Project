@@ -71,9 +71,11 @@ const CancelButton = styled.button`
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
-  border: 1px solid #ced4da;
+  border: 1px solid #9dc7d8;
+  color: #7b9fac;
   border-radius: 5px;
-  background-color: #ebedef66;
+  background-color: white;
+  margin: 0 auto;
 `;
 
 const styles = {

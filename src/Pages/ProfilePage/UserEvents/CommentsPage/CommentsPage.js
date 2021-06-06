@@ -11,7 +11,7 @@ import {
   updateParticipantStatus,
 } from "../../../../utils/firebase.js";
 import { Form } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { toast } from "react-toastify";
 import { successAlertText } from "../../../../components/Alert.js";
@@ -115,9 +115,12 @@ const SubmitButton = styled.button`
 function Comments() {
   const { id } = useParams();
 
-  const participantId = useSelector((state) => state.isLogged.userId);
+  const dispatch = useDispatch();
 
-  const eventId = id;
+  const participantId = useSelector((state) => state.isLogged.userId);
+  const eventId = useSelector((state) => state.modal.eventId);
+
+  // const eventId = id;
   let rating;
   let comment;
 
@@ -183,44 +186,44 @@ function Comments() {
     toast.success(successAlertText("已送出評價"), {
       position: toast.POSITION.TOP_CENTER,
     });
-    history.goBack();
+    dispatch({ type: "SHOW_FEEDBACK", data: false });
   };
 
   return (
-    <Container className="container-xl">
-      <Background></Background>
-      <Mask></Mask>
-      <CommentContainer>
-        <Event>
-          <EventTitle>{eventInfo.title}</EventTitle>
-          <EventInfo>
-            {`${eventInfo.startTime} - ${eventInfo.endTime}`}
-          </EventInfo>
-          <EventInfo>{eventInfo.address}</EventInfo>
-        </Event>
-        <Form>
-          <Form.Group>
-            <FormLabel className="mb-0">活動評分</FormLabel>
-            <ReactStars
-              count={5}
-              onChange={ratingChanged}
-              size={24}
-              height={"20px"}
-              activeColor="#ffd700"
-            />
-          </Form.Group>
-          <Form.Group>
-            <FormLabel>活動評價</FormLabel>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              onChange={(e) => commentChanged(e.target.value)}
-            />
-          </Form.Group>
-        </Form>
-        <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
-      </CommentContainer>
-    </Container>
+    // <Container className="container-xl">
+    //   <Background></Background>
+    //   <Mask></Mask>
+    // <CommentContainer>
+    <div>
+      <Event>
+        <EventTitle>{eventInfo.title}</EventTitle>
+        <EventInfo>{`${eventInfo.startTime} - ${eventInfo.endTime}`}</EventInfo>
+        <EventInfo>{eventInfo.address}</EventInfo>
+      </Event>
+      <Form>
+        <Form.Group>
+          <FormLabel className="mb-0">活動評分</FormLabel>
+          <ReactStars
+            count={5}
+            onChange={ratingChanged}
+            size={24}
+            height={"20px"}
+            activeColor="#ffd700"
+          />
+        </Form.Group>
+        <Form.Group>
+          <FormLabel>活動評價</FormLabel>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            onChange={(e) => commentChanged(e.target.value)}
+          />
+        </Form.Group>
+      </Form>
+      <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
+    </div>
+    // </CommentContainer>
+    // </Container>
   );
 }
 
