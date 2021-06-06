@@ -11,6 +11,8 @@ import {
   geocodeByPlaceId,
   getLatLng,
 } from "react-places-autocomplete";
+import Autocomplete from "react-google-autocomplete";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 import {
   createNewDoc,
@@ -153,6 +155,8 @@ function CreateEvent() {
   const [contentIsInvalid, setContentIsInvalid] = useState(false);
   const [addressIsInvalid, setAddressIsInvalid] = useState(false);
   const [imageIsInvalid, setImageIsInvalid] = useState(false);
+
+  const [selectedAddress, setSelectedAddress] = useState("");
 
   const getCurrentTime = () => {
     const tzoffset = new Date().getTimezoneOffset() * 60000;
@@ -339,6 +343,24 @@ function CreateEvent() {
     }
   };
 
+  const customAddressSelector = React.forwardRef(
+    ({ children, onChange }, ref) => {
+      return (
+        <GooglePlacesAutocomplete
+          apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"
+          selectProps={{
+            selectedAddress,
+            onChange: setSelectedAddress,
+          }}
+        />
+      );
+    }
+  );
+
+  useEffect(() => {
+    console.log(selectedAddress);
+  }, [selectedAddress]);
+
   return (
     <Styles>
       <Container className="container-xl">
@@ -489,13 +511,26 @@ function CreateEvent() {
             </Form.Group>
             <Form.Group controlId="address">
               <Form.Label>地址</Form.Label>
-              <Form.Control
+
+              {/* <Form.Control
                 type="text"
                 required
                 onChange={(e) => handleAddressChange(e)}
                 isInvalid={addressIsInvalid}
                 className="mb-1"
-              />
+              ></Form.Control> */}
+              <Form.Control
+                as={customAddressSelector}
+                className="mb-1"
+              ></Form.Control>
+              {/* <GooglePlacesAutocomplete
+                placeholder="地址"
+                apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"
+                selectProps={{
+                  selectedAddress,
+                  onChange: setSelectedAddress,
+                }}
+              /> */}
               <Form.Control.Feedback
                 type="invalid"
                 style={{ position: "inherit" }}
