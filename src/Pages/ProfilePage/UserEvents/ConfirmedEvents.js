@@ -10,7 +10,7 @@ import {
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import NoEvent from "./components/NoEvent.js";
+import NoEvent from "../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;

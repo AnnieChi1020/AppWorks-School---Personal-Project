@@ -5,6 +5,7 @@ import { getHosterEvents } from "../../../utils/firebase.js";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
+import NoEvent from "../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -51,15 +52,6 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-const NoEventText = styled.div`
-  width: 100px;
-  font-size: 16px;
-  line-height: 20px;
-  margin: 0 auto;
-  margin-top: 20px;
-  margin-bottom: 80px;
-`;
-
 const styles = {
   cardImage: {
     objectFit: "cover",
@@ -83,10 +75,14 @@ const styles = {
 function CancelledEvents() {
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
+  const [noEvent, setNoEvent] = useState(false);
 
   const getHosterEventsData = async () => {
     const newEvents = await getHosterEvents(hosterId, 9);
     setEvents(newEvents);
+    if (newEvents.length === 0) {
+      setNoEvent(true);
+    }
   };
 
   useEffect(() => {
@@ -112,39 +108,48 @@ function CancelledEvents() {
     history.push(`/events/${e}`);
   };
 
+  const renderNoEventMessage = () => {
+    if (noEvent) {
+      console.log("noooo");
+      return <NoEvent></NoEvent>;
+    }
+  };
+
   return (
     <EventsContainer>
-      <Events>
-        {events.map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
-            <Card style={{ height: "100%" }}>
-              <CurrentStatus>已取消</CurrentStatus>
-              <Card.Img
-                variant="top"
-                src={event.eventCoverImage}
-                style={styles.cardImage}
-                onClick={() => handleEventClick(event.eventId)}
-              />
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {event.eventTitle}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{`${reformatTimestamp(
-                      event.startTime
-                    )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                    <EventText>
-                      {event.eventAddress.formatted_address}
-                    </EventText>
-                  </Card.Text>
-                </EventInfo>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
-      {events.length === 0 ? <NoEventText>沒有活動喔</NoEventText> : <div />}
+      {events.length > 0 && (
+        <Events>
+          {events.map((event, index) => (
+            <Col className="p-0" style={styles.cardCol} key={index}>
+              <Card style={{ height: "100%" }}>
+                <CurrentStatus>已取消</CurrentStatus>
+                <Card.Img
+                  variant="top"
+                  src={event.eventCoverImage}
+                  style={styles.cardImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {event.eventTitle}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
     </EventsContainer>
   );
 }

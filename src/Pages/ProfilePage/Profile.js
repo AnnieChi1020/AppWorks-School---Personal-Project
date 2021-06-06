@@ -15,6 +15,8 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
 import { PieChart } from "react-minimal-pie-chart";
 import { ProgressBar } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { SignOutAlertText } from "../../components/Alert.js";
 
 const Container = styled.div`
   width: 300px;
@@ -103,12 +105,12 @@ const ProfileName = styled.div`
   font-size: 18px;
   line-height: 24px;
   font-weight: 600;
+  margin-bottom: 10px;
 `;
 
 const LevelText = styled.div`
   width: 80px;
   margin: 0 auto;
-  margin-top: 10px;
   font-size: 12px;
   line-height: 16px;
   padding: 3px;
@@ -202,7 +204,7 @@ const ChartLabelText = styled.div`
   line-height: 16px;
 `;
 
-const Button = styled.button`
+const UserLogoutButton = styled.button`
   width: 80px;
   margin: 0 auto;
   margin-top: 20px;
@@ -213,6 +215,20 @@ const Button = styled.button`
   border: 1px solid #67aeca;
   border-radius: 5px;
   color: #5c99b1;
+  background-color: white;
+`;
+
+const HosterLogoutButton = styled.button`
+  width: 80px;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 18px;
+  padding: 3px;
+  border: 1px solid #9ab898;
+  border-radius: 5px;
+  color: #81997f;
   background-color: white;
 `;
 
@@ -299,7 +315,11 @@ function Profile() {
       dispatch({ type: "SIGN_IN", data: false });
       dispatch({ type: "GET_USERID", data: "" });
       dispatch({ type: "GET_USERROLE", data: "" });
-      alert("已登出");
+
+      toast.info(SignOutAlertText("已登出"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
+
       history.push("/");
     }
   };
@@ -440,8 +460,13 @@ function Profile() {
     <Container>
       <Styles>
         <ProfileDiv>
-          <ProfileHeader />
-          <MainContent>
+          {role === 0 ? (
+            <ProfileHeader />
+          ) : (
+            <ProfileHeader style={{ backgroundColor: "#c7D8c6" }} />
+          )}
+
+          <MainContent style={{ borderBottom: "1px solid #e7e7e9" }}>
             <ProfileSubContainer>
               {userData.userPhoto ? (
                 <ProfileImg src={userData.photo} />
@@ -451,12 +476,20 @@ function Profile() {
             </ProfileSubContainer>
             <ProfileSubContainer>
               <ProfileName>{`哈囉，${userData.name}`}</ProfileName>
-              <LevelText>{levelStatus.current.name}</LevelText>
+              {role === 0 && <LevelText>{levelStatus.current.name}</LevelText>}
             </ProfileSubContainer>
             {role === 0 && renderLevelData()}
             {role === 0 && renderCategoryData()}
           </MainContent>
-          <Button onClick={handleLogoutButton}>登出</Button>
+          {role === 0 ? (
+            <UserLogoutButton onClick={handleLogoutButton}>
+              登出
+            </UserLogoutButton>
+          ) : (
+            <HosterLogoutButton onClick={handleLogoutButton}>
+              登出
+            </HosterLogoutButton>
+          )}
         </ProfileDiv>
       </Styles>
     </Container>

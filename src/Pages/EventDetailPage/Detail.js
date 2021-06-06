@@ -13,6 +13,8 @@ import {
 import { Modal } from "react-bootstrap";
 import EventSignUp from "./SignUp.js";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { warningAlertText } from "../../components/Alert.js";
 
 const Container = styled.div`
   width: 90%;
@@ -98,28 +100,6 @@ const EventText = styled.h2`
   }
 `;
 
-// const HosterContainer = styled.div`
-//   width: 250px;
-//   margin-top: 20px;
-//   margin-left: 20px;
-//   border: solid 1px #979797;
-//   border-radius: 20px;
-//   padding: 20px;
-// `;
-
-// const HosterName = styled.div`
-//   width: 100%;
-//   font-size: 16px;
-//   line-height: 20px;
-// `;
-
-// const HosterDetail = styled.div`
-//   width: 100%;
-//   font-size: 16px;
-//   line-height: 20px;
-//   margin-top: 10px;
-// `;
-
 const MapContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -198,7 +178,6 @@ function EventDetail() {
   let { id } = useParams();
   let eventId = id;
   const logStatus = useSelector((state) => state.isLogged);
-  // const signupData = useSelector((state) => state.signup);
   const signupModal = useSelector((state) => state.modal.signup);
 
   console.log(signupModal);
@@ -268,28 +247,21 @@ function EventDetail() {
     getEventDetail();
   }, []);
 
-  // const [show, setShow] = useState(false);
   const handleClose = () => dispatch({ type: "SIGNUP", data: false });
   const handleShow = () => {
     console.log(logStatus);
     if (logStatus.userRole === 0) {
       dispatch({ type: "SIGNUP", data: true });
     } else {
-      alert("請先登入志工帳號");
+      toast.warning(warningAlertText("請先登入志工帳號"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 
   useEffect(() => {
     dispatch({ type: "ADD_USERID", data: logStatus.userId });
   }, []);
-
-  // const handleSubmitClick = async () => {
-  //   console.log(signupData);
-  //   await postParticipantInfo(eventId, logStatus.userId, signupData);
-  //   alert("已送出報名資訊");
-  //   const inputs = document.querySelectorAll("input");
-  //   inputs.forEach((e) => (e.value = ""));
-  // };
 
   const renderButton = (e) => {
     return e.status === 0 ? (
@@ -359,30 +331,13 @@ function EventDetail() {
     &q=${event.address}`}
           ></Map>
         </EventDetailContainer>
-
-        {/* <HosterContainer>
-          <HosterName>{event.orgName}</HosterName>
-          <HosterDetail>{event.orgContact}</HosterDetail>
-          <HosterDetail>{event.orgEmail}</HosterDetail>
-        </HosterContainer> */}
       </EventMainContianer>
 
       <Modal show={signupModal} onHide={handleClose} style={styles.modal}>
-        <Modal.Header style={styles.modalHeader} closeButton>
-          {/* <Modal.Title style={styles.modalTitle}>請填寫個人資料</Modal.Title> */}
-        </Modal.Header>
+        <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
         <Modal.Body style={styles.modalBody} className="pb-5">
           <EventSignUp></EventSignUp>
         </Modal.Body>
-        {/* <Modal.Footer style={styles.modalFooter}>
-          <Button
-            variant="primary"
-            onClick={handleSubmitClick}
-            style={styles.button}
-          >
-            送出報名資料
-          </Button>
-        </Modal.Footer> */}
       </Modal>
     </Container>
   );

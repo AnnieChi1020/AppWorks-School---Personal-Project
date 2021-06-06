@@ -46,8 +46,10 @@ export const postParticipantInfo = (
   return participantRef;
 };
 
-export const getImageURL = (file) => {
-  let storageRef = firebase.storage().ref(file.name);
+export const getImageURL = (hosterId, file) => {
+  let storageRef = firebase
+    .storage()
+    .ref(`${hosterId}_${new Date().toISOString()}`);
   return storageRef.put(file).then((snapshot) => {
     return snapshot.ref.getDownloadURL();
   });

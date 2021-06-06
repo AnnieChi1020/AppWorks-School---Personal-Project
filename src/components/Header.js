@@ -5,6 +5,8 @@ import logo from "../images/logo_3.png";
 import menu from "../images/menu.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import { warningAlertText } from "./Alert.js";
 
 const Container = styled.div`
   width: 100%;
@@ -147,7 +149,11 @@ function Header() {
   };
 
   const handleCreateEventClick = () => {
-    userRole === 1 ? history.push("/createEvent") : alert("請先登入機構帳號");
+    userRole === 1
+      ? history.push("/createEvent")
+      : toast.warning(warningAlertText("請先登入機構帳號"), {
+          position: toast.POSITION.TOP_CENTER,
+        });
   };
 
   const handlePastEventsClick = () => {

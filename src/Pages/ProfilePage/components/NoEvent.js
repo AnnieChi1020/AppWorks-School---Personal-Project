@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import noEventImage from "../../../../images/noEvent.png";
+import noEventImage from "../../../images/noEvent.png";
 
 const Container = styled.div`
   width: 100%;

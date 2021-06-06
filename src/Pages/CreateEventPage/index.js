@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 import { useHistory } from "react-router-dom";
@@ -18,7 +18,8 @@ import {
   getImageURL,
 } from "../../utils/firebase.js";
 
-import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { successAlertText } from "../../components/Alert.js";
 
 const Background = styled.div`
   width: 100%;
@@ -164,20 +165,6 @@ function CreateEvent() {
     return `${currentHours()}:${currentMinutes()}`;
   };
 
-  // const [startTime, setStartTime] = useState({
-  //   date: getCurrentDate(),
-  //   time: getCurrentTime(),
-  // });
-  // const [endTime, setEndTime] = useState({
-  //   date: getCurrentDate(),
-  //   time: getCurrentTime(),
-  // });
-
-  // const [address, setAddress] = useState("{
-  //   city: "台北市",
-  //   location: "",
-  // }");
-
   const [address, setAddress] = useState("台灣");
 
   const [tags, setTags] = useState([
@@ -186,25 +173,6 @@ function CreateEvent() {
     { name: "環境保護", id: "環境保護", select: false },
     { name: "生態保護", id: "生態保護", select: false },
   ]);
-
-  // const cityArray = [
-  //   "台北市",
-  //   "新北市",
-  //   "桃園市",
-  //   "新竹市",
-  //   "新竹縣",
-  //   "苗栗縣",
-  //   "台中市",
-  //   "彰化縣",
-  //   "雲林縣",
-  //   "嘉義縣",
-  //   "台南市",
-  //   "高雄市",
-  //   "屏東縣",
-  //   "宜蘭縣",
-  //   "花蓮縣",
-  //   "台東縣",
-  // ];
 
   const getGeopoint = async (address) => {
     let location;
@@ -219,24 +187,6 @@ function CreateEvent() {
   };
 
   let history = useHistory();
-
-  // const handleStartTimeChange = (e) => {
-  //   setStartTime({ ...startTime, [e.target.type]: e.target.value });
-  // };
-
-  // useEffect(() => {
-  //   const newStartTime = new Date(startTime.date + " " + startTime.time);
-  //   dispatch({ type: "ADD_STARTTIME", data: newStartTime });
-  // }, [startTime]);
-
-  // const handleEndTimeChange = (e) => {
-  //   setEndTime({ ...endTime, [e.target.type]: e.target.value });
-  // };
-
-  // useEffect(() => {
-  //   const newEndTime = new Date(endTime.date + " " + endTime.time);
-  //   dispatch({ type: "ADD_ENDTIME", data: newEndTime });
-  // }, [endTime]);
 
   const handleTagClick = (tag) => {
     let selectedId = tag.target.id;
@@ -266,47 +216,13 @@ function CreateEvent() {
     dispatch({ type: "ADD_TAGS", data: selectedTags });
   }, [tags]);
 
-  // const handleInputChange = (e) => {
-  //   dispatch({ type: `${e.target.id}`, data: e.target.value });
-  // };
-
-  // const handleCityChange = (e) => {
-  //   const city = e.target.value;
-  //   setAddress({ ...address, city: city });
-  // };
-
-  // const handleLocationChange = (e) => {
-  //   const location = e.target.value;
-  //   setAddress({ ...address, location: location });
-  // };
-
   const handleAddressChange = (e) => {
     const address = e.target.value;
     setAddress(address);
   };
 
-  useEffect(() => {
-    console.log(getGeopoint(address));
-  }, [address]);
-
-  // async function handelClickSubmit() {
-  //   const imageUrl = await getImageURL(file);
-  //   const newEventRef = createNewDoc();
-  //   await dispatch({ type: "ADD_HOSTERID", data: hosterId });
-  //   await dispatch({ type: "ADD_ID", data: newEventRef.id });
-  //   await dispatch({ type: "ADD_COVERIMAGE", data: imageUrl });
-
-  //   const eventDetail = createEventData;
-  //   eventDetail.hosterId = hosterId;
-  //   eventDetail.eventId = newEventRef.id;
-  //   eventDetail.eventCoverImage = imageUrl;
-  //   await postEventInfo(newEventRef, eventDetail);
-  //   alert("已創建志工活動");
-  //   history.push("/events");
-  // }
-
   const constructEventData = async (inputs) => {
-    const imageUrl = await getImageURL(inputs.coverImage.files[0]);
+    const imageUrl = await getImageURL(hosterId, inputs.coverImage.files[0]);
     const geopoint = await getGeopoint(address);
     console.log(geopoint);
     const newEventRef = createNewDoc();
@@ -344,7 +260,9 @@ function CreateEvent() {
       const eventData = await constructEventData(inputs);
       console.log(eventData);
       await postEventInfo(eventData.id, eventData.data);
-      alert("已創建志工活動");
+      toast.success(successAlertText("已創建志工活動"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
       history.push("/events");
     }
   };

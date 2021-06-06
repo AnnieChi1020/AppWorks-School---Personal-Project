@@ -6,6 +6,8 @@ import { postParticipantInfo } from "../../utils/firebase.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Form, Col } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { successAlertText } from "../../components/Alert.js";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -13,47 +15,6 @@ const Wrapper = styled.div`
   margin: 0 auto;
   flex-direction: column;
 `;
-
-// const Field = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   margin-top: 20px;
-// `;
-
-// const FieldName = styled.label`
-//   width: 80px;
-//   line-height: 19px;
-//   font-size: 16px;
-//   color: #3f3a3a;
-//   margin-right: 30px;
-// `;
-
-// const FieldInput = styled.div`
-//   width: calc(100% - 110px);
-//   display: flex;
-//   align-items: center;
-// `;
-
-// const TextInput = styled.input`
-//   width: 100%;
-//   height: 30px;
-//   border-radius: 8px;
-//   border: solid 1px #979797;
-//   padding: 0 4px;
-// `;
-
-// const SubmitButton = styled.button`
-//   width: 120px;
-//   background-color: #0e6cd0;
-//   color: white;
-//   border: none;
-//   border-radius: 5px;
-//   font-size: 16px;
-//   padding: 5px 10px;
-//   margin: 0 auto;
-//   margin-top: 30px;
-// `;
 
 const Button = styled.button`
   width: 150px;
@@ -67,8 +28,6 @@ const Button = styled.button`
   margin-top: 20px;
 
   @media (max-width: 540px) {
-    /* font-size: 14px; */
-    /* line-height: 20px; */
     width: 90%;
   }
 `;
@@ -77,36 +36,8 @@ function EventSignUp() {
   const { id } = useParams();
   const eventId = id;
   const userId = useSelector((state) => state.isLogged.userId);
-  // const signupData = useSelector((state) => state.signup);
 
   const dispatch = useDispatch();
-
-  // const participantId = "9xRjcIJWdYWT4zIKs1oG";
-  // const eventId = id;
-
-  // const [signUpInput, setSignUpInput] = useState({
-  //   eventId: eventId,
-  //   participantId: participantId,
-  //   participantName: "",
-  //   participantPhone: "",
-  //   participantEmail: "",
-  //   participantStatus: 0,
-  //   participantAttended: false,
-  //   participantComment: "",
-  //   participantRating: 0,
-  // });
-
-  // const handleNameChange = (e) => {
-  //   dispatch({ type: "ADD_NAME", data: e });
-  // };
-
-  // const handlePhoneChange = (e) => {
-  //   dispatch({ type: "ADD_PHONE", data: e });
-  // };
-
-  // const handleEmailChange = (e) => {
-  //   dispatch({ type: "ADD_EMAIL", data: e });
-  // };
 
   useEffect(() => {
     dispatch({ type: "ADD_USERID", data: userId });
@@ -115,9 +46,9 @@ function EventSignUp() {
 
   const postParticipantDetail = async (signupData) => {
     await postParticipantInfo(eventId, userId, signupData);
-    alert("已送出報名資訊");
-    // const inputs = document.querySelectorAll("input");
-    // inputs.forEach((e) => (e.value = ""));
+    toast.success(successAlertText("已送出報名資訊"), {
+      position: toast.POSITION.TOP_CENTER,
+    });
   };
 
   const [validated, setValidated] = useState(false);

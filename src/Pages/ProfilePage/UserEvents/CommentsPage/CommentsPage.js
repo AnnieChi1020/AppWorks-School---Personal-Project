@@ -13,6 +13,9 @@ import {
 import { Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
+import { toast } from "react-toastify";
+import { successAlertText } from "../../../../components/Alert.js";
+
 const Background = styled.div`
   width: 100%;
   height: 100%;
@@ -177,7 +180,9 @@ function Comments() {
     currentStatus.participantInfo.participantComment = comment;
     currentStatus.participantInfo.participantRating = rating;
     await updateParticipantStatus(eventInfo.id, participantId, currentStatus);
-    alert("已送出評價");
+    toast.success(successAlertText("已送出評價"), {
+      position: toast.POSITION.TOP_CENTER,
+    });
     history.goBack();
   };
 
