@@ -30,6 +30,9 @@ const MainContent = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
+  @media (max-width: 960px) {
+    flex-direction: column;
+  }
 `;
 
 function PastEventsPage() {

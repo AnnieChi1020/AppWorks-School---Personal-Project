@@ -146,7 +146,7 @@ function LeaderBoard() {
       return a.number > b.number ? -1 : 1;
     });
     console.log(sortedArray);
-    setSortedData(sortedArray);
+    setSortedData(sortedArray.slice(0, 5));
   }, [leaderboard]);
 
   if (!sortedData.length) {

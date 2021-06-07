@@ -34,6 +34,12 @@ const PastEvent = styled.div`
     transform: scale(1, 1) rotate(0deg) !important;
     transition: all 0.35s;
   }
+  @media (max-width: 760px) {
+    width: 50%;
+  }
+  @media (max-width: 540px) {
+    width: 95%;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -170,7 +176,8 @@ function PastEvents() {
       eventsArray.push(pastEvent);
       return true;
     });
-    setEvents(eventsArray);
+    eventsArray.slice(0, 9);
+    setEvents(eventsArray.slice(0, 9));
   };
 
   const getDay = (day) => {

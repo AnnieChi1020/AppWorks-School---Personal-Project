@@ -186,10 +186,15 @@ const Button = styled.button`
   /* border: 1px solid white; */
   color: white;
 
-  @media (max-width: 960px) {
+  & :hover {
+    box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.5);
+    border: 1px solid yellow;
+  }
+
+  /* @media (max-width: 960px) {
     margin: 0 auto;
     margin-top: 20px;
-  }
+  } */
 `;
 
 function Banner() {
