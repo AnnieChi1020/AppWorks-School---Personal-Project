@@ -32,6 +32,7 @@ const PlantImage = styled.img`
 
 const LeaderBoardDiv = styled.div`
   width: 100%;
+  height: 300px;
   padding: 20px 10px;
   background-color: white;
   border-radius: 10px;

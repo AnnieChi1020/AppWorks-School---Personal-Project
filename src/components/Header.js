@@ -156,17 +156,11 @@ const LogoImage = styled.img`
   cursor: pointer;
 `;
 
-const Styles = styled.div``;
-
-const StyledNavItem = styled(Nav.Link)`
-  color: #3d3d3d;
+const Styles = styled.div`
+  .navbar-nav .nav-item {
+    color: green;
+  }
 `;
-
-const styles = {
-  navItem: {
-    color: "#3d3d3d",
-  },
-};
 
 function Header() {
   const isLogged = useSelector((state) => state.isLogged.isLogged);
@@ -224,9 +218,15 @@ function Header() {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
-                <Nav.Link onClick={handleEventsClick}>我要當志工</Nav.Link>
-                <Nav.Link onClick={handleCreateEventClick}>招募志工</Nav.Link>
-                <Nav.Link onClick={handlePastEventsClick}>活動成果</Nav.Link>
+                <Nav.Item>
+                  <Nav.Link onClick={handleEventsClick}>我要當志工</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link onClick={handleCreateEventClick}>招募志工</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link onClick={handlePastEventsClick}>活動成果</Nav.Link>
+                </Nav.Item>
               </Nav>
               <Nav>
                 {isLogged === true ? (

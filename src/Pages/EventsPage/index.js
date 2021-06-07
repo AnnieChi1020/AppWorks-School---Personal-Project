@@ -7,15 +7,15 @@ import { useEffect } from "react";
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 50px;
-  min-height: calc(100vh - 200px);
+  min-height: 100vh;
 `;
 
 const Background = styled.div`
-  height: calc(100vh - 70px);
+  height: 100%;
   width: 100%;
-  background-color: #fffaee;
-  position: absolute;
+  background-color: #80808012;
+  /* background-color: #fffaee; */
+  position: fixed;
   top: 0;
   left: 0;
   z-index: -1;

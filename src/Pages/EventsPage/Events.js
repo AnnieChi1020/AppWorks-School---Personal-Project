@@ -6,14 +6,44 @@ import { useHistory } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import noEventImage from "../../images/noEvent.png";
+import eventBanner from "../../images/eventBanner.png";
 
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 80px;
-  padding: 20px;
+  margin-top: 60px;
+  padding: 20px 30px 30px 30px;
+  background-color: white;
+  @media (max-width: 540px) {
+    padding: 20px 10px 30px 10px;
+  }
+`;
+
+const BannerContainer = styled.div`
+  width: 100%;
+  height: 300px;
+  padding: 20px 0;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  text-align: center;
+  @media (max-width: 760px) {
+    height: 200px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 540px) {
+    height: 160px;
+    margin-bottom: 10px;
+  }
+`;
+
+const BannerImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0 auto;
+  border-radius: 10px;
 `;
 
 const FilterContainer = styled.div`
@@ -31,7 +61,7 @@ const Filter = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  @media (max-width: 720px) {
+  @media (max-width: 760px) {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -50,6 +80,9 @@ const Tags = styled.div`
   justify-content: flex-start;
   flex-grow: 0;
   align-items: center;
+  @media (max-width: 760px) {
+    /* flex-wrap: wrap; */
+  }
 `;
 
 const Tag = styled.div`
@@ -57,16 +90,23 @@ const Tag = styled.div`
   font-size: 16px;
   line-height: 20px;
   padding: 5px 15px;
-  border: solid 1px #979797;
+  border: 1px solid #57bb92;
+  color: #57bb92;
   border-radius: 20px;
   margin-right: 5px;
   cursor: pointer;
   text-align: center;
   background-color: white;
-  @media (max-width: 720px) {
+  @media (max-width: 760px) {
     width: 80px;
     font-size: 14px;
     line-height: 16px;
+    padding: 5px 5px;
+  }
+  @media (max-width: 540px) {
+    width: 70px;
+    font-size: 12px;
+    line-height: 14px;
     padding: 5px 5px;
   }
 `;
@@ -83,10 +123,16 @@ const TagSelected = styled.div`
   color: white;
   cursor: pointer;
   text-align: center;
-  @media (max-width: 720px) {
+  @media (max-width: 760px) {
     width: 80px;
     font-size: 14px;
     line-height: 16px;
+    padding: 5px 5px;
+  }
+  @media (max-width: 540px) {
+    width: 70px;
+    font-size: 12px;
+    line-height: 14px;
     padding: 5px 5px;
   }
 `;
@@ -97,26 +143,38 @@ const SelectContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  @media (max-width: 720px) {
-    width: 250px;
+  @media (max-width: 760px) {
+    width: 100%;
     margin-top: 10px;
     margin-left: 0px;
+    justify-content: flex-start;
   }
 `;
 
 const Selector = styled.select`
   width: 120px;
   height: 32px;
-  border: solid 1px #979797;
+  border: solid 1px #57bb92;
   border-radius: 10px;
   padding: 0 10px;
-  color: #4f4f4f;
+  color: #57bb92;
   font-size: 16px;
 
-  @media (max-width: 720px) {
+  @media (max-width: 760px) {
     height: 28px;
     font-size: 14px;
     line-height: 16px;
+  }
+
+  @media (max-width: 540px) {
+    padding: 0 5px;
+    height: 26px;
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  select.decorated option:hover {
+    background-color: grey;
   }
 `;
 
@@ -198,21 +256,27 @@ const EventTitle = styled.div`
 // `;
 
 const ClearButton = styled.button`
-  width: 140px;
+  width: 100px;
   height: 32px;
-  background-color: #97979740;
-  color: #3e3e3e;
+  background-color: #57bb6b29;
+  color: #6c6c6c;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   line-height: 20px;
   margin-left: 10px;
   cursor: pointer;
-  @media (max-width: 720px) {
+  @media (max-width: 760px) {
     width: 100px;
     font-size: 14px;
     line-height: 16px;
     height: 28px;
+  }
+  @media (max-width: 540px) {
+    width: 80px;
+    font-size: 12px;
+    line-height: 14px;
+    height: 26px;
   }
 `;
 
@@ -389,6 +453,9 @@ function AllEvents() {
 
   return (
     <Container>
+      <BannerContainer>
+        <BannerImage src={eventBanner} />
+      </BannerContainer>
       <FilterContainer>
         <Filter>
           <Tags>
@@ -431,9 +498,9 @@ function AllEvents() {
 
       <Events>
         {events.map((event, index) => (
-          <Col className="p-0" style={styles.cardCol} key={index}>
+          <Col className="p-0 " style={styles.cardCol} key={index}>
             <Card
-              className="shadow-sm rounded bg-white"
+              className="shadow-sm rounded bg-white h-100"
               onClick={() => handleEventClick(event.eventId)}
               style={{ cursor: "pointer" }}
             >
