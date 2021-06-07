@@ -147,6 +147,9 @@ const Styles = styled.div`
   .invalid-feedback {
     margin-top: 5px;
   }
+  /* .css-yk16xz-control {
+    border: 1px solid red;
+  } */
 `;
 
 function CreateEvent() {
@@ -160,6 +163,14 @@ function CreateEvent() {
   const [imageIsInvalid, setImageIsInvalid] = useState(false);
 
   const [selectedAddress, setSelectedAddress] = useState("");
+
+  useEffect(() => {
+    setSelectedAddress({ ...selectedAddress, label: "台灣" });
+  }, []);
+
+  useEffect(() => {
+    console.log(selectedAddress.label);
+  }, [selectedAddress]);
 
   const getCurrentTime = () => {
     const tzoffset = new Date().getTimezoneOffset() * 60000;
@@ -245,7 +256,9 @@ function CreateEvent() {
 
   const constructEventData = async (inputs) => {
     const imageUrl = await getImageURL(hosterId, inputs.coverImage.files[0]);
-    const geopoint = await getGeopoint(address);
+    // const geopoint = await getGeopoint(address);
+    const geopoint = await getGeopoint(selectedAddress.label);
+
     console.log(geopoint);
     const newEventRef = createNewDoc();
     console.log(imageUrl);
@@ -320,10 +333,18 @@ function CreateEvent() {
 
     const timeIsValid = checkIfTimeIsInvalid();
 
-    if (!inputs.address.value) {
-      setAddressIsInvalid(true);
+    // if (!inputs.address.value) {
+    //   setAddressIsInvalid(true);
+    // } else {
+    //   setAddressIsInvalid(false);
+    // }
+
+    if (!selectedAddress.value) {
+      document.querySelector(".css-yk16xz-control").style.border =
+        "1px solid red";
     } else {
-      setAddressIsInvalid(false);
+      document.querySelector(".css-yk16xz-control").style.border =
+        "1px solid hsl(0, 0%, 80%)";
     }
 
     if (!inputs.coverImage.files[0]) {
@@ -335,7 +356,11 @@ function CreateEvent() {
     event.preventDefault();
     event.stopPropagation();
 
-    if (inputs.checkValidity() === true && timeIsValid) {
+    if (
+      inputs.checkValidity() === true &&
+      timeIsValid &&
+      selectedAddress.value
+    ) {
       const eventData = await constructEventData(inputs);
       console.log(eventData);
       await postEventInfo(eventData.id, eventData.data);
@@ -517,25 +542,26 @@ function CreateEvent() {
             <Form.Group controlId="address">
               <Form.Label>地址</Form.Label>
 
-              <Form.Control
+              {/* <Form.Control
                 type="text"
                 required
                 onChange={(e) => handleAddressChange(e)}
                 isInvalid={addressIsInvalid}
                 className="mb-1"
-              ></Form.Control>
+              ></Form.Control> */}
               {/* <Form.Control
                 as={customAddressSelector}
                 className="mb-1"
               ></Form.Control> */}
-              {/* <GooglePlacesAutocomplete
+              <GooglePlacesAutocomplete
                 placeholder="地址"
                 apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"
                 selectProps={{
                   selectedAddress,
                   onChange: setSelectedAddress,
+                  placeholder: "請輸入地址",
                 }}
-              /> */}
+              />
               <Form.Control.Feedback
                 type="invalid"
                 style={{ position: "inherit" }}
@@ -546,7 +572,7 @@ function CreateEvent() {
             <Form.Group>
               <Map
                 src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
-    &q=${address}`}
+    &q=${selectedAddress.label}`}
               ></Map>
             </Form.Group>
             <Form.Group controlId="coverImage">
