@@ -96,13 +96,11 @@ function Login() {
 
   const [action, setAction] = useState("login");
   const [identity, setIdentity] = useState("user");
-  // const [signupInfo, setSignupInfo] = useState({
-  //   name: "",
-  //   email: "",
-  //   password: "",
-  //   phone: "",
-  //   address: "",
-  // });
+
+  const [emailIsInvalid, setEmailIsInvalid] = useState(false);
+  const [passwordIsInvalid, setPasswordIsInvalid] = useState(false);
+  const [nameIsInvalid, setNameIsInvalid] = useState(false);
+  const [phoneIsInvalid, setPhoneIsInvalid] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -129,10 +127,18 @@ function Login() {
     return hosterData;
   };
 
+  const clearValidationStatus = () => {
+    setEmailIsInvalid(false);
+    setPasswordIsInvalid(false);
+    setNameIsInvalid(false);
+    setPhoneIsInvalid(false);
+  };
+
   const handleActionChange = (e) => {
-    dispatch({ type: "SHOW_LOGINALERT", data: true });
+    // dispatch({ type: "SHOW_LOGINALERT", data: true });
     setAction(e.target.id);
     setValidated(false);
+    clearValidationStatus();
     const inputs = document.querySelectorAll("input");
     inputs.forEach((input) => {
       input.value = "";
@@ -142,6 +148,7 @@ function Login() {
   const handleIdentityChange = (e) => {
     setIdentity(e.target.id);
     setValidated(false);
+    clearValidationStatus();
     const inputs = document.querySelectorAll("input");
     inputs.forEach((input) => {
       input.value = "";
@@ -189,6 +196,7 @@ function Login() {
     const email = inputs.email.value;
     const password = inputs.password.value;
     const loginMessage = await userSignIn(email, password);
+
     if (loginMessage === "auth/user-not-found") {
       toast.error(errorAlertText("email 尚未註冊喔"), {
         position: toast.POSITION.TOP_CENTER,
@@ -236,23 +244,65 @@ function Login() {
 
   const handleLoginSubmit = async (event) => {
     const inputs = event.currentTarget;
-    event.preventDefault();
-    event.stopPropagation();
-    setValidated(true);
+    const validRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    console.log(inputs.email.value);
+    if (!inputs.email.value.match(validRegex)) {
+      setEmailIsInvalid(true);
+    } else {
+      setEmailIsInvalid(false);
+    }
+
+    if (inputs.password.value.length < 6) {
+      setPasswordIsInvalid(true);
+    } else {
+      setPasswordIsInvalid(false);
+    }
+
     if (inputs.checkValidity() === true) {
       login(inputs);
     }
+
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   const handleSignupSubmit = async (event) => {
     const inputs = event.currentTarget;
-    event.preventDefault();
-    event.stopPropagation();
 
-    setValidated(true);
+    if (!inputs.name.value) {
+      setNameIsInvalid(true);
+    } else {
+      setNameIsInvalid(false);
+    }
+
+    const validRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (!inputs.email.value.match(validRegex)) {
+      setEmailIsInvalid(true);
+    } else {
+      setEmailIsInvalid(false);
+    }
+
+    if (inputs.password.value.length < 6) {
+      setPasswordIsInvalid(true);
+    } else {
+      setPasswordIsInvalid(false);
+    }
+
+    const phoneno = /^\d{10}$/;
+    if (!inputs.phone.value.match(phoneno)) {
+      setPhoneIsInvalid(true);
+    } else {
+      setPhoneIsInvalid(false);
+    }
+
     if (inputs.checkValidity() === true) {
       signup(inputs);
     }
+
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   const renderModalHeader = () => {
@@ -313,13 +363,18 @@ function Login() {
 
   const userLogin = () => {
     return (
-      <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
+      <Form
+        noValidate
+        // validated={validated}
+        onSubmit={handleLoginSubmit}
+      >
         <Form.Group controlId="email">
           <Form.Control
             type="email"
             placeholder="Email"
             className="mb-1"
             required
+            isInvalid={emailIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入正確的eamil
@@ -331,9 +386,10 @@ function Login() {
             placeholder="密碼"
             className="mb-1"
             required
+            isInvalid={passwordIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入密碼
+            密碼需超過6個字元
           </Form.Control.Feedback>
         </Form.Group>
         <ButtonContainer>
@@ -355,6 +411,7 @@ function Login() {
             placeholder="Email"
             className="mb-1"
             required
+            isInvalid={emailIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入正確的eamil
@@ -366,9 +423,10 @@ function Login() {
             placeholder="密碼"
             className="mb-1"
             required
+            isInvalid={passwordIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入密碼
+            密碼需超過6個字元
           </Form.Control.Feedback>
         </Form.Group>
         <ButtonContainer>
@@ -396,6 +454,7 @@ function Login() {
             placeholder="姓名"
             className="mb-1"
             required
+            isInvalid={nameIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入姓名
@@ -407,6 +466,7 @@ function Login() {
             placeholder="Email"
             className="mb-1"
             required
+            isInvalid={emailIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入正確的email
@@ -418,9 +478,10 @@ function Login() {
             placeholder="密碼"
             className="mb-1"
             required
+            isInvalid={passwordIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入密碼
+            密碼需超過6個字元
           </Form.Control.Feedback>
         </Form.Group>
         <ButtonContainer>
@@ -442,6 +503,7 @@ function Login() {
             placeholder="機構名稱"
             className="mb-1"
             required
+            isInvalid={nameIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入機構名稱
@@ -453,6 +515,7 @@ function Login() {
             placeholder="Email"
             className="mb-1"
             required
+            isInvalid={emailIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入正確的email
@@ -464,17 +527,19 @@ function Login() {
             placeholder="密碼"
             className="mb-1"
             required
+            isInvalid={passwordIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入密碼
+            密碼需超過6個字元
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="phone">
           <Form.Control
-            type="number"
-            placeholder="連絡電話"
+            type="text"
+            placeholder="0912345678"
             className="mb-1"
             required
+            isInvalid={phoneIsInvalid}
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
             請輸入連絡電話
@@ -512,7 +577,7 @@ function Login() {
             ? organizationLogin()
             : identity === "user"
             ? userSignup()
-            : organizationSignup()}{" "}
+            : organizationSignup()}
         </Modal.Body>
       </Modal>
     </Wrapper>
