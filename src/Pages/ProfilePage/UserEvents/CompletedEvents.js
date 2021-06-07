@@ -97,7 +97,7 @@ const styles = {
     overflow: "hidden",
   },
   modal: {
-    marginTop: "50px",
+    marginTop: "70px",
   },
   modalHeader: {
     border: "none",

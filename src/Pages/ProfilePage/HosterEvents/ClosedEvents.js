@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getHosterEvents } from "../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Col, Card } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { Col, Card, Modal } from "react-bootstrap";
 import NoEvent from "../components/NoEvent.js";
+import Results from "./EventResultPage/EventResultPage.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -102,6 +103,12 @@ const styles = {
   cardCol: {
     overflow: "hidden",
   },
+  modalHeader: {
+    border: "none",
+  },
+  modal: {
+    marginTop: "70px",
+  },
 };
 
 const Styles = styled.div`
@@ -114,6 +121,10 @@ function ClosedEvents() {
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
+
+  const showResultModal = useSelector((state) => state.modal.result);
+
+  const dispatch = useDispatch();
 
   const getHosterEventsData = async () => {
     const newEvents = await getHosterEvents(hosterId, 1);
@@ -155,7 +166,10 @@ function ClosedEvents() {
 
   const renderResultButton = (event) => {
     return !event.resultContent ? (
-      <SecondaryButton onClick={() => handleResultClick(event.eventId)}>
+      <SecondaryButton
+        // onClick={() => handleResultClick(event.eventId)}
+        onClick={() => handleShow(event.eventId)}
+      >
         分享活動成果
       </SecondaryButton>
     ) : (
@@ -172,6 +186,12 @@ function ClosedEvents() {
     }
   };
 
+  const handleClose = () => dispatch({ type: "SHOW_RESULT", data: false });
+  const handleShow = (eventId) => {
+    dispatch({ type: "SHOW_RESULT", data: true });
+    dispatch({ type: "SET_EVENTID", data: eventId });
+  };
+
   return (
     <Styles>
       <EventsContainer>
@@ -179,7 +199,7 @@ function ClosedEvents() {
           <Events>
             {events.map((event, index) => (
               <Col className="p-0" style={styles.cardCol} key={index}>
-                 <Card className="h-100 eventCard">
+                <Card className="h-100 eventCard">
                   <CurrentStatus>已結束</CurrentStatus>
                   <Card.Img
                     variant="top"
@@ -216,6 +236,12 @@ function ClosedEvents() {
           </Events>
         )}
         {renderNoEventMessage()}
+        <Modal show={showResultModal} onHide={handleClose} style={styles.modal}>
+          <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
+          <Modal.Body style={styles.modalBody}>
+            <Results></Results>
+          </Modal.Body>
+        </Modal>
       </EventsContainer>
     </Styles>
   );

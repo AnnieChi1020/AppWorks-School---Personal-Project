@@ -144,6 +144,9 @@ const Styles = styled.div`
   .form-control .is-invalid {
     background-image: none;
   }
+  .invalid-feedback {
+    margin-top: 5px;
+  }
 `;
 
 function CreateEvent() {
@@ -291,8 +294,10 @@ function CreateEvent() {
     console.log(start < end);
     if (start >= end) {
       setTimeIsInvalid(true);
+      return false;
     } else {
       setTimeIsInvalid(false);
+      return true;
     }
   };
 
@@ -313,7 +318,7 @@ function CreateEvent() {
       setContentIsInvalid(false);
     }
 
-    checkIfTimeIsInvalid();
+    const timeIsValid = checkIfTimeIsInvalid();
 
     if (!inputs.address.value) {
       setAddressIsInvalid(true);
@@ -330,7 +335,7 @@ function CreateEvent() {
     event.preventDefault();
     event.stopPropagation();
 
-    if (inputs.checkValidity() === true && !timeIsInvalid) {
+    if (inputs.checkValidity() === true && timeIsValid) {
       const eventData = await constructEventData(inputs);
       console.log(eventData);
       await postEventInfo(eventData.id, eventData.data);
@@ -512,17 +517,17 @@ function CreateEvent() {
             <Form.Group controlId="address">
               <Form.Label>地址</Form.Label>
 
-              {/* <Form.Control
+              <Form.Control
                 type="text"
                 required
                 onChange={(e) => handleAddressChange(e)}
                 isInvalid={addressIsInvalid}
                 className="mb-1"
-              ></Form.Control> */}
-              <Form.Control
+              ></Form.Control>
+              {/* <Form.Control
                 as={customAddressSelector}
                 className="mb-1"
-              ></Form.Control>
+              ></Form.Control> */}
               {/* <GooglePlacesAutocomplete
                 placeholder="地址"
                 apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"

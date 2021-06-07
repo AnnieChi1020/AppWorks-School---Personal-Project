@@ -235,7 +235,7 @@ const HosterLogoutButton = styled.button`
 const Styles = styled.div`
   .progress {
     border-radius: 20px;
-    height: 13px;
+    height: 10px;
   }
   .progress-bar {
     background-color: #48add5;
