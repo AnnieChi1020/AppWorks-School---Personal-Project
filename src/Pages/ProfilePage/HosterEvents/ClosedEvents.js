@@ -104,6 +104,12 @@ const styles = {
   },
 };
 
+const Styles = styled.div`
+  .eventCard {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+`;
+
 function ClosedEvents() {
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
@@ -167,49 +173,51 @@ function ClosedEvents() {
   };
 
   return (
-    <EventsContainer>
-      {events.length > 0 && (
-        <Events>
-          {events.map((event, index) => (
-            <Col className="p-0" style={styles.cardCol} key={index}>
-              <Card style={{ height: "100%" }}>
-                <CurrentStatus>已結束</CurrentStatus>
-                <Card.Img
-                  variant="top"
-                  src={event.eventCoverImage}
-                  style={styles.cardImage}
-                  onClick={() => handleEventClick(event.eventId)}
-                />
-                <Card.Body style={styles.cardBody}>
-                  <EventInfo>
-                    <Card.Title style={styles.cardTitle}>
-                      {event.eventTitle}
-                    </Card.Title>
-                    <Card.Text>
-                      <EventText>{`${reformatTimestamp(
-                        event.startTime
-                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                      <EventText>
-                        {event.eventAddress.formatted_address}
-                      </EventText>
-                    </Card.Text>
-                  </EventInfo>
-                  <ManageEventContainer>
-                    <PrimaryButton
-                      onClick={() => handleParticipantClick(event.eventId)}
-                    >
-                      管理參加者
-                    </PrimaryButton>
-                    {renderResultButton(event)}
-                  </ManageEventContainer>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Events>
-      )}
-      {renderNoEventMessage()}
-    </EventsContainer>
+    <Styles>
+      <EventsContainer>
+        {events.length > 0 && (
+          <Events>
+            {events.map((event, index) => (
+              <Col className="p-0" style={styles.cardCol} key={index}>
+                 <Card className="h-100 eventCard">
+                  <CurrentStatus>已結束</CurrentStatus>
+                  <Card.Img
+                    variant="top"
+                    src={event.eventCoverImage}
+                    style={styles.cardImage}
+                    onClick={() => handleEventClick(event.eventId)}
+                  />
+                  <Card.Body style={styles.cardBody}>
+                    <EventInfo>
+                      <Card.Title style={styles.cardTitle}>
+                        {event.eventTitle}
+                      </Card.Title>
+                      <Card.Text>
+                        <EventText>{`${reformatTimestamp(
+                          event.startTime
+                        )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                        <EventText>
+                          {event.eventAddress.formatted_address}
+                        </EventText>
+                      </Card.Text>
+                    </EventInfo>
+                    <ManageEventContainer>
+                      <PrimaryButton
+                        onClick={() => handleParticipantClick(event.eventId)}
+                      >
+                        管理參加者
+                      </PrimaryButton>
+                      {renderResultButton(event)}
+                    </ManageEventContainer>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Events>
+        )}
+        {renderNoEventMessage()}
+      </EventsContainer>
+    </Styles>
   );
 }
 

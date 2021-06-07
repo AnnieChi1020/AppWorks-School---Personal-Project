@@ -115,6 +115,12 @@ const Title = styled.div`
   border-bottom: 2px solid #619e6f;
 `;
 
+const Styles = styled.div`
+  .eventCard {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+`;
+
 function ParticipantList() {
   let { id } = useParams();
   const eventId = id;
@@ -204,29 +210,30 @@ function ParticipantList() {
   };
 
   return (
-    <EventsContainer>
-      <Title>活動參加名單</Title>
-      <Events>
-        {participants.map((participant, index) => (
-          <Col
-            className="p-1"
-            style={{ minWidth: "200px", maxWidth: "200px" }}
-            key={index}
-          >
-            <Card style={{ height: "100%" }}>
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {participant.participantName}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{participant.participantPhone}</EventText>
-                    <EventText>{participant.participantEmail}</EventText>
-                  </Card.Text>
-                </EventInfo>
-                <ButtonsContainer>
-                  {renderButton(participant)}
-                  {/* {participant.participantAttended === false ? (
+    <Styles>
+      <EventsContainer>
+        <Title>活動參加名單</Title>
+        <Events>
+          {participants.map((participant, index) => (
+            <Col
+              className="p-1"
+              style={{ minWidth: "200px", maxWidth: "200px" }}
+              key={index}
+            >
+              <Card className="h-100 eventCard">
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {participant.participantName}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{participant.participantPhone}</EventText>
+                      <EventText>{participant.participantEmail}</EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  <ButtonsContainer>
+                    {renderButton(participant)}
+                    {/* {participant.participantAttended === false ? (
                     <ConfirmButton
                       onClick={(e) => {
                         handleAttendClick(eventId, participant.participantId);
@@ -238,13 +245,14 @@ function ParticipantList() {
                   ) : (
                     <ConfirmButton disabled>已確認出席</ConfirmButton>
                   )} */}
-                </ButtonsContainer>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
-    </EventsContainer>
+                  </ButtonsContainer>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+      </EventsContainer>
+    </Styles>
   );
 }
 

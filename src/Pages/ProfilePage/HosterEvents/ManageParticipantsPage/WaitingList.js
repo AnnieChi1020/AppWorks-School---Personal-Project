@@ -121,6 +121,12 @@ const Title = styled.div`
   border-bottom: 2px solid #1190cb;
 `;
 
+const Styles = styled.div`
+  .eventCard {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+`;
+
 function WaitingList() {
   let { id } = useParams();
   const eventId = id;
@@ -253,6 +259,7 @@ function WaitingList() {
   };
 
   return (
+    <Styles>
     <EventsContainer>
       <Title>志工活動申請</Title>
       <Events>
@@ -262,7 +269,7 @@ function WaitingList() {
             style={{ minWidth: "200px", maxWidth: "200px" }}
             key={index}
           >
-            <Card style={{ height: "100%" }}>
+             <Card className="h-100 eventCard">
               <Card.Body style={styles.cardBody}>
                 <EventInfo>
                   <Card.Title style={styles.cardTitle}>
@@ -291,7 +298,7 @@ function WaitingList() {
           </Col>
         ))}
       </Events>
-    </EventsContainer>
+    </EventsContainer></Styles>
   );
 }
 
