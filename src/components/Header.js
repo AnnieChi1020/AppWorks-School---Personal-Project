@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import Login from "./Login.js";
-import logo from "../images/logo_3.png";
+// import logo from "../images/logo_3.png";
+import logo from "../images/newLogo.png";
 import menu from "../images/menu.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -152,13 +153,40 @@ const MenuImage = styled.img`
 `;
 
 const LogoImage = styled.img`
-  height: 35px;
+  height: 40px;
   cursor: pointer;
 `;
 
 const Styles = styled.div`
-  .navbar-nav .nav-item {
-    color: green;
+  .navbar-toggler-icon {
+    background-image: url(${menu});
+    width: 20px;
+    height: 20px;
+  }
+  .nav-items {
+    padding: 8px 15px !important;
+    :hover {
+      color: #57bc90 !important;
+      font-weight: 600;
+    }
+    @media (max-width: 991px) {
+      padding: 15px 15px !important;
+    }
+  }
+  .loginBtn {
+    background-color: #57bc90;
+    color: white !important;
+    padding: 5px 15px !important;
+    border-radius: 20px;
+    @media (max-width: 991px) {
+      background-color: inherit;
+      color: rgba(0, 0, 0, 0.55) !important;
+      padding: 15px 15px !important;
+      :hover {
+        color: #57bc90 !important;
+        font-weight: 600;
+      }
+    }
   }
 `;
 
@@ -229,22 +257,40 @@ function Header() {
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
                 <Nav.Item>
-                  <Nav.Link onClick={handleEventsClick}>我要當志工</Nav.Link>
+                  <Nav.Link className="nav-items" onClick={handleEventsClick}>
+                    我要當志工
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link onClick={handleCreateEventClick}>招募志工</Nav.Link>
+                  <Nav.Link
+                    className="nav-items"
+                    onClick={handleCreateEventClick}
+                  >
+                    招募志工
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link onClick={handlePastEventsClick}>活動成果</Nav.Link>
+                  <Nav.Link
+                    className="nav-items"
+                    onClick={handlePastEventsClick}
+                  >
+                    活動成果
+                  </Nav.Link>
                 </Nav.Item>
               </Nav>
               <Nav>
                 {isLogged === true ? (
-                  <Nav.Link onClick={handleProfileClick} className="mr-3">
+                  <Nav.Link
+                    onClick={handleProfileClick}
+                    className="mr-3 loginBtn"
+                  >
                     我的活動
                   </Nav.Link>
                 ) : (
-                  <Nav.Link onClick={() => handleLoginClick()} className="mr-3">
+                  <Nav.Link
+                    onClick={() => handleLoginClick()}
+                    className="mr-3 loginBtn"
+                  >
                     登入 / 註冊
                   </Nav.Link>
                 )}
