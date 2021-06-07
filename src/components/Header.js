@@ -162,6 +162,16 @@ const Styles = styled.div`
   }
 `;
 
+const StyledNavItem = styled(Nav.Item)`
+  color: #3d3d3d;
+`;
+
+const styles = {
+  navItem: {
+    color: "#3d3d3d",
+  },
+};
+
 function Header() {
   const isLogged = useSelector((state) => state.isLogged.isLogged);
   const userRole = useSelector((state) => state.isLogged.userRole);

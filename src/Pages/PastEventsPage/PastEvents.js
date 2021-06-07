@@ -10,6 +10,11 @@ import {
 import ReactStars from "react-rating-stars-component";
 import { Modal } from "react-bootstrap";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSadTear } from "@fortawesome/free-solid-svg-icons";
+
+import sadFace from "../../images/sad.svg";
+
 const PastEventsContainer = styled.div`
   width: calc(100% - 20px);
   margin-top: 20px;
@@ -110,6 +115,7 @@ const PastEventImages = styled.div`
 const PastEventImage = styled.img`
   height: 15vw;
   max-height: 150px;
+  min-height: 130px;
   min-width: 40%;
   flex-grow: 1;
   margin: 5px;
@@ -146,6 +152,25 @@ const UserFeedback = styled.div`
 const UserComment = styled.div`
   font-size: 14px;
   line-height: 18px;
+`;
+
+const NoResultDiv = styled.div`
+  width: 100%;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 10px 0;
+  color: #949494;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const NoResultImage = styled.img`
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  margin-left: 5px;
 `;
 
 function PastEvents() {
@@ -242,6 +267,25 @@ function PastEvents() {
 
   const handleClose = () => setShow(false);
 
+  const renderNoResultMessage = () => {
+    return (
+      <NoResultDiv>
+        <NoResultImage src={sadFace} />
+        <div>還沒有活動成果哦</div>
+      </NoResultDiv>
+    );
+  };
+
+  const renderNoFeedbackMessage = () => {
+    return (
+      <NoResultDiv>
+        <NoResultImage src={sadFace} />
+        <div>尚未收到參加者回饋</div>
+        <NoResultImage src={sadFace} />
+      </NoResultDiv>
+    );
+  };
+
   return (
     <div>
       <PastEventsContainer>
@@ -291,32 +335,32 @@ function PastEvents() {
           </PastEventText>
           <PastEventTitle className="pl-2">{eventResult.title}</PastEventTitle>
           <PastEventResult className="pl-2">
-            {eventResult.eventResult}
+            {eventResult.eventResult ? (
+              eventResult.eventResult
+            ) : (
+              // renderNoResultMessage()
+              <div />
+            )}
           </PastEventResult>
         </Modal.Body>
         <Modal.Footer>
           <UserFeedbacks className="pl-2">
-            {userFeedback.map((feedback, index) => (
-              <UserFeedback key={index}>
-                {/* <div>
-                  <UseImage
-                    src={`https://image.slidesharecdn.com/random-120815092541-phpapp02/95/cute-cat-1-728.jpg?cb=1345022928`}
-                  />
-                  <UserComment>{feedback.participantName}</UserComment>
-                </div> */}
-                <div>
-                  {/* <UserComment>{`參加者${index}`}</UserComment> */}
-                  <ReactStars
-                    count={5}
-                    edit={false}
-                    value={feedback.participantRating}
-                    size={24}
-                    activeColor="#ffd700"
-                  />
-                  <UserComment>{feedback.participantComment}</UserComment>
-                </div>
-              </UserFeedback>
-            ))}
+            {userFeedback.length !== 0
+              ? userFeedback.map((feedback, index) => (
+                  <UserFeedback key={index}>
+                    <div>
+                      <ReactStars
+                        count={5}
+                        edit={false}
+                        value={feedback.participantRating}
+                        size={24}
+                        activeColor="#ffd700"
+                      />
+                      <UserComment>{feedback.participantComment}</UserComment>
+                    </div>
+                  </UserFeedback>
+                ))
+              : renderNoFeedbackMessage()}
           </UserFeedbacks>
         </Modal.Footer>
       </Modal>

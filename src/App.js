@@ -12,6 +12,8 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import Header from "./components/Header.js";
 import Footer from "./components/Footer.js";
 import HomePage from "./Pages/HomePage/index.js";
