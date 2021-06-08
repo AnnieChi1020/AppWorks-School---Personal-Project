@@ -38,8 +38,8 @@ function Header() {
   return (
     <Container>
       <FooterContent>
-        <LogoImage src={logo} />
-        <LogoText src={logoText} />
+        {/* <LogoImage src={logo} />
+        <LogoText src={logoText} /> */}
       </FooterContent>
     </Container>
   );

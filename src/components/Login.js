@@ -73,6 +73,13 @@ const SubmitButton = styled.button`
   color: white;
 `;
 
+const TestAccount = styled.div`
+  padding: 5px 12px 5px 5px;
+  font-size: 12px;
+  line-height: 14px;
+  color: #a5a5a5;
+`;
+
 const styles = {
   modal: {
     marginTop: "100px",
@@ -383,7 +390,7 @@ function Login() {
           <Form.Group controlId="email">
             <Form.Control
               type="email"
-              placeholder="Email"
+              placeholder="jennie@gmail.com"
               className="mb-1 formInput"
               required
               isInvalid={emailIsInvalid}
@@ -394,11 +401,13 @@ function Login() {
             >
               請輸入正確的eamil
             </Form.Control.Feedback>
+
+            {/* <TestAccount>測試帳號：jeannie@gmail.com</TestAccount> */}
           </Form.Group>
           <Form.Group controlId="password">
             <Form.Control
               type="password"
-              placeholder="密碼"
+              placeholder="000000"
               className="mb-1"
               required
               isInvalid={passwordIsInvalid}
@@ -428,7 +437,7 @@ function Login() {
           <Form.Group controlId="email">
             <Form.Control
               type="email"
-              placeholder="Email"
+              placeholder="doggy_place@gmail.com"
               className="mb-1"
               required
               isInvalid={emailIsInvalid}
@@ -443,7 +452,7 @@ function Login() {
           <Form.Group controlId="password">
             <Form.Control
               type="password"
-              placeholder="密碼"
+              placeholder="000000"
               className="mb-1"
               required
               isInvalid={passwordIsInvalid}

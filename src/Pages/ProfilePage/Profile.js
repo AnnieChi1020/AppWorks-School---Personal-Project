@@ -259,6 +259,7 @@ function Profile() {
     },
   });
 
+  const [attendedEventNotExist, setAttendedEventNotExist] = useState(false);
   const [pieChartData, setPieChartData] = useState([
     { title: "社會福利", value: 0, color: "#67aeca" },
     { title: "文化教育", value: 0, color: "#57BC90" },
@@ -377,22 +378,27 @@ function Profile() {
       { title: "生態保護", value: 0, color: "#67c6ca" },
     ];
 
-    await Promise.all(
-      eventIdArray.map(async (id) => {
-        const event = await getEventInfo(id);
-        if (checkEventPassed(event)) {
-          dataMock.forEach((type) => {
-            if (event.eventTags.includes(type.title)) {
-              type.value++;
-              return;
-            } else {
-              return;
-            }
-          });
-        }
-      })
-    );
-    setPieChartData(dataMock);
+    if (eventIdArray.length > 0) {
+      await Promise.all(
+        eventIdArray.map(async (id) => {
+          const event = await getEventInfo(id);
+          if (checkEventPassed(event)) {
+            dataMock.forEach((type) => {
+              if (event.eventTags.includes(type.title)) {
+                type.value++;
+                return;
+              } else {
+                return;
+              }
+            });
+          }
+        })
+      );
+      setPieChartData(dataMock);
+    } else {
+      setAttendedEventNotExist(true);
+    }
+
     console.log(dataMock);
     return dataMock;
   };
@@ -429,20 +435,36 @@ function Profile() {
         <Text>{`各類型志工活動參加比例 (已完成)`}</Text>
         <PieChartMainContent>
           <PieChartContainer>
-            <PieChart
-              data={pieChartData}
-              lineWidth={50}
-              paddingAngle={0.5}
-              animate={true}
-              radius={50}
-              // label={({ dataEntry }) => `${dataEntry.value}`}
-              labelStyle={{
-                fontSize: "6px",
-                fontFamily: "sans-serif",
-                fill: "#ffffff",
-              }}
-              labelPosition={75}
-            />
+            {attendedEventNotExist ? (
+              <PieChart
+                data={[{ title: "生態保護", value: 1, color: "#e9ecef" }]}
+                lineWidth={50}
+                animate={true}
+                radius={50}
+                // startAngle={-90}
+                // paddingAngle={1}
+                labelStyle={{
+                  fontSize: "6px",
+                  fontFamily: "sans-serif",
+                  fill: "#ffffff",
+                }}
+                labelPosition={75}
+              />
+            ) : (
+              <PieChart
+                data={pieChartData}
+                lineWidth={50}
+                paddingAngle={0.5}
+                animate={true}
+                radius={50}
+                labelStyle={{
+                  fontSize: "6px",
+                  fontFamily: "sans-serif",
+                  fill: "#ffffff",
+                }}
+                labelPosition={75}
+              />
+            )}
           </PieChartContainer>
           <LabelsContainer>
             {pieChartData.map((label, index) => (

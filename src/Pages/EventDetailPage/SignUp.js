@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Form, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { successAlertText } from "../../components/Alert.js";
+import { successAlertText, errorAlertText } from "../../components/Alert.js";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -90,7 +90,12 @@ function EventSignUp() {
     event.preventDefault();
     event.stopPropagation();
     // setValidated(true);
-    if (inputs.checkValidity() === true) {
+    if (
+      inputs.checkValidity() === true &&
+      inputs.name.value &&
+      inputs.email.value.match(validRegex) &&
+      inputs.phone.value.match(phoneno)
+    ) {
       const signupData = {
         eventId: eventId,
         participantId: userId,
@@ -104,6 +109,10 @@ function EventSignUp() {
       };
       await postParticipantDetail(signupData);
       dispatch({ type: "SIGNUP", data: false });
+    } else {
+      toast.error(errorAlertText("請確認報名資訊"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 

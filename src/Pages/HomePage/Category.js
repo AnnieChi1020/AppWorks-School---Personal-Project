@@ -4,7 +4,7 @@ import animal from "../../images/animal.svg";
 import welfare from "../../images/welfare.svg";
 import environment from "../../images/environment.svg";
 import education from "../../images/education.svg";
-
+import categoryHeaderImgae from "../../images/category_header.png";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
