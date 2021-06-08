@@ -52,7 +52,7 @@ const EventInfo = styled.div`
   flex-direction: column;
 `;
 
-const ManageEventContainer = styled.div`
+const ButtonsContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -68,6 +68,8 @@ const EventText = styled.div`
 `;
 
 const PrimaryButton = styled.button`
+  width: 85px;
+  flex-grow: 1;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
@@ -78,6 +80,8 @@ const PrimaryButton = styled.button`
 `;
 
 const SecondaryButton = styled.button`
+  width: 75px;
+  flex-grow: 1;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
@@ -242,7 +246,7 @@ function ActiveEvents() {
                         </EventText>
                       </Card.Text>
                     </EventInfo>
-                    <ManageEventContainer>
+                    <ButtonsContainer>
                       <PrimaryButton
                         onClick={() => handleParticipantClick(event.eventId)}
                       >
@@ -259,7 +263,7 @@ function ActiveEvents() {
                       >
                         取消活動
                       </SecondaryButton>
-                    </ManageEventContainer>
+                    </ButtonsContainer>
                   </Card.Body>
                 </Card>
               </Col>

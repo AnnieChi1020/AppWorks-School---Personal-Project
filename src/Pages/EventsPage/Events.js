@@ -181,7 +181,7 @@ const Selector = styled.select`
 const Events = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 10px;
+  grid-gap: 20px 15px;
   margin: 0 auto;
   padding: 20px 0;
   @media (max-width: 768px) {
@@ -305,12 +305,25 @@ const NoEventText = styled.div`
 `;
 
 const styles = {
-  cardImage: {
-    objectFit: "cover",
-    width: "100%",
-    height: "150px",
-  },
+  cardImage: {},
 };
+
+const Styles = styled.div`
+  .eventCard {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 10px !important;
+  }
+  .cardImage {
+    object-fit: cover;
+    width: 100%;
+    height: 150px;
+    border-radius: 10px 10px 0 0 !important;
+  }
+  #citySelector > option:hover {
+    color: #1b517e;
+    cursor: pointer;
+  }
+`;
 
 function AllEvents() {
   let selectedTag = useSelector((state) => state.filter.tag);
@@ -452,89 +465,94 @@ function AllEvents() {
   };
 
   return (
-    <Container>
-      <BannerContainer>
-        <BannerImage src={eventBanner} />
-      </BannerContainer>
-      <FilterContainer>
-        <Filter>
-          <Tags>
-            {tagArray.map((tag, index) =>
-              selectedTag === tag ? (
-                <TagSelected
-                // onClick={(e) => handleTagClick(e)}
-                // key={index}
-                >
-                  {tag}
-                </TagSelected>
-              ) : (
-                <Tag onClick={(e) => handleTagClick(e)} key={index}>
-                  {tag}
-                </Tag>
-              )
-            )}
-          </Tags>
-          <SelectContainer>
-            <Selector
-              id="citySelector"
-              data-default-value="default"
-              onChange={(e) => handleCitySelect(e)}
-            >
-              <option value="default" selected disabled hidden>
-                活動縣市
-              </option>
-              {cityArray.map((city, index) => (
-                <option value={city}>{city}</option>
-              ))}
-            </Selector>
-            <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
-          </SelectContainer>
-        </Filter>
-        {/* <Buttons>
+    <Styles>
+      <Container>
+        <BannerContainer>
+          <BannerImage src={eventBanner} />
+        </BannerContainer>
+        <FilterContainer>
+          <Filter>
+            <Tags>
+              {tagArray.map((tag, index) =>
+                selectedTag === tag ? (
+                  <TagSelected
+                  // onClick={(e) => handleTagClick(e)}
+                  // key={index}
+                  >
+                    {tag}
+                  </TagSelected>
+                ) : (
+                  <Tag onClick={(e) => handleTagClick(e)} key={index}>
+                    {tag}
+                  </Tag>
+                )
+              )}
+            </Tags>
+            <SelectContainer>
+              <Selector
+                id="citySelector"
+                data-default-value="default"
+                onChange={(e) => handleCitySelect(e)}
+              >
+                <option value="default" selected disabled hidden>
+                  活動縣市
+                </option>
+                {cityArray.map((city, index) => (
+                  <option value={city}>{city}</option>
+                ))}
+              </Selector>
+              <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
+            </SelectContainer>
+          </Filter>
+          {/* <Buttons>
           <Button>搜尋活動</Button>
           <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
         </Buttons> */}
-      </FilterContainer>
+        </FilterContainer>
 
-      <Events>
-        {events.map((event, index) => (
-          <Col className="p-0 " style={styles.cardCol} key={index}>
-            <Card
-              className="shadow-sm rounded bg-white h-100"
-              onClick={() => handleEventClick(event.eventId)}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="bg-image hover-overlay hover-zoom">
-                <Card.Img
-                  variant="top"
-                  src={event.eventCoverImage}
-                  style={styles.cardImage}
-                ></Card.Img>
-              </div>
-              <Card.Body className="py-2 px-3" style={{ position: "relative" }}>
-                {/* <TagIcon></TagIcon> */}
-                <EventTagContianer>
-                  {event.eventTags.map((tag, index) => (
-                    <EventTag key={index}>{tag}</EventTag>
-                  ))}
-                  <EventTag>{event.eventAddress}</EventTag>
-                </EventTagContianer>
-                <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
-                <EventTitle>{event.eventTitle}</EventTitle>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
-      {noEvent ? (
-        <NoEvent>
-          <NoEventImage src={noEventImage} />
-          <NoEventText>目前沒有活動哦</NoEventText>
-        </NoEvent>
-      ) : (
-        <div />
-      )}
-    </Container>
+        <Events>
+          {events.map((event, index) => (
+            <Col className="p-0 " style={styles.cardCol} key={index}>
+              <Card
+                className="shadow-sm rounded bg-white h-100 eventCard"
+                onClick={() => handleEventClick(event.eventId)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="bg-image hover-overlay hover-zoom">
+                  <Card.Img
+                    variant="top"
+                    src={event.eventCoverImage}
+                    className="cardImage"
+                  ></Card.Img>
+                </div>
+                <Card.Body
+                  className="py-2 px-3"
+                  style={{ position: "relative" }}
+                >
+                  {/* <TagIcon></TagIcon> */}
+                  <EventTagContianer>
+                    {event.eventTags.map((tag, index) => (
+                      <EventTag key={index}>{tag}</EventTag>
+                    ))}
+                    <EventTag>{event.eventAddress}</EventTag>
+                  </EventTagContianer>
+                  <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
+                  <EventTitle>{event.eventTitle}</EventTitle>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Events>
+        {noEvent ? (
+          <NoEvent>
+            <NoEventImage src={noEventImage} />
+            <NoEventText>目前沒有活動哦</NoEventText>
+          </NoEvent>
+        ) : (
+          <div />
+        )}
+      </Container>
+    </Styles>
   );
 }
 

@@ -373,19 +373,19 @@ function CreateEvent() {
     }
   };
 
-  const customAddressSelector = React.forwardRef(
-    ({ children, onChange }, ref) => {
-      return (
-        <GooglePlacesAutocomplete
-          apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"
-          selectProps={{
-            selectedAddress,
-            onChange: setSelectedAddress,
-          }}
-        />
-      );
-    }
-  );
+  // const customAddressSelector = React.forwardRef(
+  //   ({ children, onChange }, ref) => {
+  //     return (
+  //       <GooglePlacesAutocomplete
+  //         apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"
+  //         selectProps={{
+  //           selectedAddress,
+  //           onChange: setSelectedAddress,
+  //         }}
+  //       />
+  //     );
+  //   }
+  // );
 
   useEffect(() => {
     console.log(selectedAddress);

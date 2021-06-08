@@ -4,7 +4,7 @@ import WaitingList from "./WaitingList.js";
 import ParticipantList from "./ParticipantList.js";
 // import { getHosterEvents } from "../../utils/firebase.js";
 // import { useHistory, useParams } from "react-router-dom";
-import background from "../../../../images/background.jpg";
+import background from "../../../../images/manageBackground.jpg";
 
 const Container = styled.div`
   width: 100%;
@@ -39,8 +39,8 @@ const Mask = styled.div`
 function ManageParticipant() {
   return (
     <Container className="container-xl mb-5">
-      {/* <Background />
-      <Mask /> */}
+      <Background />
+      <Mask />
       <WaitingList />
       <ParticipantList />
     </Container>

@@ -10,9 +10,6 @@ import {
 import ReactStars from "react-rating-stars-component";
 import { Modal } from "react-bootstrap";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSadTear } from "@fortawesome/free-solid-svg-icons";
-
 import sadFace from "../../images/sad.svg";
 
 const PastEventsContainer = styled.div`

@@ -61,8 +61,8 @@ const EventInfo = styled.div`
 
 const EventImage = styled.img`
   width: 100%;
-  height: 20vw;
-  max-height: 300px;
+  height: 15vw;
+  max-height: 250px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -100,6 +100,7 @@ function EventResult() {
   const dispatch = useDispatch();
 
   const eventId = useSelector((state) => state.modal.eventId);
+  const hosterId = useSelector((state) => state.isLogged.userId);
 
   const [resultIsInvalid, setResultIsInvalid] = useState(false);
   const [filesIsInvalid, setFilesIsInvalid] = useState(false);
@@ -151,7 +152,8 @@ function EventResult() {
     let imageArray = [];
     for (let i = 0; i < files.length; i++) {
       let imageFile = files[i];
-      const url = await getImageURL(imageFile);
+      console.log(imageFile);
+      const url = await getImageURL(hosterId, imageFile);
       imageArray.push(url);
     }
     // setFiles(imageArray);
@@ -199,6 +201,7 @@ function EventResult() {
       toast.success(successAlertText("已上傳活動成果"), {
         position: toast.POSITION.TOP_CENTER,
       });
+      dispatch({ type: "SHOW_RESULT", data: false });
     } else {
       toast.error(errorAlertText("請提供完整資訊"), {
         position: toast.POSITION.TOP_CENTER,

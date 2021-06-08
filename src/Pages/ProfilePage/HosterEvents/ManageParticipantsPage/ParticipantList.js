@@ -9,9 +9,11 @@ import {
 } from "../../../../utils/firebase.js";
 import { useParams } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
+import noParticipantImage from "../../../../images/noParticipant.png";
 
 const EventsContainer = styled.div`
   width: 90%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -112,12 +114,45 @@ const Title = styled.div`
   margin-top: 15px;
   margin-bottom: 10px;
   text-align: center;
-  border-bottom: 2px solid #619e6f;
+  border-bottom: 3px solid #619e6f;
+`;
+
+const NoResultDiv = styled.div`
+  width: 200px;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 10px 0;
+  color: #949494;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+`;
+
+const NoResultImage = styled.img`
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  margin-right: 5px;
+  margin-left: 5px;
+`;
+
+const NoResultText = styled.div`
+  position: absolute;
+  top: 32px;
+  left: 50px;
+  color: #3d3d3d;
 `;
 
 const Styles = styled.div`
   .eventCard {
     border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+  .col {
+    min-width: 200px !important;
+    flex-grow: 0;
+    justify-content: flex-start;
   }
 `;
 
@@ -126,14 +161,20 @@ function ParticipantList() {
   const eventId = id;
 
   const [participants, setParticipants] = useState([]);
+  const [noParticipant, setNoParticipant] = useState(false);
 
   const getParticipantsData = async () => {
     const newParticipants = await getParticipants(eventId, 1);
     let participantsArray = [];
-    newParticipants.map((e) => {
-      participantsArray.push(e.participantInfo);
-      return true;
-    });
+    await Promise.all(
+      newParticipants.map((e) => {
+        participantsArray.push(e.participantInfo);
+        return true;
+      })
+    );
+    if (participantsArray.length === 0) {
+      setNoParticipant(true);
+    }
     setParticipants([...participantsArray]);
   };
 
@@ -209,17 +250,24 @@ function ParticipantList() {
     );
   };
 
+  const renderNoResultMessage = () => {
+    if (noParticipant) {
+      return (
+        <NoResultDiv>
+          <NoResultImage src={noParticipantImage} />
+          <NoResultText>尚無參加者哦</NoResultText>
+        </NoResultDiv>
+      );
+    }
+  };
+
   return (
     <Styles>
       <EventsContainer>
         <Title>活動參加名單</Title>
         <Events>
           {participants.map((participant, index) => (
-            <Col
-              className="p-1"
-              style={{ minWidth: "200px", maxWidth: "200px" }}
-              key={index}
-            >
+            <Col className="p-1 col" key={index}>
               <Card className="h-100 eventCard">
                 <Card.Body style={styles.cardBody}>
                   <EventInfo>
@@ -233,23 +281,12 @@ function ParticipantList() {
                   </EventInfo>
                   <ButtonsContainer>
                     {renderButton(participant)}
-                    {/* {participant.participantAttended === false ? (
-                    <ConfirmButton
-                      onClick={(e) => {
-                        handleAttendClick(eventId, participant.participantId);
-                        e.target.textContent = "已確認出席";
-                      }}
-                    >
-                      出席確認
-                    </ConfirmButton>
-                  ) : (
-                    <ConfirmButton disabled>已確認出席</ConfirmButton>
-                  )} */}
                   </ButtonsContainer>
                 </Card.Body>
               </Card>
             </Col>
           ))}
+          {renderNoResultMessage()}
         </Events>
       </EventsContainer>
     </Styles>

@@ -9,12 +9,16 @@ import {
 } from "../../../../utils/firebase.js";
 import { useParams } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
+import sadFace from "../../../../images/sad.svg";
+import noApplicantImage from "../../../../images/noApplicant.png";
 
 const EventsContainer = styled.div`
   width: 90%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  margin-top: 100px;
   background-color: white;
   padding: 10px 20px 20px 20px;
   border-radius: 20px;
@@ -118,12 +122,45 @@ const Title = styled.div`
   margin-top: 15px;
   margin-bottom: 10px;
   text-align: center;
-  border-bottom: 2px solid #1190cb;
+  border-bottom: 3px solid #1190cb;
+`;
+
+const NoResultDiv = styled.div`
+  width: 200px;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 10px 0;
+  color: #949494;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+`;
+
+const NoResultImage = styled.img`
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  margin-right: 5px;
+  margin-left: 5px;
+`;
+
+const NoResultText = styled.div`
+  position: absolute;
+  top: 28px;
+  left: 35px;
+  color: #3d3d3d;
 `;
 
 const Styles = styled.div`
   .eventCard {
     border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+  .col {
+    min-width: 200px !important;
+    flex-grow: 0;
+    justify-content: flex-start;
   }
 `;
 
@@ -132,16 +169,22 @@ function WaitingList() {
   const eventId = id;
 
   const [applicants, setApplicants] = useState([]);
+  const [noApplicant, setNoApplicant] = useState(false);
 
   const getApplicantsData = async () => {
     let applicantsArray = [];
     const newApplicants = await getParticipants(eventId, 0);
-    newApplicants.map((applicant) => {
-      applicant.participantInfo.click = false;
-      console.log(applicant);
-      applicantsArray.push(applicant.participantInfo);
-      return true;
-    });
+    await Promise.all(
+      newApplicants.map((applicant) => {
+        applicant.participantInfo.click = false;
+        console.log(applicant);
+        applicantsArray.push(applicant.participantInfo);
+        return true;
+      })
+    );
+    if (applicantsArray.length === 0) {
+      setNoApplicant(true);
+    }
     setApplicants(applicantsArray);
   };
 
@@ -258,47 +301,47 @@ function WaitingList() {
     setApplicants([...updatedApplicants]);
   };
 
+  const renderNoFeedbackMessage = () => {
+    if (noApplicant) {
+      return (
+        <NoResultDiv>
+          <NoResultImage src={noApplicantImage} />
+          <NoResultText>目前沒有申請</NoResultText>
+        </NoResultDiv>
+      );
+    }
+  };
+
   return (
     <Styles>
-    <EventsContainer>
-      <Title>志工活動申請</Title>
-      <Events>
-        {applicants.map((applicant, index) => (
-          <Col
-            className="p-0 m-1"
-            style={{ minWidth: "200px", maxWidth: "200px" }}
-            key={index}
-          >
-             <Card className="h-100 eventCard">
-              <Card.Body style={styles.cardBody}>
-                <EventInfo>
-                  <Card.Title style={styles.cardTitle}>
-                    {applicant.participantName}
-                  </Card.Title>
-                  <Card.Text>
-                    <EventText>{applicant.participantPhone}</EventText>
-                    <EventText>{applicant.participantEmail}</EventText>
-                  </Card.Text>
-                </EventInfo>
-                <ButtonsContainer>
-                  {renderConfirmButton(applicant)}
-                  {renderRejectButton(applicant)}
-
-                  {/* <RejectButton
-                    onClick={(e) => {
-                      handleRejectClick(eventId, applicant.participantId);
-                      e.target.textContent = "已拒絕";
-                    }}
-                  >
-                    婉拒報名
-                  </RejectButton> */}
-                </ButtonsContainer>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Events>
-    </EventsContainer></Styles>
+      <EventsContainer>
+        <Title>志工活動申請</Title>
+        <Events>
+          {applicants.map((applicant, index) => (
+            <Col className="p-0 m-1 col" key={index}>
+              <Card className="h-100 eventCard">
+                <Card.Body style={styles.cardBody}>
+                  <EventInfo>
+                    <Card.Title style={styles.cardTitle}>
+                      {applicant.participantName}
+                    </Card.Title>
+                    <Card.Text>
+                      <EventText>{applicant.participantPhone}</EventText>
+                      <EventText>{applicant.participantEmail}</EventText>
+                    </Card.Text>
+                  </EventInfo>
+                  <ButtonsContainer>
+                    {renderConfirmButton(applicant)}
+                    {renderRejectButton(applicant)}
+                  </ButtonsContainer>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+          {renderNoFeedbackMessage()}
+        </Events>
+      </EventsContainer>
+    </Styles>
   );
 }
 
