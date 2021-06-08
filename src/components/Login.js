@@ -93,6 +93,9 @@ const Styles = styled.div`
   .invalid-feedback {
     margin-top: 5px;
   }
+  input:focus {
+    outline: none !important;
+  }
 `;
 
 function Login() {
@@ -381,7 +384,7 @@ function Login() {
             <Form.Control
               type="email"
               placeholder="Email"
-              className="mb-1"
+              className="mb-1 formInput"
               required
               isInvalid={emailIsInvalid}
             />

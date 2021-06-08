@@ -84,6 +84,7 @@ const Option = styled.div`
   margin-bottom: 10px;
   text-align: center;
   color: #495057;
+  cursor: pointer;
   @media (max-width: 760px) {
     font-size: 14px;
     padding: 5px 15px;
@@ -102,6 +103,12 @@ const OptionSelected = styled.div`
   background-color: #636363;
   color: white;
   text-align: center;
+  cursor: pointer;
+  @media (max-width: 760px) {
+    font-size: 14px;
+    padding: 5px 15px;
+    margin-right: 5px;
+  }
 `;
 
 const Map = styled.iframe`
@@ -147,9 +154,11 @@ const Styles = styled.div`
   .invalid-feedback {
     margin-top: 5px;
   }
-  /* .css-yk16xz-control {
-    border: 1px solid red;
-  } */
+  .css-yk16xz-control {
+    @media (max-width: 760px) {
+      font-size: 14px;
+    }
+  }
 `;
 
 function CreateEvent() {
@@ -249,10 +258,10 @@ function CreateEvent() {
     dispatch({ type: "ADD_TAGS", data: selectedTags });
   }, [tags]);
 
-  const handleAddressChange = (e) => {
-    const address = e.target.value;
-    setAddress(address);
-  };
+  // const handleAddressChange = (e) => {
+  //   const address = e.target.value;
+  //   setAddress(address);
+  // };
 
   const constructEventData = async (inputs) => {
     const imageUrl = await getImageURL(hosterId, inputs.coverImage.files[0]);
