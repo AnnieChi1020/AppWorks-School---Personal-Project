@@ -11,6 +11,8 @@ import {
   geocodeByPlaceId,
   getLatLng,
 } from "react-places-autocomplete";
+import Autocomplete from "react-google-autocomplete";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 import {
   createNewDoc,
@@ -82,6 +84,7 @@ const Option = styled.div`
   margin-bottom: 10px;
   text-align: center;
   color: #495057;
+  cursor: pointer;
   @media (max-width: 760px) {
     font-size: 14px;
     padding: 5px 15px;
@@ -100,6 +103,12 @@ const OptionSelected = styled.div`
   background-color: #636363;
   color: white;
   text-align: center;
+  cursor: pointer;
+  @media (max-width: 760px) {
+    font-size: 14px;
+    padding: 5px 15px;
+    margin-right: 5px;
+  }
 `;
 
 const Map = styled.iframe`
@@ -142,6 +151,14 @@ const Styles = styled.div`
   .form-control .is-invalid {
     background-image: none;
   }
+  .invalid-feedback {
+    margin-top: 5px;
+  }
+  .css-yk16xz-control {
+    @media (max-width: 760px) {
+      font-size: 14px;
+    }
+  }
 `;
 
 function CreateEvent() {
@@ -153,6 +170,16 @@ function CreateEvent() {
   const [contentIsInvalid, setContentIsInvalid] = useState(false);
   const [addressIsInvalid, setAddressIsInvalid] = useState(false);
   const [imageIsInvalid, setImageIsInvalid] = useState(false);
+
+  const [selectedAddress, setSelectedAddress] = useState("");
+
+  useEffect(() => {
+    setSelectedAddress({ ...selectedAddress, label: "台灣" });
+  }, []);
+
+  useEffect(() => {
+    console.log(selectedAddress.label);
+  }, [selectedAddress]);
 
   const getCurrentTime = () => {
     const tzoffset = new Date().getTimezoneOffset() * 60000;
@@ -231,14 +258,16 @@ function CreateEvent() {
     dispatch({ type: "ADD_TAGS", data: selectedTags });
   }, [tags]);
 
-  const handleAddressChange = (e) => {
-    const address = e.target.value;
-    setAddress(address);
-  };
+  // const handleAddressChange = (e) => {
+  //   const address = e.target.value;
+  //   setAddress(address);
+  // };
 
   const constructEventData = async (inputs) => {
     const imageUrl = await getImageURL(hosterId, inputs.coverImage.files[0]);
-    const geopoint = await getGeopoint(address);
+    // const geopoint = await getGeopoint(address);
+    const geopoint = await getGeopoint(selectedAddress.label);
+
     console.log(geopoint);
     const newEventRef = createNewDoc();
     console.log(imageUrl);
@@ -287,8 +316,10 @@ function CreateEvent() {
     console.log(start < end);
     if (start >= end) {
       setTimeIsInvalid(true);
+      return false;
     } else {
       setTimeIsInvalid(false);
+      return true;
     }
   };
 
@@ -309,12 +340,20 @@ function CreateEvent() {
       setContentIsInvalid(false);
     }
 
-    checkIfTimeIsInvalid();
+    const timeIsValid = checkIfTimeIsInvalid();
 
-    if (!inputs.address.value) {
-      setAddressIsInvalid(true);
+    // if (!inputs.address.value) {
+    //   setAddressIsInvalid(true);
+    // } else {
+    //   setAddressIsInvalid(false);
+    // }
+
+    if (!selectedAddress.value) {
+      document.querySelector(".css-yk16xz-control").style.border =
+        "1px solid red";
     } else {
-      setAddressIsInvalid(false);
+      document.querySelector(".css-yk16xz-control").style.border =
+        "1px solid hsl(0, 0%, 80%)";
     }
 
     if (!inputs.coverImage.files[0]) {
@@ -326,7 +365,11 @@ function CreateEvent() {
     event.preventDefault();
     event.stopPropagation();
 
-    if (inputs.checkValidity() === true && !timeIsInvalid) {
+    if (
+      inputs.checkValidity() === true &&
+      timeIsValid &&
+      selectedAddress.value
+    ) {
       const eventData = await constructEventData(inputs);
       console.log(eventData);
       await postEventInfo(eventData.id, eventData.data);
@@ -338,6 +381,24 @@ function CreateEvent() {
       toast.error(errorAlertText("請確認活動資料"));
     }
   };
+
+  // const customAddressSelector = React.forwardRef(
+  //   ({ children, onChange }, ref) => {
+  //     return (
+  //       <GooglePlacesAutocomplete
+  //         apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"
+  //         selectProps={{
+  //           selectedAddress,
+  //           onChange: setSelectedAddress,
+  //         }}
+  //       />
+  //     );
+  //   }
+  // );
+
+  useEffect(() => {
+    console.log(selectedAddress);
+  }, [selectedAddress]);
 
   return (
     <Styles>
@@ -489,12 +550,26 @@ function CreateEvent() {
             </Form.Group>
             <Form.Group controlId="address">
               <Form.Label>地址</Form.Label>
-              <Form.Control
+
+              {/* <Form.Control
                 type="text"
                 required
                 onChange={(e) => handleAddressChange(e)}
                 isInvalid={addressIsInvalid}
                 className="mb-1"
+              ></Form.Control> */}
+              {/* <Form.Control
+                as={customAddressSelector}
+                className="mb-1"
+              ></Form.Control> */}
+              <GooglePlacesAutocomplete
+                placeholder="地址"
+                apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"
+                selectProps={{
+                  selectedAddress,
+                  onChange: setSelectedAddress,
+                  placeholder: "請輸入地址",
+                }}
               />
               <Form.Control.Feedback
                 type="invalid"
@@ -506,7 +581,7 @@ function CreateEvent() {
             <Form.Group>
               <Map
                 src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
-    &q=${address}`}
+    &q=${selectedAddress.label}`}
               ></Map>
             </Form.Group>
             <Form.Group controlId="coverImage">
@@ -525,49 +600,6 @@ function CreateEvent() {
               </Form.Control.Feedback>
               <Form></Form>
             </Form.Group>
-            {/* <PlacesAutocomplete
-          // value={this.state.address}
-          // onChange={this.handleChange}
-          // onSelect={this.handleSelect}
-          >
-            {({
-              getInputProps,
-              suggestions,
-              getSuggestionItemProps,
-              loading,
-            }) => (
-              <div>
-                <input
-                  {...getInputProps({
-                    placeholder: "Search Places ...",
-                    className: "location-search-input",
-                  })}
-                />
-                <div className="autocomplete-dropdown-container">
-                  {loading && <div>Loading...</div>}
-                  {suggestions.map((suggestion) => {
-                    const className = suggestion.active
-                      ? "suggestion-item--active"
-                      : "suggestion-item";
-                    // inline style for demonstration purpose
-                    const style = suggestion.active
-                      ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                      : { backgroundColor: "#ffffff", cursor: "pointer" };
-                    return (
-                      <div
-                        {...getSuggestionItemProps(suggestion, {
-                          className,
-                          style,
-                        })}
-                      >
-                        <span>{suggestion.description}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </PlacesAutocomplete> */}
             <Button type="submit">創建活動</Button>
           </Form>
         </CreateEventContainer>

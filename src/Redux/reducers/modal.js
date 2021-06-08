@@ -3,6 +3,7 @@ const initialState = {
   login: false,
   feedback: false,
   eventId: "",
+  result: false,
 };
 
 const filterReducer = (state = initialState, action) => {
@@ -13,6 +14,8 @@ const filterReducer = (state = initialState, action) => {
       return { ...state, login: action.data };
     case "SHOW_FEEDBACK":
       return { ...state, feedback: action.data };
+    case "SHOW_RESULT":
+      return { ...state, result: action.data };
     case "SET_EVENTID":
       return { ...state, eventId: action.data };
     default:

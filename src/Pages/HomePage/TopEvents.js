@@ -5,6 +5,9 @@ import { getParticipantNumber, getEvents } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { Card, Col } from "react-bootstrap";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
+
 const TopEventsContainer = styled.div`
   width: 100%;
   margin: 0 auto;
@@ -25,7 +28,6 @@ const TopEventsHeader = styled.div`
   font-weight: 500;
   line-height: 30px;
   text-align: center;
-  /* border-bottom: 3px solid #1190cb; */
   font-family: "Noto Sans TC", sans-serif;
   color: #676565;
 `;
@@ -44,20 +46,39 @@ const EventsContainer = styled.div`
   }
 `;
 
-const EventCard = styled.div`
-  width: 250px;
-  height: 250px;
-  border: 1px solid #8080801a;
-  align-items: center;
-  background-color: #8080801a;
-`;
+// const EventCard = styled.div`
+//   width: 250px;
+//   height: 250px;
+//   border: 1px solid #8080801a;
+//   align-items: center;
+//   background-color: #8080801a;
+// `;
 
 const EventTitle = styled.div`
   font-size: 18px;
   margin-top: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   color: #3e3e3e;
   font-weight: 600;
+  @media (max-width: 966px) {
+    font-size: 14px;
+  }
+`;
+
+const EventText = styled.div`
+  width: 40px;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0 auto;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: #3e3e3e;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  color: #8c8a8a;
+
   @media (max-width: 966px) {
     font-size: 14px;
   }
@@ -68,6 +89,11 @@ const styles = {
     objectFit: "cover",
     width: "100%",
     height: "150px",
+  },
+  modalBody: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
 };
 
@@ -128,8 +154,12 @@ function TopEvents() {
                     style={styles.cardImage}
                   ></Card.Img>
                 </div>
-                <Card.Body className="py-2 px-3">
+                <Card.Body className="py-2 px-3" style={styles.modalBody}>
                   <EventTitle>{event.title}</EventTitle>
+                  <EventText>
+                    {`${event.number}`}
+                    <FontAwesomeIcon icon={faUserFriends} />
+                  </EventText>
                 </Card.Body>
               </Card>
             </Col>

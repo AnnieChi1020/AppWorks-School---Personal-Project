@@ -97,7 +97,7 @@ const styles = {
     overflow: "hidden",
   },
   modal: {
-    marginTop: "50px",
+    marginTop: "70px",
   },
   modalHeader: {
     border: "none",
@@ -107,7 +107,11 @@ const styles = {
   },
 };
 
-const Styles = styled.div``;
+const Styles = styled.div`
+  .eventCard {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+`;
 
 function UserCompletedEvents() {
   const userId = useSelector((state) => state.isLogged.userId);
@@ -190,74 +194,80 @@ function UserCompletedEvents() {
   };
 
   return (
-    <EventsContainer>
-      {events.length > 0 && (
-        <Events>
-          {events[0].map((event, index) => (
-            <Col className="p-0" style={styles.cardCol} key={index}>
-              <Card style={{ height: "100%" }}>
-                {event.userAttend === false ? (
-                  <CurrentStatus>待確認出席</CurrentStatus>
-                ) : (
-                  <CurrentStatus>已確認出席</CurrentStatus>
-                )}
-                <Card.Img
-                  variant="top"
-                  src={event.eventCoverImage}
-                  style={styles.cardImage}
-                  onClick={() => handleEventClick(event.eventId)}
-                />
-                <Card.Body style={styles.cardBody}>
-                  <EventInfo>
-                    <Card.Title style={styles.cardTitle}>
-                      {event.eventTitle}
-                    </Card.Title>
-                    <Card.Text>
-                      <EventText>{`${reformatTimestamp(
-                        event.startTime
-                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                      <EventText>
-                        {event.eventAddress.formatted_address}
-                      </EventText>
-                    </Card.Text>
-                  </EventInfo>
-                  <EventStatus>
-                    {event.userAttend === false ? (
-                      <RateButton disabled style={{ opacity: ".5" }}>
-                        評價活動
-                      </RateButton>
-                    ) : (
-                      <div />
-                    )}
-                    {event.userAttend === true && event.userRate === 0 ? (
-                      <RateButton onClick={() => handleShow(event.eventId)}>
-                        評價活動
-                      </RateButton>
-                    ) : (
-                      <div />
-                    )}
-                    {event.userAttend === true && event.userRate !== 0 ? (
-                      <RateButton disabled style={{ opacity: ".5" }}>
-                        已評價活動
-                      </RateButton>
-                    ) : (
-                      <div />
-                    )}
-                  </EventStatus>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Events>
-      )}
-      {renderNoEventMessage()}
-      <Modal show={showFeedbackModal} onHide={handleClose} style={styles.modal}>
-        <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
-        <Modal.Body style={styles.modalBody}>
-          <Comments></Comments>
-        </Modal.Body>
-      </Modal>
-    </EventsContainer>
+    <Styles>
+      <EventsContainer>
+        {events.length > 0 && (
+          <Events>
+            {events[0].map((event, index) => (
+              <Col className="p-0" style={styles.cardCol} key={index}>
+                <Card className="h-100 eventCard">
+                  {event.userAttend === false ? (
+                    <CurrentStatus>待確認出席</CurrentStatus>
+                  ) : (
+                    <CurrentStatus>已確認出席</CurrentStatus>
+                  )}
+                  <Card.Img
+                    variant="top"
+                    src={event.eventCoverImage}
+                    style={styles.cardImage}
+                    onClick={() => handleEventClick(event.eventId)}
+                  />
+                  <Card.Body style={styles.cardBody}>
+                    <EventInfo>
+                      <Card.Title style={styles.cardTitle}>
+                        {event.eventTitle}
+                      </Card.Title>
+                      <Card.Text>
+                        <EventText>{`${reformatTimestamp(
+                          event.startTime
+                        )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                        <EventText>
+                          {event.eventAddress.formatted_address}
+                        </EventText>
+                      </Card.Text>
+                    </EventInfo>
+                    <EventStatus>
+                      {event.userAttend === false ? (
+                        <RateButton disabled style={{ opacity: ".5" }}>
+                          評價活動
+                        </RateButton>
+                      ) : (
+                        <div />
+                      )}
+                      {event.userAttend === true && event.userRate === 0 ? (
+                        <RateButton onClick={() => handleShow(event.eventId)}>
+                          評價活動
+                        </RateButton>
+                      ) : (
+                        <div />
+                      )}
+                      {event.userAttend === true && event.userRate !== 0 ? (
+                        <RateButton disabled style={{ opacity: ".5" }}>
+                          已評價活動
+                        </RateButton>
+                      ) : (
+                        <div />
+                      )}
+                    </EventStatus>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Events>
+        )}
+        {renderNoEventMessage()}
+        <Modal
+          show={showFeedbackModal}
+          onHide={handleClose}
+          style={styles.modal}
+        >
+          <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
+          <Modal.Body style={styles.modalBody}>
+            <Comments></Comments>
+          </Modal.Body>
+        </Modal>
+      </EventsContainer>
+    </Styles>
   );
 }
 

@@ -46,16 +46,18 @@ const Container = styled.div`
 `;
 
 const CreateEventContainer = styled.div`
-  width: 80%;
+  max-width: 600px;
+  width: 95%;
   display: flex;
   margin: 0 auto;
-  margin-top: 120px;
+  margin-top: 100px;
   margin-bottom: 100px;
   flex-direction: column;
   padding: 10px 20px;
   background-color: white;
   border-radius: 8px;
   border: solid 1px #979797;
+  min-height: calc(100vh - 200px);
 `;
 
 const Tags = styled.div`
@@ -75,6 +77,11 @@ const Option = styled.div`
   margin-bottom: 10px;
   text-align: center;
   color: #495057;
+  @media (max-width: 760px) {
+    font-size: 14px;
+    padding: 5px 15px;
+    margin-right: 5px;
+  }
 `;
 
 const OptionSelected = styled.div`
@@ -93,7 +100,7 @@ const OptionSelected = styled.div`
 const Map = styled.iframe`
   width: 100%;
   height: 30vw;
-  max-height: 500px;
+  max-height: 300px;
   border-radius: 10px;
 `;
 
@@ -106,9 +113,30 @@ const Button = styled.button`
   font-size: 1rem;
   line-height: 1.5;
   padding: 5px 20px;
-  margin-left: calc(50% - 70px);
+  margin-left: calc(50% - 60px);
   margin-top: 40px;
   margin-bottom: 20px;
+`;
+
+const Styles = styled.div`
+  .form-label {
+    @media (max-width: 760px) {
+      font-size: 14px;
+    }
+  }
+  .form-control {
+    @media (max-width: 760px) {
+      font-size: 14px;
+    }
+  }
+  .form-control-file {
+    @media (max-width: 760px) {
+      font-size: 14px;
+    }
+  }
+  .form-control .is-invalid {
+    background-image: none;
+  }
 `;
 
 function EditEvent() {
@@ -340,97 +368,98 @@ function EditEvent() {
   };
 
   return (
-    <Container className="container-xl">
-      <Background></Background>
-      <Mask></Mask>
-      <CreateEventContainer>
-        <Form className="px-0 py-3 p-md-4">
-          <Form.Group>
-            <Form.Label>活動名稱</Form.Label>
-            <Form.Control
-              type="input"
-              id="ADD_TITLE"
-              defaultValue={event.eventTitle}
-              onChange={(e) => handleTitleChange(e)}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>活動內容</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              id="ADD_CONTENT"
-              defaultValue={event.eventContent}
-              onChange={(e) => handleContentChange(e)}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Row>
-              <Col>
-                <Form.Label>開始日期</Form.Label>
-                <Form.Control
-                  type="date"
-                  defaultValue={event.startTime.date}
-                  onChange={(e) => handleStartDateChange(e)}
-                />
-              </Col>
-              <Col>
-                <Form.Label>時間</Form.Label>
-                <Form.Control
-                  type="time"
-                  defaultValue={event.startTime.time}
-                  onChange={(e) => handleStartTimeChange(e)}
-                />
-              </Col>
-            </Row>
-          </Form.Group>
-          <Form.Group>
-            <Row>
-              <Col>
-                <Form.Label>結束日期</Form.Label>
-                <Form.Control
-                  type="date"
-                  defaultValue={event.endTime.date}
-                  onChange={(e) => handleEndDateChange(e)}
-                />
-              </Col>
-              <Col>
-                <Form.Label>時間</Form.Label>
-                <Form.Control
-                  type="time"
-                  defaultValue={event.endTime.time}
-                  onChange={(e) => handleEndTimeChange(e)}
-                />
-              </Col>
-            </Row>
-          </Form.Group>
-          <Form.Group controlId="formEventCoverImage">
-            <Form.Label>活動類型</Form.Label>
-            <Tags>
-              {tags.map((tag, index) =>
-                tag.select === true ? (
-                  <OptionSelected
-                    id={tag.id}
-                    key={index}
-                    onClick={(e) => handleTagClick(e)}
-                  >
-                    {tag.name}
-                  </OptionSelected>
-                ) : (
-                  <Option
-                    id={tag.id}
-                    key={index}
-                    onClick={(e) => handleTagClick(e)}
-                  >
-                    {tag.name}
-                  </Option>
-                )
-              )}
-            </Tags>
-          </Form.Group>
-          <Form.Group>
-            <Row>
-              {/* <Col className="col-12 col-sm-3 pr-sm-0">
+    <Styles>
+      <Container className="container-xl">
+        <Background></Background>
+        <Mask></Mask>
+        <CreateEventContainer>
+          <Form className="px-0 py-3 p-md-4">
+            <Form.Group>
+              <Form.Label>活動名稱</Form.Label>
+              <Form.Control
+                type="input"
+                id="ADD_TITLE"
+                defaultValue={event.eventTitle}
+                onChange={(e) => handleTitleChange(e)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>活動內容</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                id="ADD_CONTENT"
+                defaultValue={event.eventContent}
+                onChange={(e) => handleContentChange(e)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Row>
+                <Col>
+                  <Form.Label>開始日期</Form.Label>
+                  <Form.Control
+                    type="date"
+                    defaultValue={event.startTime.date}
+                    onChange={(e) => handleStartDateChange(e)}
+                  />
+                </Col>
+                <Col>
+                  <Form.Label>時間</Form.Label>
+                  <Form.Control
+                    type="time"
+                    defaultValue={event.startTime.time}
+                    onChange={(e) => handleStartTimeChange(e)}
+                  />
+                </Col>
+              </Row>
+            </Form.Group>
+            <Form.Group>
+              <Row>
+                <Col>
+                  <Form.Label>結束日期</Form.Label>
+                  <Form.Control
+                    type="date"
+                    defaultValue={event.endTime.date}
+                    onChange={(e) => handleEndDateChange(e)}
+                  />
+                </Col>
+                <Col>
+                  <Form.Label>時間</Form.Label>
+                  <Form.Control
+                    type="time"
+                    defaultValue={event.endTime.time}
+                    onChange={(e) => handleEndTimeChange(e)}
+                  />
+                </Col>
+              </Row>
+            </Form.Group>
+            <Form.Group controlId="formEventCoverImage">
+              <Form.Label>活動類型</Form.Label>
+              <Tags>
+                {tags.map((tag, index) =>
+                  tag.select === true ? (
+                    <OptionSelected
+                      id={tag.id}
+                      key={index}
+                      onClick={(e) => handleTagClick(e)}
+                    >
+                      {tag.name}
+                    </OptionSelected>
+                  ) : (
+                    <Option
+                      id={tag.id}
+                      key={index}
+                      onClick={(e) => handleTagClick(e)}
+                    >
+                      {tag.name}
+                    </Option>
+                  )
+                )}
+              </Tags>
+            </Form.Group>
+            <Form.Group>
+              <Row>
+                {/* <Col className="col-12 col-sm-3 pr-sm-0">
                 <Form.Group controlId="formEventCity">
                   <Form.Label>活動縣市</Form.Label>
                   <Form.Control
@@ -444,38 +473,41 @@ function EditEvent() {
                   </Form.Control>
                 </Form.Group>
               </Col> */}
-              <Col>
-                <Form.Group className="pl-0" controlId="formEventAddress">
-                  <Form.Label>地址</Form.Label>
-                  <Form.Control
-                    tyle="input"
-                    defaultValue={address}
-                    onChange={(e) => handleLocationChange(e)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form.Group>
-          <Form.Group>
-            <Map
-              src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
+                <Col>
+                  <Form.Group className="pl-0" controlId="formEventAddress">
+                    <Form.Label>地址</Form.Label>
+                    <Form.Control
+                      tyle="input"
+                      defaultValue={address}
+                      onChange={(e) => handleLocationChange(e)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form.Group>
+            <Form.Group>
+              <Map
+                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
     &q=${address}`}
-            ></Map>
-          </Form.Group>
-          <Form.Group controlId="formEventCoverImage">
-            <Form.Label>上傳活動封面</Form.Label>
-            <Form>
-              <Form.File id="formcheck-api-regular">
-                <Form.File.Input onChange={(e) => setFile(e.target.files[0])} />
-              </Form.File>
-            </Form>
-          </Form.Group>
-          <Button type="button" onClick={handelClickSubmit}>
-            儲存活動資訊
-          </Button>
-        </Form>
-      </CreateEventContainer>
-    </Container>
+              ></Map>
+            </Form.Group>
+            <Form.Group controlId="formEventCoverImage">
+              <Form.Label>上傳活動封面</Form.Label>
+              <Form>
+                <Form.File id="formcheck-api-regular">
+                  <Form.File.Input
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </Form.File>
+              </Form>
+            </Form.Group>
+            <Button type="button" onClick={handelClickSubmit}>
+              儲存活動資訊
+            </Button>
+          </Form>
+        </CreateEventContainer>
+      </Container>
+    </Styles>
   );
 }
 

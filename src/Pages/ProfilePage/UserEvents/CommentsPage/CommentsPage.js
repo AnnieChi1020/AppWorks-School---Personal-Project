@@ -14,52 +14,59 @@ import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 import { toast } from "react-toastify";
-import { successAlertText } from "../../../../components/Alert.js";
+import {
+  successAlertText,
+  errorAlertText,
+} from "../../../../components/Alert.js";
 
-const Background = styled.div`
-  width: 100%;
-  height: 100%;
-  background-image: url(${background});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-`;
+// const Background = styled.div`
+//   width: 100%;
+//   height: 100%;
+//   background-image: url(${background});
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   background-size: cover;
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   z-index: -1;
+// `;
 
-const Mask = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-`;
+// const Mask = styled.div`
+//   width: 100%;
+//   height: 100%;
+//   background-color: rgb(0, 0, 0, 0.5);
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   z-index: -1;
+// `;
 
-const Container = styled.div`
-  width: 100%;
-  margin: 0 auto;
-  margin-top: 0px;
-  min-height: calc(100vh - 200px);
-`;
+// const Container = styled.div`
+//   width: 100%;
+//   margin: 0 auto;
+//   margin-top: 0px;
+//   min-height: calc(100vh - 200px);
+// `;
+
+// const CommentContainer = styled.div`
+//   width: 80%;
+//   display: flex;
+//   margin: 0 auto;
+//   margin-top: 120px;
+//   margin-bottom: 100px;
+//   flex-direction: column;
+//   padding: 20px 30px;
+//   background-color: white;
+//   border-radius: 8px;
+//   border: solid 1px #979797;
+//   @media (max-width: 760px) {
+//     width: 95%;
+//   }
+// `;
 
 const CommentContainer = styled.div`
-  width: 80%;
-  display: flex;
-  margin: 0 auto;
-  margin-top: 120px;
-  margin-bottom: 100px;
-  flex-direction: column;
-  padding: 20px 30px;
-  background-color: white;
-  border-radius: 8px;
-  border: solid 1px #979797;
-  @media (max-width: 760px) {
-    width: 95%;
-  }
+  width: 100%;
 `;
 
 const Event = styled.div`
@@ -99,13 +106,18 @@ const FormLabel = styled.div`
   line-height: 20px;
 `;
 
+const ButtonContainer = styled.div`
+  width: 100%;
+  text-align: center;
+`;
+
 const SubmitButton = styled.button`
   font-size: 14px;
   line-height: 24px;
   padding: 5px 20px;
   margin: 0 auto;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border: 1px solid #ced4da;
   border-radius: 20px;
   background-color: #1190cb;
@@ -113,16 +125,18 @@ const SubmitButton = styled.button`
 `;
 
 function Comments() {
-  const { id } = useParams();
+  // const { id } = useParams();
 
   const dispatch = useDispatch();
 
   const participantId = useSelector((state) => state.isLogged.userId);
   const eventId = useSelector((state) => state.modal.eventId);
 
+  // const [rateIsInvalid, setRateIsInvalid] = useState(false);
+
   // const eventId = id;
-  let rating;
-  let comment;
+  let rating = 0;
+  let comment = "";
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
@@ -169,6 +183,7 @@ function Comments() {
 
   const ratingChanged = (newRating) => {
     rating = newRating;
+    console.log(rating);
     return rating;
   };
 
@@ -177,16 +192,29 @@ function Comments() {
     return comment;
   };
 
-  let history = useHistory();
+  // let history = useHistory();
   const handelClickSubmit = async () => {
-    const currentStatus = await getParticipantInfo(eventInfo.id, participantId);
-    currentStatus.participantInfo.participantComment = comment;
-    currentStatus.participantInfo.participantRating = rating;
-    await updateParticipantStatus(eventInfo.id, participantId, currentStatus);
-    toast.success(successAlertText("已送出評價"), {
-      position: toast.POSITION.TOP_CENTER,
-    });
-    dispatch({ type: "SHOW_FEEDBACK", data: false });
+    if (rating === 0) {
+      toast.error(errorAlertText("請填寫活動評分"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else if (!comment) {
+      toast.error(errorAlertText("請填寫活動評價"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else {
+      const currentStatus = await getParticipantInfo(
+        eventInfo.id,
+        participantId
+      );
+      currentStatus.participantInfo.participantComment = comment;
+      currentStatus.participantInfo.participantRating = rating;
+      await updateParticipantStatus(eventInfo.id, participantId, currentStatus);
+      toast.success(successAlertText("已送出評價"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      dispatch({ type: "SHOW_FEEDBACK", data: false });
+    }
   };
 
   return (
@@ -194,7 +222,7 @@ function Comments() {
     //   <Background></Background>
     //   <Mask></Mask>
     // <CommentContainer>
-    <div>
+    <CommentContainer>
       <Event>
         <EventTitle>{eventInfo.title}</EventTitle>
         <EventInfo>{`${eventInfo.startTime} - ${eventInfo.endTime}`}</EventInfo>
@@ -202,7 +230,7 @@ function Comments() {
       </Event>
       <Form>
         <Form.Group>
-          <FormLabel className="mb-0">活動評分</FormLabel>
+          <FormLabel className="mb-0">活動評分 (必填)</FormLabel>
           <ReactStars
             count={5}
             onChange={ratingChanged}
@@ -220,8 +248,10 @@ function Comments() {
           />
         </Form.Group>
       </Form>
-      <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
-    </div>
+      <ButtonContainer>
+        <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
+      </ButtonContainer>
+    </CommentContainer>
     // </CommentContainer>
     // </Container>
   );

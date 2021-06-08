@@ -12,6 +12,8 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import Header from "./components/Header.js";
 import Footer from "./components/Footer.js";
 import HomePage from "./Pages/HomePage/index.js";
@@ -121,7 +123,7 @@ function App() {
         <Route exact path="/profile/event-result/:id" component={EventResult} />
         <Route exact path="/profile/comments/:id" component={EventComments} />
         <Route exact path="/pastEvents" component={PastEvents} />
-        <Footer />
+        {/* <Footer /> */}
         <Styles>
           <ToastContainer
             position="top-center"

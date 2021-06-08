@@ -32,6 +32,7 @@ const PlantImage = styled.img`
 
 const LeaderBoardDiv = styled.div`
   width: 100%;
+  height: 300px;
   padding: 20px 10px;
   background-color: white;
   border-radius: 10px;
@@ -146,7 +147,7 @@ function LeaderBoard() {
       return a.number > b.number ? -1 : 1;
     });
     console.log(sortedArray);
-    setSortedData(sortedArray);
+    setSortedData(sortedArray.slice(0, 5));
   }, [leaderboard]);
 
   if (!sortedData.length) {

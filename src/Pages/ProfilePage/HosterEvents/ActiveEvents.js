@@ -52,7 +52,7 @@ const EventInfo = styled.div`
   flex-direction: column;
 `;
 
-const ManageEventContainer = styled.div`
+const ButtonsContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -68,6 +68,8 @@ const EventText = styled.div`
 `;
 
 const PrimaryButton = styled.button`
+  width: 85px;
+  flex-grow: 1;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
@@ -78,6 +80,8 @@ const PrimaryButton = styled.button`
 `;
 
 const SecondaryButton = styled.button`
+  width: 75px;
+  flex-grow: 1;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
@@ -123,6 +127,12 @@ const styles = {
     overflow: "hidden",
   },
 };
+
+const Styles = styled.div`
+  .eventCard {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+`;
 
 function ActiveEvents() {
   const hosterId = useSelector((state) => state.isLogged.userId);
@@ -208,59 +218,61 @@ function ActiveEvents() {
   };
 
   return (
-    <EventsContainer>
-      {events.length > 0 && (
-        <Events>
-          {events.map((event, index) => (
-            <Col className="p-0" style={styles.cardCol} key={index}>
-              <Card style={{ height: "100%" }}>
-                <CurrentStatus>招募中</CurrentStatus>
-                <Card.Img
-                  variant="top"
-                  src={event.eventCoverImage}
-                  style={styles.cardImage}
-                  onClick={() => handleEventClick(event.eventId)}
-                />
-                <Card.Body style={styles.cardBody}>
-                  <EventInfo>
-                    <Card.Title style={styles.cardTitle}>
-                      {event.eventTitle}
-                    </Card.Title>
-                    <Card.Text>
-                      <EventText>{`${reformatTimestamp(
-                        event.startTime
-                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                      <EventText>
-                        {event.eventAddress.formatted_address}
-                      </EventText>
-                    </Card.Text>
-                  </EventInfo>
-                  <ManageEventContainer>
-                    <PrimaryButton
-                      onClick={() => handleParticipantClick(event.eventId)}
-                    >
-                      管理參加者
-                    </PrimaryButton>
-                    <SecondaryButton
-                      onClick={() => handleEditClick(event.eventId)}
-                    >
-                      編輯活動
-                    </SecondaryButton>
+    <Styles>
+      <EventsContainer>
+        {events.length > 0 && (
+          <Events>
+            {events.map((event, index) => (
+              <Col className="p-0" style={styles.cardCol} key={index}>
+                <Card className="h-100 eventCard">
+                  <CurrentStatus>招募中</CurrentStatus>
+                  <Card.Img
+                    variant="top"
+                    src={event.eventCoverImage}
+                    style={styles.cardImage}
+                    onClick={() => handleEventClick(event.eventId)}
+                  />
+                  <Card.Body style={styles.cardBody}>
+                    <EventInfo>
+                      <Card.Title style={styles.cardTitle}>
+                        {event.eventTitle}
+                      </Card.Title>
+                      <Card.Text>
+                        <EventText>{`${reformatTimestamp(
+                          event.startTime
+                        )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                        <EventText>
+                          {event.eventAddress.formatted_address}
+                        </EventText>
+                      </Card.Text>
+                    </EventInfo>
+                    <ButtonsContainer>
+                      <PrimaryButton
+                        onClick={() => handleParticipantClick(event.eventId)}
+                      >
+                        管理參加者
+                      </PrimaryButton>
+                      <SecondaryButton
+                        onClick={() => handleEditClick(event.eventId)}
+                      >
+                        編輯活動
+                      </SecondaryButton>
 
-                    <SecondaryButton
-                      onClick={(e) => handleCancelClick(event.eventId, e)}
-                    >
-                      取消活動
-                    </SecondaryButton>
-                  </ManageEventContainer>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Events>
-      )}
-      {renderNoEventMessage()}
-    </EventsContainer>
+                      <SecondaryButton
+                        onClick={(e) => handleCancelClick(event.eventId, e)}
+                      >
+                        取消活動
+                      </SecondaryButton>
+                    </ButtonsContainer>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Events>
+        )}
+        {renderNoEventMessage()}
+      </EventsContainer>
+    </Styles>
   );
 }
 

@@ -91,6 +91,12 @@ const styles = {
   },
 };
 
+const Styles = styled.div`
+  .eventCard {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+`;
+
 function UserCancelledEvents() {
   const [events, setEvents] = useState("");
   const [noEvent, setNoEvent] = useState(false);
@@ -183,38 +189,39 @@ function UserCancelledEvents() {
   };
 
   return (
-    <EventsContainer className="applying-events">
-      {events.length > 0 && (
-        <Events>
-          {events[0].map((event, index) => (
-            <Col className="p-0" style={styles.cardCol} key={index}>
-              <Card style={{ height: "100%" }}>
-                {event.passed ? (
-                  <CurrentStatus>未報名成功</CurrentStatus>
-                ) : (
-                  <CurrentStatus>已取消報名</CurrentStatus>
-                )}
-                <Card.Img
-                  variant="top"
-                  src={event.eventCoverImage}
-                  style={styles.cardImage}
-                  onClick={() => handleEventClick(event.eventId)}
-                />
-                <Card.Body style={styles.cardBody}>
-                  <EventInfo>
-                    <Card.Title style={styles.cardTitle}>
-                      {event.eventTitle}
-                    </Card.Title>
-                    <Card.Text>
-                      <EventText>{`${reformatTimestamp(
-                        event.startTime
-                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                      <EventText>
-                        {event.eventAddress.formatted_address}
-                      </EventText>
-                    </Card.Text>
-                  </EventInfo>
-                  {/* <EventStatus>
+    <Styles>
+      <EventsContainer className="applying-events">
+        {events.length > 0 && (
+          <Events>
+            {events[0].map((event, index) => (
+              <Col className="p-0" style={styles.cardCol} key={index}>
+                <Card className="h-100 eventCard">
+                  {event.passed ? (
+                    <CurrentStatus>未報名成功</CurrentStatus>
+                  ) : (
+                    <CurrentStatus>已取消報名</CurrentStatus>
+                  )}
+                  <Card.Img
+                    variant="top"
+                    src={event.eventCoverImage}
+                    style={styles.cardImage}
+                    onClick={() => handleEventClick(event.eventId)}
+                  />
+                  <Card.Body style={styles.cardBody}>
+                    <EventInfo>
+                      <Card.Title style={styles.cardTitle}>
+                        {event.eventTitle}
+                      </Card.Title>
+                      <Card.Text>
+                        <EventText>{`${reformatTimestamp(
+                          event.startTime
+                        )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                        <EventText>
+                          {event.eventAddress.formatted_address}
+                        </EventText>
+                      </Card.Text>
+                    </EventInfo>
+                    {/* <EventStatus>
                   <CancelButton
                     onClick={(e) => {
                       handleCancelClick(event.eventId, userId);
@@ -224,14 +231,15 @@ function UserCancelledEvents() {
                     取消報名
                   </CancelButton>
                 </EventStatus> */}
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Events>
-      )}
-      {renderNoEventMessage()}
-    </EventsContainer>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Events>
+        )}
+        {renderNoEventMessage()}
+      </EventsContainer>
+    </Styles>
   );
 }
 

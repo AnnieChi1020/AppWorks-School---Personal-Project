@@ -73,6 +73,13 @@ const SubmitButton = styled.button`
   color: white;
 `;
 
+const TestAccount = styled.div`
+  padding: 5px 12px 5px 5px;
+  font-size: 12px;
+  line-height: 14px;
+  color: #a5a5a5;
+`;
+
 const styles = {
   modal: {
     marginTop: "100px",
@@ -89,6 +96,15 @@ const styles = {
   },
 };
 
+const Styles = styled.div`
+  .invalid-feedback {
+    margin-top: 5px;
+  }
+  input:focus {
+    outline: none !important;
+  }
+`;
+
 function Login() {
   const loginModal = useSelector((state) => state.modal.login);
 
@@ -96,13 +112,11 @@ function Login() {
 
   const [action, setAction] = useState("login");
   const [identity, setIdentity] = useState("user");
-  // const [signupInfo, setSignupInfo] = useState({
-  //   name: "",
-  //   email: "",
-  //   password: "",
-  //   phone: "",
-  //   address: "",
-  // });
+
+  const [emailIsInvalid, setEmailIsInvalid] = useState(false);
+  const [passwordIsInvalid, setPasswordIsInvalid] = useState(false);
+  const [nameIsInvalid, setNameIsInvalid] = useState(false);
+  const [phoneIsInvalid, setPhoneIsInvalid] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -129,10 +143,18 @@ function Login() {
     return hosterData;
   };
 
+  const clearValidationStatus = () => {
+    setEmailIsInvalid(false);
+    setPasswordIsInvalid(false);
+    setNameIsInvalid(false);
+    setPhoneIsInvalid(false);
+  };
+
   const handleActionChange = (e) => {
-    dispatch({ type: "SHOW_LOGINALERT", data: true });
+    // dispatch({ type: "SHOW_LOGINALERT", data: true });
     setAction(e.target.id);
     setValidated(false);
+    clearValidationStatus();
     const inputs = document.querySelectorAll("input");
     inputs.forEach((input) => {
       input.value = "";
@@ -142,6 +164,7 @@ function Login() {
   const handleIdentityChange = (e) => {
     setIdentity(e.target.id);
     setValidated(false);
+    clearValidationStatus();
     const inputs = document.querySelectorAll("input");
     inputs.forEach((input) => {
       input.value = "";
@@ -189,6 +212,7 @@ function Login() {
     const email = inputs.email.value;
     const password = inputs.password.value;
     const loginMessage = await userSignIn(email, password);
+
     if (loginMessage === "auth/user-not-found") {
       toast.error(errorAlertText("email 尚未註冊喔"), {
         position: toast.POSITION.TOP_CENTER,
@@ -236,20 +260,64 @@ function Login() {
 
   const handleLoginSubmit = async (event) => {
     const inputs = event.currentTarget;
-    event.preventDefault();
-    event.stopPropagation();
-    setValidated(true);
+    const validRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    console.log(inputs.email.value);
+    if (!inputs.email.value.match(validRegex)) {
+      setEmailIsInvalid(true);
+    } else {
+      setEmailIsInvalid(false);
+    }
+
+    if (inputs.password.value.length < 6) {
+      setPasswordIsInvalid(true);
+    } else {
+      setPasswordIsInvalid(false);
+    }
+
     if (inputs.checkValidity() === true) {
       login(inputs);
     }
+
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   const handleSignupSubmit = async (event) => {
     const inputs = event.currentTarget;
+
     event.preventDefault();
     event.stopPropagation();
 
-    setValidated(true);
+    if (!inputs.name.value) {
+      setNameIsInvalid(true);
+    } else {
+      setNameIsInvalid(false);
+    }
+
+    const validRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (!inputs.email.value.match(validRegex)) {
+      setEmailIsInvalid(true);
+    } else {
+      setEmailIsInvalid(false);
+    }
+
+    if (inputs.password.value.length < 6) {
+      setPasswordIsInvalid(true);
+    } else {
+      setPasswordIsInvalid(false);
+    }
+
+    if (inputs.phone) {
+      const phoneno = /^\d{10}$/;
+      if (!inputs.phone.value.match(phoneno)) {
+        setPhoneIsInvalid(true);
+      } else {
+        setPhoneIsInvalid(false);
+      }
+    }
+
     if (inputs.checkValidity() === true) {
       signup(inputs);
     }
@@ -313,186 +381,244 @@ function Login() {
 
   const userLogin = () => {
     return (
-      <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
-        <Form.Group controlId="email">
-          <Form.Control
-            type="email"
-            placeholder="Email"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入正確的eamil
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="password">
-          <Form.Control
-            type="password"
-            placeholder="密碼"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入密碼
-          </Form.Control.Feedback>
-        </Form.Group>
-        <ButtonContainer>
-          <SwitchButton id="signup" onClick={(e) => handleActionChange(e)}>
-            立即註冊
-          </SwitchButton>
-          <SubmitButton type="submit">登入</SubmitButton>
-        </ButtonContainer>
-      </Form>
+      <Styles>
+        <Form
+          noValidate
+          // validated={validated}
+          onSubmit={handleLoginSubmit}
+        >
+          <Form.Group controlId="email">
+            <Form.Control
+              type="email"
+              placeholder="jennie@gmail.com"
+              className="mb-1 formInput"
+              required
+              isInvalid={emailIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入正確的eamil
+            </Form.Control.Feedback>
+
+            {/* <TestAccount>測試帳號：jeannie@gmail.com</TestAccount> */}
+          </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Control
+              type="password"
+              placeholder="000000"
+              className="mb-1"
+              required
+              isInvalid={passwordIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              密碼需超過6個字元
+            </Form.Control.Feedback>
+          </Form.Group>
+          <ButtonContainer>
+            <SwitchButton id="signup" onClick={(e) => handleActionChange(e)}>
+              立即註冊
+            </SwitchButton>
+            <SubmitButton type="submit">登入</SubmitButton>
+          </ButtonContainer>
+        </Form>
+      </Styles>
     );
   };
 
   const organizationLogin = () => {
     return (
-      <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
-        <Form.Group controlId="email">
-          <Form.Control
-            type="email"
-            placeholder="Email"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入正確的eamil
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="password">
-          <Form.Control
-            type="password"
-            placeholder="密碼"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入密碼
-          </Form.Control.Feedback>
-        </Form.Group>
-        <ButtonContainer>
-          <SwitchButton
-            id="signup"
-            onClick={(e) => handleActionChange(e)}
-            style={{ border: "1px solid #57BC90", color: "#57BC90" }}
-          >
-            立即註冊
-          </SwitchButton>
-          <SubmitButton type="submit" style={{ backgroundColor: "#57BC90" }}>
-            登入
-          </SubmitButton>
-        </ButtonContainer>
-      </Form>
+      <Styles>
+        <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
+          <Form.Group controlId="email">
+            <Form.Control
+              type="email"
+              placeholder="doggy_place@gmail.com"
+              className="mb-1"
+              required
+              isInvalid={emailIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入正確的eamil
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Control
+              type="password"
+              placeholder="000000"
+              className="mb-1"
+              required
+              isInvalid={passwordIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              密碼需超過6個字元
+            </Form.Control.Feedback>
+          </Form.Group>
+          <ButtonContainer>
+            <SwitchButton
+              id="signup"
+              onClick={(e) => handleActionChange(e)}
+              style={{ border: "1px solid #57BC90", color: "#57BC90" }}
+            >
+              立即註冊
+            </SwitchButton>
+            <SubmitButton type="submit" style={{ backgroundColor: "#57BC90" }}>
+              登入
+            </SubmitButton>
+          </ButtonContainer>
+        </Form>
+      </Styles>
     );
   };
 
   const userSignup = () => {
     return (
-      <Form noValidate validated={validated} onSubmit={handleSignupSubmit}>
-        <Form.Group controlId="name">
-          <Form.Control
-            type="name"
-            placeholder="姓名"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入姓名
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="email">
-          <Form.Control
-            type="email"
-            placeholder="Email"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入正確的email
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="password">
-          <Form.Control
-            type="password"
-            placeholder="密碼"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入密碼
-          </Form.Control.Feedback>
-        </Form.Group>
-        <ButtonContainer>
-          <SwitchButton id="login" onClick={(e) => handleActionChange(e)}>
-            立即登入
-          </SwitchButton>
-          <SubmitButton type="submit">註冊</SubmitButton>
-        </ButtonContainer>
-      </Form>
+      <Styles>
+        <Form noValidate validated={validated} onSubmit={handleSignupSubmit}>
+          <Form.Group controlId="name">
+            <Form.Control
+              type="name"
+              placeholder="姓名"
+              className="mb-1"
+              required
+              isInvalid={nameIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入姓名
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="email">
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              className="mb-1"
+              required
+              isInvalid={emailIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入正確的email
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Control
+              type="password"
+              placeholder="密碼"
+              className="mb-1"
+              required
+              isInvalid={passwordIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              密碼需超過6個字元
+            </Form.Control.Feedback>
+          </Form.Group>
+          <ButtonContainer>
+            <SwitchButton id="login" onClick={(e) => handleActionChange(e)}>
+              立即登入
+            </SwitchButton>
+            <SubmitButton type="submit">註冊</SubmitButton>
+          </ButtonContainer>
+        </Form>
+      </Styles>
     );
   };
 
   const organizationSignup = () => {
     return (
-      <Form noValidate validated={validated} onSubmit={handleSignupSubmit}>
-        <Form.Group controlId="name">
-          <Form.Control
-            type="name"
-            placeholder="機構名稱"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入機構名稱
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="email">
-          <Form.Control
-            type="email"
-            placeholder="Email"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入正確的email
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="password">
-          <Form.Control
-            type="password"
-            placeholder="密碼"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入密碼
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="phone">
-          <Form.Control
-            type="number"
-            placeholder="連絡電話"
-            className="mb-1"
-            required
-          />
-          <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入連絡電話
-          </Form.Control.Feedback>
-        </Form.Group>
-        <ButtonContainer>
-          <SwitchButton
-            id="login"
-            onClick={(e) => handleActionChange(e)}
-            style={{ border: "1px solid #57BC90", color: "#57BC90" }}
-          >
-            立即登入
-          </SwitchButton>
-          <SubmitButton type="submit" style={{ backgroundColor: "#57BC90" }}>
-            註冊
-          </SubmitButton>
-        </ButtonContainer>
-      </Form>
+      <Styles>
+        <Form noValidate validated={validated} onSubmit={handleSignupSubmit}>
+          <Form.Group controlId="name">
+            <Form.Control
+              type="name"
+              placeholder="機構名稱"
+              className="mb-1"
+              required
+              isInvalid={nameIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入機構名稱
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="email">
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              className="mb-1"
+              required
+              isInvalid={emailIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入正確的email
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Control
+              type="password"
+              placeholder="密碼"
+              className="mb-1"
+              required
+              isInvalid={passwordIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              密碼需超過6個字元
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="phone">
+            <Form.Control
+              type="text"
+              placeholder="0912345678"
+              className="mb-1"
+              required
+              isInvalid={phoneIsInvalid}
+            />
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ position: "inherit" }}
+            >
+              請輸入連絡電話
+            </Form.Control.Feedback>
+          </Form.Group>
+          <ButtonContainer>
+            <SwitchButton
+              id="login"
+              onClick={(e) => handleActionChange(e)}
+              style={{ border: "1px solid #57BC90", color: "#57BC90" }}
+            >
+              立即登入
+            </SwitchButton>
+            <SubmitButton type="submit" style={{ backgroundColor: "#57BC90" }}>
+              註冊
+            </SubmitButton>
+          </ButtonContainer>
+        </Form>
+      </Styles>
     );
   };
 
@@ -512,7 +638,7 @@ function Login() {
             ? organizationLogin()
             : identity === "user"
             ? userSignup()
-            : organizationSignup()}{" "}
+            : organizationSignup()}
         </Modal.Body>
       </Modal>
     </Wrapper>

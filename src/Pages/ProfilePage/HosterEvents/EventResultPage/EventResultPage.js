@@ -10,50 +10,22 @@ import {
 } from "../../../../utils/firebase.js";
 import background from "../../../../images/background.jpg";
 import { Form } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 
 import { toast } from "react-toastify";
-import { successAlertText } from "../../../../components/Alert.js";
-
-const Background = styled.div`
-  width: 100%;
-  height: 100%;
-  background-image: url(${background});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-`;
-
-const Mask = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  margin: 0 auto;
-  margin-top: 0px;
-`;
+import {
+  successAlertText,
+  errorAlertText,
+} from "../../../../components/Alert.js";
 
 const CreateEventContainer = styled.div`
-  width: 80%;
+  width: 100%;
   display: flex;
   margin: 0 auto;
-  margin-top: 120px;
-  margin-bottom: 100px;
   flex-direction: column;
-  padding: 30px 30px;
+  padding: 0 10px;
   background-color: white;
   border-radius: 8px;
-  border: solid 1px #979797;
   @media (max-width: 720px) {
     width: 90%;
     padding: 20px 20px;
@@ -89,8 +61,8 @@ const EventInfo = styled.div`
 
 const EventImage = styled.img`
   width: 100%;
-  height: 25vw;
-  max-height: 300px;
+  height: 15vw;
+  max-height: 250px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -115,12 +87,23 @@ const Button = styled.button`
   }
 `;
 
-function EventResult() {
-  const { id } = useParams();
-  const eventId = id;
+const Styles = styled.div`
+  .invalid-feedback {
+    margin-top: 5px;
+  }
+`;
 
-  const [result, setResult] = useState("");
-  // const [files, setFiles] = useState([]);
+function EventResult() {
+  // const { id } = useParams();
+  // const eventId = id;
+
+  const dispatch = useDispatch();
+
+  const eventId = useSelector((state) => state.modal.eventId);
+  const hosterId = useSelector((state) => state.isLogged.userId);
+
+  const [resultIsInvalid, setResultIsInvalid] = useState(false);
+  const [filesIsInvalid, setFilesIsInvalid] = useState(false);
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
@@ -165,56 +148,50 @@ function EventResult() {
     getEventDetail();
   }, []);
 
-  let history = useHistory();
-
-  const resultChanged = (input) => {
-    setResult(input);
-  };
-
-  let fileArray;
-  const fileChange = async (e) => {
-    fileArray = e.target.files;
-    // let imageArray = [];
-    // for (let i = 0; i < e.target.files.length; i++) {
-    //   let imageFile = e.target.files[i];
-    //   const url = await getImageURL(imageFile);
-    //   imageArray.push(url);
-    // }
-    // setFiles(imageArray);
-  };
-
   const uploadImage = async (files) => {
     let imageArray = [];
     for (let i = 0; i < files.length; i++) {
       let imageFile = files[i];
-      const url = await getImageURL(imageFile);
+      console.log(imageFile);
+      const url = await getImageURL(hosterId, imageFile);
       imageArray.push(url);
     }
     // setFiles(imageArray);
     return imageArray;
   };
 
-  useEffect(() => {}, []);
-
-  const handelClickSubmit = async () => {
-    // const eventData = await getEventInfo(eventId);
-    // const imageUrl = await uploadImage(fileArray);
-    // eventData.resultContent = result;
-    // eventData.resultImage = imageUrl;
-    // await updateEvent(eventId, eventData);
-    // alert("已上傳活動成果");
-    // history.goBack();
-  };
-
-  const [validated, setValidated] = useState(false);
+  // const [validated, setValidated] = useState(false);
 
   const handleSubmit = async (event) => {
+    const inputs = event.currentTarget;
+
     event.preventDefault();
     event.stopPropagation();
-    const inputs = event.currentTarget;
-    setValidated(true);
 
-    if (inputs.checkValidity() === true) {
+    console.log(inputs.images.files);
+    console.log(inputs.result.value);
+
+    console.log(typeof inputs.images.files);
+
+    if (!inputs.result.value) {
+      setResultIsInvalid(true);
+    } else {
+      setResultIsInvalid(false);
+    }
+
+    if (inputs.images.files.length < 3) {
+      setFilesIsInvalid(true);
+    } else {
+      setFilesIsInvalid(false);
+    }
+
+    // setValidated(true);
+
+    console.log(inputs.images.files);
+    console.log(inputs.result.value);
+
+    if (inputs.result.value && inputs.images.files.length > 2) {
+      console.log(inputs.images.files);
       const eventData = await getEventInfo(eventId);
       const imageUrl = await uploadImage(inputs.images.files);
       eventData.resultContent = inputs.result.value;
@@ -224,25 +201,32 @@ function EventResult() {
       toast.success(successAlertText("已上傳活動成果"), {
         position: toast.POSITION.TOP_CENTER,
       });
-      history.push("/profile");
-      history.push("/profile");
+      dispatch({ type: "SHOW_RESULT", data: false });
+    } else {
+      toast.error(errorAlertText("請提供完整資訊"), {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 
+  useEffect(() => {
+    console.log(filesIsInvalid);
+  }, [filesIsInvalid]);
+
   return (
-    <Container className="container-xl mb-5">
-      <Background></Background>
-      <Mask></Mask>
+    <Styles>
       <CreateEventContainer>
         <Event>
           <EventImage src={eventInfo.image}></EventImage>
           <EventTitle>{eventInfo.title}</EventTitle>
-          <EventInfo>
-            {`${eventInfo.startTime} - ${eventInfo.endTime}`}
-          </EventInfo>
+          <EventInfo>{`${eventInfo.startTime} - ${eventInfo.endTime}`}</EventInfo>
           <EventInfo>{eventInfo.address}</EventInfo>
         </Event>
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form
+          noValidate
+          // validated={validated}
+          onSubmit={handleSubmit}
+        >
           <Form.Group controlId="result">
             <Form.Label>活動成果說明</Form.Label>
             <Form.Control
@@ -251,7 +235,7 @@ function EventResult() {
               required
               className="mb-1"
               rows={3}
-              onChange={(e) => resultChanged(e.target.value)}
+              isInvalid={resultIsInvalid}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -266,27 +250,20 @@ function EventResult() {
               type="file"
               multiple="multiple"
               required
-              onChange={(e) => fileChange(e)}
+              isInvalid={filesIsInvalid}
+              onChange={(e) => console.log(e.target.files)}
             ></Form.Control>
             <Form.Control.Feedback
               type="invalid"
               style={{ position: "inherit" }}
             >
-              請選擇活動照片
+              請選擇至少3張活動照片
             </Form.Control.Feedback>
-            {/* <Form>
-              <Form.File id="formcheck-api-regular">
-                <Form.File.Input
-                  multiple="multiple"
-                  onChange={(e) => fileChange(e)}
-                />
-              </Form.File>
-            </Form> */}
           </Form.Group>
           <Button type="submit">送出成果資料</Button>
         </Form>
       </CreateEventContainer>
-    </Container>
+    </Styles>
   );
 }
 
