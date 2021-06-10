@@ -349,7 +349,7 @@ function LoginPage() {
             required
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入正確的eamil
+            請輸入正確的email
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="password">
@@ -384,7 +384,7 @@ function LoginPage() {
             required
           />
           <Form.Control.Feedback type="invalid" style={{ position: "inherit" }}>
-            請輸入正確的eamil
+            請輸入正確的email
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="password">

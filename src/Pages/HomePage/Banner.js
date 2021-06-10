@@ -12,7 +12,7 @@ import education from "../../images/education.png";
 import { useHistory } from "react-router-dom";
 
 const BannerContainer = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 800px;
   display: flex;
   flex-wrap: wrap;
@@ -38,7 +38,7 @@ const BannerContainer = styled.div`
 `;
 
 const Mask = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 800px;
   position: absolute;
   left: 0;
@@ -100,45 +100,6 @@ const TextSubtitle = styled.div`
     font-size: 16px;
     text-align: center;
   }
-`;
-
-const Categories = styled.div`
-  width: 100%;
-  height: auto;
-  margin: 0 auto;
-  margin-top: 100px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: row;
-  & div + div {
-    border-left: 1px solid white;
-  }
-`;
-
-const Category = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 0 15px;
-`;
-
-const CategoryImage = styled.img`
-  width: 40px;
-  height: 40px;
-  margin: 0 auto;
-`;
-
-const CategoryText = styled.div`
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  text-align: center;
-  color: white;
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 600;
-  margin-top: 10px;
 `;
 
 // const TextHeader = styled.div`

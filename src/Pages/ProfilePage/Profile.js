@@ -261,10 +261,7 @@ function Profile() {
 
   const [attendedEventNotExist, setAttendedEventNotExist] = useState(false);
   const [pieChartData, setPieChartData] = useState([
-    { title: "社會福利", value: 0, color: "#67aeca" },
-    { title: "文化教育", value: 0, color: "#57BC90" },
-    { title: "環境保護", value: 0, color: "#67caae" },
-    { title: "生態保護", value: 0, color: "#67c6ca" },
+    { title: "沒有活動", value: 1, color: "#e9ecef" },
   ]);
 
   const levels = [
@@ -378,27 +375,27 @@ function Profile() {
       { title: "生態保護", value: 0, color: "#67c6ca" },
     ];
 
-    if (eventIdArray.length > 0) {
-      await Promise.all(
-        eventIdArray.map(async (id) => {
-          const event = await getEventInfo(id);
-          if (checkEventPassed(event)) {
-            dataMock.forEach((type) => {
-              if (event.eventTags.includes(type.title)) {
-                type.value++;
-                return;
-              } else {
-                return;
-              }
-            });
-          }
-        })
-      );
-      setPieChartData(dataMock);
-    } else {
-      setAttendedEventNotExist(true);
-    }
+    await Promise.all(
+      eventIdArray.map(async (id) => {
+        const event = await getEventInfo(id);
+        if (checkEventPassed(event)) {
+          dataMock.forEach((type) => {
+            if (event.eventTags.includes(type.title)) {
+              type.value++;
+              return;
+            } else {
+              return;
+            }
+          });
+        }
+      })
+    );
 
+    // console.log(eventExist);
+    // if (eventExist === 0) {
+    //   dataMock = [{ title: "沒有活動", value: 1, color: "#e9ecef" }];
+    // }
+    setPieChartData(dataMock);
     console.log(dataMock);
     return dataMock;
   };
@@ -410,6 +407,10 @@ function Profile() {
   useEffect(() => {
     console.log(pieChartData);
   }, [pieChartData]);
+
+  useEffect(() => {
+    console.log(attendedEventNotExist);
+  }, [attendedEventNotExist]);
 
   const renderLevelData = () => {
     return (
@@ -435,36 +436,19 @@ function Profile() {
         <Text>{`各類型志工活動參加比例 (已完成)`}</Text>
         <PieChartMainContent>
           <PieChartContainer>
-            {attendedEventNotExist ? (
-              <PieChart
-                data={[{ title: "生態保護", value: 1, color: "#e9ecef" }]}
-                lineWidth={50}
-                animate={true}
-                radius={50}
-                // startAngle={-90}
-                // paddingAngle={1}
-                labelStyle={{
-                  fontSize: "6px",
-                  fontFamily: "sans-serif",
-                  fill: "#ffffff",
-                }}
-                labelPosition={75}
-              />
-            ) : (
-              <PieChart
-                data={pieChartData}
-                lineWidth={50}
-                paddingAngle={0.5}
-                animate={true}
-                radius={50}
-                labelStyle={{
-                  fontSize: "6px",
-                  fontFamily: "sans-serif",
-                  fill: "#ffffff",
-                }}
-                labelPosition={75}
-              />
-            )}
+            <PieChart
+              data={pieChartData}
+              lineWidth={50}
+              paddingAngle={0.5}
+              animate={true}
+              radius={50}
+              labelStyle={{
+                fontSize: "6px",
+                fontFamily: "sans-serif",
+                fill: "#ffffff",
+              }}
+              labelPosition={75}
+            />
           </PieChartContainer>
           <LabelsContainer>
             {pieChartData.map((label, index) => (
@@ -482,38 +466,44 @@ function Profile() {
   return (
     <Container>
       <Styles>
-        <ProfileDiv>
-          {role === 0 ? (
-            <ProfileHeader />
-          ) : (
-            <ProfileHeader style={{ backgroundColor: "#c7D8c6" }} />
-          )}
+        {role === 0 || role === 1 ? (
+          <ProfileDiv>
+            {role === 0 ? (
+              <ProfileHeader />
+            ) : (
+              <ProfileHeader style={{ backgroundColor: "#c7D8c6" }} />
+            )}
 
-          <MainContent style={{ borderBottom: "1px solid #e7e7e9" }}>
-            <ProfileSubContainer>
-              {userData.userPhoto ? (
-                <ProfileImg src={userData.photo} />
-              ) : (
-                <ProfileImg src={userImg} />
-              )}
-            </ProfileSubContainer>
-            <ProfileSubContainer>
-              <ProfileName>{`哈囉，${userData.name}`}</ProfileName>
-              {role === 0 && <LevelText>{levelStatus.current.name}</LevelText>}
-            </ProfileSubContainer>
-            {role === 0 && renderLevelData()}
-            {role === 0 && renderCategoryData()}
-          </MainContent>
-          {role === 0 ? (
-            <UserLogoutButton onClick={handleLogoutButton}>
-              登出
-            </UserLogoutButton>
-          ) : (
-            <HosterLogoutButton onClick={handleLogoutButton}>
-              登出
-            </HosterLogoutButton>
-          )}
-        </ProfileDiv>
+            <MainContent style={{ borderBottom: "1px solid #e7e7e9" }}>
+              <ProfileSubContainer>
+                {userData.userPhoto ? (
+                  <ProfileImg src={userData.photo} />
+                ) : (
+                  <ProfileImg src={userImg} />
+                )}
+              </ProfileSubContainer>
+              <ProfileSubContainer>
+                <ProfileName>{`哈囉，${userData.name}`}</ProfileName>
+                {role === 0 && (
+                  <LevelText>{levelStatus.current.name}</LevelText>
+                )}
+              </ProfileSubContainer>
+              {role === 0 && renderLevelData()}
+              {role === 0 && renderCategoryData()}
+            </MainContent>
+            {role === 0 ? (
+              <UserLogoutButton onClick={handleLogoutButton}>
+                登出
+              </UserLogoutButton>
+            ) : (
+              <HosterLogoutButton onClick={handleLogoutButton}>
+                登出
+              </HosterLogoutButton>
+            )}
+          </ProfileDiv>
+        ) : (
+          <div />
+        )}
       </Styles>
     </Container>
   );

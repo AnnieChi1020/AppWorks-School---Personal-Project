@@ -189,7 +189,7 @@ function EventDetail() {
     image: "",
     title: "",
     content: "",
-    address: "",
+    address: "台灣",
     location: {},
     startTime: "",
     endTime: "",

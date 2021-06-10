@@ -167,6 +167,7 @@ export const getUserProfile = (id) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
+        console.log(doc.data());
         return doc.data();
       } else {
       }
