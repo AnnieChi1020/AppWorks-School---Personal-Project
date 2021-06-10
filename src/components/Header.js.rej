@@ -1,0 +1,77 @@
+diff a/src/components/Header.js b/src/components/Header.js	(rejected hunks)
+@@ -115,23 +156,19 @@
+   cursor: pointer;
+ `;
+ 
++const Styles = styled.div``;
++
++const StyledNavItem = styled(Nav.Link)`
++  color: #3d3d3d;
++`;
++
+ const styles = {
+-  loginBtn: {
+-    height: "32px",
+-    textDecoration: "none",
+-    backgroundColor: "#57bc90",
+-    borderRadius: "30px",
+-    color: "white",
+-    fontSize: "16px",
+-    fontWeight: "500",
+-    lineHeight: "20px",
+-    padding: "5px 13px",
+-    marginLeft: "30px",
++  navItem: {
++    color: "#3d3d3d",
+   },
+ };
+ 
+ function Header() {
+-  const [click, setClick] = useState(false);
+   const isLogged = useSelector((state) => state.isLogged.isLogged);
+   const userRole = useSelector((state) => state.isLogged.userRole);
+   const loginModal = useSelector((state) => state.modal.login);
+@@ -174,13 +211,38 @@
+     return loginModal ? <Login></Login> : <div />;
+   };
+ 
+-  const handleMenuClick = () => {
+-    document.querySelector("#navItemsContainer").style.display = "flex";
+-  };
+-
+   return (
+     <Container>
+-      <HeaderContent>
++      <Styles>
++        <HeaderContent>
++          <Navbar collapseOnSelect expand="lg" bg="white" variant="light">
++            <Navbar.Brand>
++              <LogoContainer className="ml-3">
++                <LogoImage src={logo} onClick={handleLogoClick} />
++              </LogoContainer>
++            </Navbar.Brand>
++            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
++            <Navbar.Collapse id="responsive-navbar-nav">
++              <Nav className="mr-auto">
++                <Nav.Link onClick={handleEventsClick}>我要當志工</Nav.Link>
++                <Nav.Link onClick={handleCreateEventClick}>招募志工</Nav.Link>
++                <Nav.Link onClick={handlePastEventsClick}>活動成果</Nav.Link>
++              </Nav>
++              <Nav>
++                {isLogged === true ? (
++                  <Nav.Link onClick={handleProfileClick} className="mr-3">
++                    我的活動
++                  </Nav.Link>
++                ) : (
++                  <Nav.Link onClick={() => handleLoginClick()} className="mr-3">
++                    登入 / 註冊
++                  </Nav.Link>
++                )}
++              </Nav>
++            </Navbar.Collapse>
++          </Navbar>
++        </HeaderContent>
++        {/* <HeaderContent>
+         <NavContent>
+           <LogoContainer>
+             <LogoImage src={logo} onClick={handleLogoClick} />
