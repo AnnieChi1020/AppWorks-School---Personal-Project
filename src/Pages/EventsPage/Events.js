@@ -453,6 +453,8 @@ function AllEvents() {
     event.eventAddress.address_components.forEach((e) => {
       if (e.types.includes("administrative_area_level_1")) {
         area = e.long_name;
+      } else if (e.types.includes("administrative_area_level_2")) {
+        area = e.long_name;
       }
     });
     return area;

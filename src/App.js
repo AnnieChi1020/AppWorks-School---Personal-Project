@@ -73,6 +73,7 @@ function App() {
 
     if (userId) {
       const userProfile = await getUserProfile(userId);
+      console.log(userProfile);
       dispatch({ type: "SIGN_IN", data: true });
       dispatch({ type: "GET_USERID", data: userId });
       dispatch({ type: "GET_USERROLE", data: userProfile.role });
@@ -104,6 +105,7 @@ function App() {
         className="App"
         style={{
           minHeight: "calc(100vh - 50px)",
+          width: "100%",
         }}
       >
         <Header />
