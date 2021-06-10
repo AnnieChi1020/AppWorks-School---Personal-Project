@@ -16,10 +16,14 @@ const CategoryContainer = styled.div`
 
 const MainContentContainer = styled.div`
   width: 100%;
-  margin-top: 900px;
+  margin-top: 800px;
   text-align: center;
+
   @media (max-width: 960px) {
-    margin-top: 900px;
+    margin-top: 500px;
+  }
+  @media (max-width: 540px) {
+    margin-top: 400px;
   }
 `;
 

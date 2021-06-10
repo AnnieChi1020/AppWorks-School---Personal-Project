@@ -1,19 +1,20 @@
 import styled from "styled-components";
 import React from "react";
-import banner from "../../images/background.jpg";
+// import banner from "../../images/background.jpg";
 import slogan from "../../images/slogan.png";
-
+import join from "../../images/join_text.png";
 import animal from "../../images/animal.png";
 import welfare from "../../images/welfare.png";
 import environment from "../../images/environment.png";
 import education from "../../images/education.png";
 // import banner from "../../images/banner.svg";
+import banner from "../../images/banner_3.png";
 
 import { useHistory } from "react-router-dom";
 
 const BannerContainer = styled.div`
   width: 100%;
-  height: 800px;
+  height: 700px;
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
@@ -30,20 +31,26 @@ const BannerContainer = styled.div`
   align-items: center;
 
   @media (max-width: 960px) {
-    /* height: 700px; */
+    height: 400px;
   }
   @media (max-width: 540px) {
-    /* height: 620px; */
+    height: 300px;
   }
 `;
 
 const Mask = styled.div`
   width: 100%;
-  height: 800px;
+  height: 700px;
   position: absolute;
   left: 0;
   top: 0;
-  background-color: rgb(0, 0, 0, 0.35);
+  background-color: rgb(0, 0, 0, 0.2);
+  @media (max-width: 960px) {
+    height: 400px;
+  }
+  @media (max-width: 540px) {
+    height: 300px;
+  }
 `;
 
 const MainContentContainer = styled.div`
@@ -51,6 +58,13 @@ const MainContentContainer = styled.div`
   height: calc(100% - 50px);
   margin-top: 50px;
   padding: 50px;
+
+  @media (max-width: 960px) {
+    padding: 40px;
+  }
+  @media (max-width: 540px) {
+    padding: 20px;
+  }
 
   /* display: flex;
   flex-direction: row;
@@ -64,25 +78,30 @@ const MainContentContainer = styled.div`
 const TextContainer = styled.div`
   width: 600px;
   height: 100%;
-  margin: 0 auto;
   flex-grow: 0;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  @media (max-width: 720px) {
+  @media (max-width: 700px) {
     width: 100%;
   }
 `;
 
 const Slogan = styled.img`
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 150px;
   object-fit: contain;
   filter: none;
   margin: 0 auto;
   margin-top: 0px;
-  margin-bottom: 30px;
+  margin-left: 0;
+  @media (max-width: 960px) {
+    height: 100px;
+  }
+  @media (max-width: 540px) {
+    height: 80px;
+  }
 `;
 
 const TextSubtitle = styled.div`
@@ -136,33 +155,55 @@ const TextSubtitle = styled.div`
 // `;
 
 const Button = styled.button`
-  width: 120px;
-  margin: 0 auto;
-  margin-top: 100px;
+  width: 130px;
+  margin-left: 90px;
+  margin-top: 50px;
   padding: 5px 10px;
-  border-radius: 10px;
-  background-color: rgb(87, 188, 144);
+  border-radius: 20px;
+  /* background-color: rgb(87, 188, 144); */
+  background-color: inherit;
+  background-color: rgb(251, 251, 251, 0.2);
   border: none;
   font-weight: 600;
-  /* border: 1px solid white; */
+  border: 1px solid white;
   color: white;
+  letter-spacing: 3px;
+  font-size: 18px;
 
-  & :hover {
-    box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.5);
-    border: 1px solid yellow;
+  :hover {
+    background-color: rgb(87, 188, 144);
+    /* box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3); */
+    border: 1px solid rgb(87, 188, 144);
+  }
+  :active {
+    background-color: #52a983;
+    /* box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3); */
+    border: 1px solid #43886a;
   }
 
-  /* @media (max-width: 960px) {
-    margin: 0 auto;
+  @media (max-width: 960px) {
+    width: 110px;
+    margin-top: 40px;
+    margin-left: 50px;
+    font-size: 16px;
+    padding: 3px 5px;
+  }
+  @media (max-width: 540px) {
+    width: 90px;
     margin-top: 20px;
-  } */
+    margin-left: 20px;
+    font-size: 14px;
+    padding: 3px 5px;
+  }
 `;
 
 function Banner() {
   const history = useHistory();
 
   const handleButtonClick = () => {
-    history.push("/events");
+    setTimeout(function () {
+      history.push("/events");
+    }, 1500);
   };
 
   return (
@@ -170,8 +211,12 @@ function Banner() {
       <Mask />
       <MainContentContainer className="container-xl">
         <TextContainer>
-          <Slogan src={slogan} />
-          <TextSubtitle>加入志工的行列，一起改變世界！</TextSubtitle>
+          {/* <Slogan src={slogan} /> */}
+          <Slogan src={join} />
+
+          {/* <TextSubtitle>加入志工的行列，一起改變世界！</TextSubtitle> */}
+          {/* <TextSubtitle>加入志工的行列，一起改變世界！</TextSubtitle> */}
+
           <Button onClick={handleButtonClick}>我要報名</Button>
         </TextContainer>
       </MainContentContainer>

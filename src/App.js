@@ -31,6 +31,9 @@ import EditEvent from "./Pages/ProfilePage/HosterEvents/EditEventPage/EditEventP
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 const Styles = styled.div`
+  * {
+    font-family: "Noto Sans TC", sans-serif;
+  }
   .Toastify__toast-container {
     width: 250px;
   }
@@ -106,25 +109,30 @@ function App() {
           width: "100%",
         }}
       >
-        <Header />
-        <Route exact path="/" component={HomePage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/createEvent" component={CreateEvent} />
-        <Route exact path="/events" component={EventsPage} />
-        <Route exact path="/events/:id" component={EventDetail} />
-        <Route exact path="/profile" component={ProfilePage} />
-        <Route
-          exact
-          path="/profile/manage-participants/:id"
-          component={ManageParticipantPage}
-        />
-        <Route exact path="/profile/edit-event/:id" component={EditEvent} />
-
-        <Route exact path="/profile/event-result/:id" component={EventResult} />
-        <Route exact path="/profile/comments/:id" component={EventComments} />
-        <Route exact path="/pastEvents" component={PastEvents} />
-        {/* <Footer /> */}
         <Styles>
+          <Header />
+          <Route exact path="/" component={HomePage} />
+          <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/createEvent" component={CreateEvent} />
+          <Route exact path="/events" component={EventsPage} />
+          <Route exact path="/events/:id" component={EventDetail} />
+          <Route exact path="/profile" component={ProfilePage} />
+          <Route
+            exact
+            path="/profile/manage-participants/:id"
+            component={ManageParticipantPage}
+          />
+          <Route exact path="/profile/edit-event/:id" component={EditEvent} />
+
+          <Route
+            exact
+            path="/profile/event-result/:id"
+            component={EventResult}
+          />
+          <Route exact path="/profile/comments/:id" component={EventComments} />
+          <Route exact path="/pastEvents" component={PastEvents} />
+          {/* <Footer /> */}
+
           <ToastContainer
             position="top-center"
             autoClose={3000}
