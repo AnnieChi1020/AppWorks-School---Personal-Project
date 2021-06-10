@@ -26,6 +26,7 @@
     "react-card-flipper": "^1.0.1",
     "react-datepicker": "^3.8.0",
     "react-dom": "^17.0.2",
+    "react-dropdown": "^1.9.2",
     "react-google-autocomplete": "^2.4.0",
     "react-google-places-autocomplete": "^3.3.1",
     "react-minimal-pie-chart": "^8.2.0",

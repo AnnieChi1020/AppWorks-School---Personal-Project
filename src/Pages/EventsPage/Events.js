@@ -1,12 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Component } from "react";
+import Select from "react-select";
 import { getEvents } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import noEventImage from "../../images/noEvent.png";
 import eventBanner from "../../images/eventBanner.png";
+import Dropdown from "react-dropdown";
+import "react-dropdown/style.css";
 
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
@@ -319,9 +322,51 @@ const Styles = styled.div`
     height: 150px;
     border-radius: 10px 10px 0 0 !important;
   }
-  #citySelector > option:hover {
-    color: #1b517e;
-    cursor: pointer;
+
+  .city-select {
+    background-color: white;
+    height: 32px;
+    width: 120px;
+    border: solid 1px #57bb92;
+    border-radius: 10px;
+    padding: 5px 15px;
+    color: #57bb92;
+    font-size: 16px;
+    line-height: 20px;
+    box-shadow: none;
+    text-align: left;
+
+    .Dropdown-arrow {
+      position: absolute;
+      top: 45%;
+      right: 10px;
+    }
+    @media (max-width: 760px) {
+      height: 28px;
+      width: 120px;
+      padding: 5px 5px 5px 10px;
+      font-size: 14px;
+      line-height: 16px;
+    }
+    @media (max-width: 540px) {
+      height: 26px;
+      width: 100px;
+      font-size: 12px;
+      line-height: 14px;
+    }
+  }
+  .city-select-menu {
+    margin-top: 0px;
+    border: solid 1px #57bb92;
+    @media (max-width: 760px) {
+      font-size: 14px;
+      line-height: 16px;
+    }
+
+    @media (max-width: 540px) {
+      font-size: 12px;
+      line-height: 14px;
+    }
   }
 `;
 
@@ -406,7 +451,8 @@ function AllEvents() {
   };
 
   const handleCitySelect = async (e) => {
-    const newCity = e.target.value;
+    // const newCity = e.target.value;
+    const newCity = e;
     dispatch({ type: "ADD_CITY", data: newCity });
   };
 
@@ -460,10 +506,11 @@ function AllEvents() {
     return area;
   };
 
+  const defaultOption = "";
   const handleClearButton = () => {
     dispatch({ type: "ADD_TAG", data: "" });
     dispatch({ type: "ADD_CITY", data: "" });
-    document.getElementById("citySelector").value = "default";
+    document.querySelector(".Dropdown-placeholder").innerHTML = "活動縣市 ";
   };
 
   return (
@@ -491,18 +538,14 @@ function AllEvents() {
               )}
             </Tags>
             <SelectContainer>
-              <Selector
-                id="citySelector"
-                data-default-value="default"
-                onChange={(e) => handleCitySelect(e)}
-              >
-                <option value="default" selected disabled hidden>
-                  活動縣市
-                </option>
-                {cityArray.map((city, index) => (
-                  <option value={city}>{city}</option>
-                ))}
-              </Selector>
+              <Dropdown
+                options={cityArray}
+                onChange={(e) => handleCitySelect(e.value)}
+                placeholder="活動縣市 "
+                controlClassName="city-select"
+                menuClassName="city-select-menu"
+                value={defaultOption}
+              />
               <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
             </SelectContainer>
           </Filter>
