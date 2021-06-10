@@ -66,8 +66,6 @@ const Styles = styled.div`
 function App() {
   const dispatch = useDispatch();
 
-  const loginAlert = useSelector((state) => state.alert.loginAlert);
-
   const checkLoginStatus = async () => {
     const userId = await checkAuthStatus();
 

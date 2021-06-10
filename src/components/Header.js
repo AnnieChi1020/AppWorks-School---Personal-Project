@@ -70,44 +70,55 @@ function Header() {
   const isLogged = useSelector((state) => state.isLogged.isLogged);
   const userRole = useSelector((state) => state.isLogged.userRole);
   const loginModal = useSelector((state) => state.modal.login);
+  const expanded = useSelector((state) => state.expanded.collapseNav);
 
-  const [expanded, setExpanded] = useState("false");
+  // const [expanded, setExpanded] = useState("false");
 
   const dispatch = useDispatch();
 
   const history = useHistory();
 
   const handleLogoClick = () => {
-    history.push("/");
-    setExpanded(false);
+    dispatch({ type: "SHOW_NAV", data: false });
+    setTimeout(function () {
+      history.push("/");
+    }, 1000);
   };
 
   const handleEventsClick = () => {
-    setExpanded(false);
-    history.push("/events");
+    dispatch({ type: "SHOW_NAV", data: false });
+    setTimeout(function () {
+      history.push("/events");
+    }, 1000);
   };
 
   const handleCreateEventClick = () => {
-    setExpanded(false);
+    dispatch({ type: "SHOW_NAV", data: false });
     userRole === 1
-      ? history.push("/createEvent")
+      ? setTimeout(function () {
+          history.push("/createEvent");
+        }, 1000)
       : toast.warning(warningAlertText("請先登入機構帳號"), {
           position: toast.POSITION.TOP_CENTER,
         });
   };
 
   const handlePastEventsClick = () => {
-    setExpanded(false);
-    history.push("/pastEvents");
+    dispatch({ type: "SHOW_NAV", data: false });
+    setTimeout(function () {
+      history.push("/pastEvents");
+    }, 1000);
   };
 
   const handleProfileClick = () => {
-    setExpanded(false);
-    history.push("/profile");
+    dispatch({ type: "SHOW_NAV", data: false });
+    setTimeout(function () {
+      history.push("/profile");
+    }, 1000);
   };
 
   const handleLoginClick = () => {
-    setExpanded(false);
+    dispatch({ type: "SHOW_NAV", data: false });
     loginModal === false
       ? dispatch({ type: "LOGIN", data: true })
       : dispatch({ type: "LOGIN", data: false });
@@ -136,7 +147,9 @@ function Header() {
           </Navbar.Brand>
           <Navbar.Toggle
             aria-controls="responsive-navbar-nav"
-            onClick={() => setExpanded(expanded ? false : true)}
+            onClick={() =>
+              dispatch({ type: "SHOW_NAV", data: expanded ? false : true })
+            }
           />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">

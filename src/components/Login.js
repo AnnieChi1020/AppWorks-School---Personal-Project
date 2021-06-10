@@ -151,7 +151,6 @@ function Login() {
   };
 
   const handleActionChange = (e) => {
-    // dispatch({ type: "SHOW_LOGINALERT", data: true });
     setAction(e.target.id);
     setValidated(false);
     clearValidationStatus();

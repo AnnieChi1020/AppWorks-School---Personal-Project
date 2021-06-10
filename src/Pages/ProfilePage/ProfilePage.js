@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Profile from "./Profile.js";
 import HosterEvents from "./HosterEvents/HosterEvents.js";
 import UserEvents from "./UserEvents/UserEvents.js";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
@@ -36,6 +36,8 @@ function ProfilePage() {
   const role = useSelector((state) => state.isLogged.userRole);
   const history = useHistory();
 
+  const dispatch = useDispatch();
+
   const renderEventsData = () => {
     if (role === 0) {
       return <UserEvents />;
@@ -48,7 +50,10 @@ function ProfilePage() {
   };
 
   return (
-    <Container className="container-xl">
+    <Container
+      className="container-xl"
+      onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
+    >
       <Background></Background>
       <Profile />
       {renderEventsData()}

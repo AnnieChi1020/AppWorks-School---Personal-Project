@@ -1,11 +1,9 @@
-// import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import PastEvents from "./PastEvents.js";
 import LeaderBoard from "./LeaderBoard.js";
 import whiteWall from "../../images/white_wall.jpg";
-
-// import { getHosterEvents } from "../../utils/firebase.js";
-// import { useHistory, useParams } from "react-router-dom";
+import React from "react";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   width: 100%;
@@ -36,8 +34,13 @@ const MainContent = styled.div`
 `;
 
 function PastEventsPage() {
+  const dispatch = useDispatch();
+
   return (
-    <Container className="container-xl mb-5">
+    <Container
+      className="container-xl mb-5"
+      onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
+    >
       <Background />
       <MainContent>
         <PastEvents />
