@@ -37,7 +37,7 @@ function ProfilePage() {
   const history = useHistory();
 
   useEffect(() => {
-    if (role !== 0 || 1) {
+    if ((role && role !== 0) || (role && role !== 1)) {
       history.push("/");
     }
   }, [role]);
