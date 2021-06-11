@@ -8,9 +8,11 @@ import {
   updateParticipantStatus,
 } from "../../../utils/firebase.js";
 import { useSelector } from "react-redux";
-import { Col, Card } from "react-bootstrap";
+import { Col, Card, Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import NoEvent from "../components/NoEvent.js";
+import { toast } from "react-toastify";
+import { successAlertText } from "../../../components/Alert.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -78,6 +80,53 @@ const CancelButton = styled.button`
   margin: 0 auto;
 `;
 
+const StyledHeader = styled(Modal.Header)`
+  border: none;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 15px 16px 10px 16px;
+  color: #5d5d5d;
+  background-color: #9dc7d878;
+`;
+
+const StyledBody = styled(Modal.Body)`
+  padding: 25px 30px 25px 30px;
+`;
+
+const ButtonsContainer = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+`;
+
+const PrimaryButton = styled.button`
+  width: 100%;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 5px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #67aeca;
+  color: white;
+  margin: 0 auto;
+  cursor: pointer;
+`;
+
+const SecondaryButton = styled.button`
+  width: 100%;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 5px;
+  border: 1px solid #67aeca;
+  border-radius: 5px;
+  background-color: white;
+  color: #67aeca;
+  margin: 0 auto;
+  cursor: pointer;
+`;
+
 const styles = {
   cardImage: {
     objectFit: "cover",
@@ -109,6 +158,12 @@ function UserConfirmedEvents() {
   const [events, setEvents] = useState("");
   const [noEvent, setNoEvent] = useState(false);
 
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelEvent, setCancelEvent] = useState({
+    eventId: "",
+    userId: "",
+  });
+
   const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 1);
     return applyingEvents;
@@ -123,7 +178,7 @@ function UserConfirmedEvents() {
         if (event.eventStatus === 0) {
           eventInfoArray.push(event);
         }
-        setEvents([eventInfoArray]);
+        setEvents([...eventInfoArray]);
         return eventInfoArray;
       })
     );
@@ -164,6 +219,26 @@ function UserConfirmedEvents() {
     let currentStatus = await getParticipantInfo(eventId, userId);
     currentStatus.participantInfo.participantStatus = 9;
     updateParticipantStatus(eventId, userId, currentStatus);
+    let newEventsArray = events;
+    newEventsArray.map((event) => {
+      if (event.eventId === eventId) {
+        event.eventStatus = 9;
+        return event;
+      } else {
+        return event;
+      }
+    });
+    setEvents(newEventsArray);
+    toast.success(successAlertText("成功取消報名"), {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    setShowCancelModal(false);
+  };
+
+  const handleClose = () => setShowCancelModal(false);
+  const handleShow = (eventId) => {
+    setShowCancelModal(true);
+    setCancelEvent({ ...cancelEvent, eventId: eventId, userId: userId });
   };
 
   const renderNoEventMessage = () => {
@@ -178,7 +253,7 @@ function UserConfirmedEvents() {
       <EventsContainer className="applying-events">
         {events.length > 0 && (
           <Events>
-            {events[0].map((event, index) => (
+            {events.map((event, index) => (
               <Col className="p-0" style={styles.cardCol} key={index}>
                 <Card className="h-100 eventCard">
                   <CurrentStatus>已確認報名</CurrentStatus>
@@ -203,14 +278,18 @@ function UserConfirmedEvents() {
                       </Card.Text>
                     </EventInfo>
                     <EventStatus>
-                      <CancelButton
-                        onClick={(e) => {
-                          handleCancelClick(event.eventId, userId);
-                          e.target.textContent = "已取消";
-                        }}
-                      >
-                        取消報名
-                      </CancelButton>
+                      {event.eventStatus === 9 ? (
+                        <CancelButton>已取消報名</CancelButton>
+                      ) : (
+                        <CancelButton
+                          onClick={(e) => {
+                            // handleCancelClick(event.eventId, userId, e);
+                            handleShow(event.eventId);
+                          }}
+                        >
+                          取消報名
+                        </CancelButton>
+                      )}
                     </EventStatus>
                   </Card.Body>
                 </Card>
@@ -220,6 +299,29 @@ function UserConfirmedEvents() {
         )}
         {renderNoEventMessage()}
       </EventsContainer>
+      <Modal
+        show={showCancelModal}
+        onHide={handleClose}
+        centered
+        dialogClassName="cancel-modal"
+        size="sm"
+      >
+        <StyledHeader>確定要取消活動嗎</StyledHeader>
+        <StyledBody>
+          <ButtonsContainer>
+            <SecondaryButton onClick={() => handleClose()}>
+              再想一下
+            </SecondaryButton>
+            <PrimaryButton
+              onClick={() =>
+                handleCancelClick(cancelEvent.eventId, cancelEvent.userId)
+              }
+            >
+              取消報名
+            </PrimaryButton>
+          </ButtonsContainer>
+        </StyledBody>
+      </Modal>
     </Styles>
   );
 }

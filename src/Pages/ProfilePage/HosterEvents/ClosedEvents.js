@@ -167,9 +167,9 @@ function ClosedEvents() {
   const handleParticipantClick = (id) => {
     history.push(`profile/manage-participants/${id}`);
   };
-  const handleResultClick = (id) => {
-    history.push(`profile/event-result/${id}`);
-  };
+  // const handleResultClick = (id) => {
+  //   history.push(`profile/event-result/${id}`);
+  // };
 
   const getDay = (day) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
