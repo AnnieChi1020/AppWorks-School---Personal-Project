@@ -36,11 +36,11 @@ function ProfilePage() {
   const role = useSelector((state) => state.isLogged.userRole);
   const history = useHistory();
 
-  useEffect(() => {
-    if ((role && role !== 0) || (role && role !== 1)) {
-      history.push("/");
-    }
-  }, [role]);
+  // useEffect(() => {
+  //   if ((role && role !== 0) || (role && role !== 1)) {
+  //     history.push("/");
+  //   }
+  // }, [role]);
 
   const dispatch = useDispatch();
 
@@ -49,6 +49,8 @@ function ProfilePage() {
       return <UserEvents />;
     } else if (role === 1) {
       return <HosterEvents />;
+    } else {
+      history.push("/");
     }
     // else {
     //   history.push("/");
