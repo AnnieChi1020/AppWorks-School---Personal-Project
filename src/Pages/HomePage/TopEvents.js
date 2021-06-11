@@ -8,34 +8,40 @@ import { Card, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 
+import background from "../../images/TP_background_3.png";
+
 const TopEventsContainer = styled.div`
   width: 100%;
-  margin: 0 auto;
-  padding-top: 20px;
+  background-image: url(${background});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const MainContentContainer = styled.div`
   width: 100%;
   text-align: center;
+  margin: 0 auto;
+  padding: 150px 20px 150px 20px;
 `;
 
 const TopEventsHeader = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 100px;
-  padding: 10px 20px;
-  font-size: 28px;
+  padding: 20px 20px;
+  font-size: 32px;
   font-weight: 600;
-  line-height: 30px;
+  line-height: 34px;
   text-align: center;
   font-family: "Noto Sans TC", sans-serif;
-  color: #848484;
+  color: white;
+  letter-spacing: 2px;
 `;
 
 const EventsContainer = styled.div`
   width: 100%;
-  margin-top: 30px;
   padding: 0 20px;
+  margin-top: 60px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 5px;
@@ -46,13 +52,29 @@ const EventsContainer = styled.div`
   }
 `;
 
-// const EventCard = styled.div`
-//   width: 250px;
-//   height: 250px;
-//   border: 1px solid #8080801a;
-//   align-items: center;
-//   background-color: #8080801a;
-// `;
+const StyledCard = styled(Card)`
+  /* border: 1px solid rgba(0, 0, 0, 0.125); */
+  cursor: pointer;
+  border-radius: 10px 10px 10px 10px !important;
+`;
+
+const CardImg = styled(Card.Img)`
+  object-fit: cover;
+  width: 100%;
+  height: 150px;
+  border-radius: 10px 10px 0px 0px;
+`;
+
+const CardBody = styled(Card.Body)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  :hover {
+    div {
+      color: #54b188;
+    }
+  }
+`;
 
 const EventTitle = styled.div`
   font-size: 18px;
@@ -85,11 +107,6 @@ const EventText = styled.div`
 `;
 
 const styles = {
-  cardImage: {
-    objectFit: "cover",
-    width: "100%",
-    height: "150px",
-  },
   modalBody: {
     display: "flex",
     flexDirection: "column",
@@ -133,31 +150,30 @@ function TopEvents() {
 
   return (
     <TopEventsContainer>
-      <MainContentContainer>
+      <MainContentContainer className="container-xl">
         <TopEventsHeader>熱門志工活動</TopEventsHeader>
         <EventsContainer>
           {topEvents.map((event, index) => (
             <Col className="p-1 h-100" style={styles.cardCol} key={index}>
-              <Card
+              <StyledCard
                 className="shadow-sm rounded bg-white h-100"
                 onClick={() => handleEventClick(event.id)}
-                style={{ cursor: "pointer" }}
               >
                 <div className="bg-image hover-overlay hover-zoom">
-                  <Card.Img
+                  <CardImg
                     variant="top"
                     src={event.image}
                     style={styles.cardImage}
-                  ></Card.Img>
+                  ></CardImg>
                 </div>
-                <Card.Body className="py-2 px-3" style={styles.modalBody}>
+                <CardBody className="py-2 px-3" style={styles.modalBody}>
                   <EventTitle>{event.title}</EventTitle>
                   <EventText>
                     {`${event.number}`}
                     <FontAwesomeIcon icon={faUserFriends} />
                   </EventText>
-                </Card.Body>
-              </Card>
+                </CardBody>
+              </StyledCard>
             </Col>
           ))}
         </EventsContainer>

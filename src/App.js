@@ -29,7 +29,7 @@ import EventResult from "./Pages/ProfilePage/HosterEvents/EventResultPage/EventR
 import EditEvent from "./Pages/ProfilePage/HosterEvents/EditEventPage/EditEventPage.js";
 import NotFound from "./Pages/404Page";
 
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const Styles = styled.div`
   * {
@@ -115,27 +115,33 @@ function App() {
       >
         <Styles>
           <Header />
-          <Route exact path="/" component={HomePage} />
-          <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/createEvent" component={CreateEvent} />
-          <Route exact path="/events" component={EventsPage} />
-          <Route exact path="/events/:id" component={EventDetail} />
-          <Route exact path="/profile" component={ProfilePage} />
-          <Route
-            exact
-            path="/profile/manage-participants/:id"
-            component={ManageParticipantPage}
-          />
-          <Route exact path="/profile/edit-event/:id" component={EditEvent} />
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/createEvent" component={CreateEvent} />
+            <Route exact path="/events" component={EventsPage} />
+            <Route exact path="/events/:id" component={EventDetail} />
+            <Route exact path="/profile" component={ProfilePage} />
+            <Route
+              exact
+              path="/profile/manage-participants/:id"
+              component={ManageParticipantPage}
+            />
+            <Route exact path="/profile/edit-event/:id" component={EditEvent} />
 
-          <Route
-            exact
-            path="/profile/event-result/:id"
-            component={EventResult}
-          />
-          <Route exact path="/profile/comments/:id" component={EventComments} />
-          <Route exact path="/pastEvents" component={PastEvents} />
-          <Route component={NotFound} />
+            <Route
+              exact
+              path="/profile/event-result/:id"
+              component={EventResult}
+            />
+            <Route
+              exact
+              path="/profile/comments/:id"
+              component={EventComments}
+            />
+            <Route exact path="/pastEvents" component={PastEvents} />
+            <Route component={NotFound} />
+          </Switch>
           {/* <Footer /> */}
 
           <ToastContainer
