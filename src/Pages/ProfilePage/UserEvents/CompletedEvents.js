@@ -5,6 +5,7 @@ import {
   getUserEvents,
   getEventInfo,
   getParticipantInfo,
+  onSnapshotParticipantInfo,
 } from "../../../utils/firebase.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Card, Modal } from "react-bootstrap";
@@ -118,6 +119,31 @@ function UserCompletedEvents() {
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
   const showFeedbackModal = useSelector((state) => state.modal.feedback);
+  const feedbackCompleted = useSelector(
+    (state) => state.modal.feedbackCompleted
+  );
+  const selectedEventId = useSelector((state) => state.modal.eventId);
+
+  useEffect(() => {
+    console.log(selectedEventId);
+    console.log(`feedback is ${feedbackCompleted}`);
+    if (feedbackCompleted) {
+      let currentEventsArray = events;
+      currentEventsArray.map((event) => {
+        if (event.eventId === selectedEventId) {
+          event.userRate = 5;
+          return event;
+        } else {
+          return event;
+        }
+      });
+      setEvents(currentEventsArray);
+      dispatch({ type: "SET_FEEDBACKCOMPLETED", data: false });
+      dispatch({ type: "SET_EVENTID", data: "" });
+    }
+  }, [feedbackCompleted]);
+
+  console.log(events);
 
   const dispatch = useDispatch();
 
@@ -143,7 +169,7 @@ function UserCompletedEvents() {
           event.userAttend = userAttend;
           eventInfoArray.push(event);
         }
-        setEvents([eventInfoArray]);
+        setEvents([...eventInfoArray]);
         return eventInfoArray;
       })
     );
@@ -198,7 +224,7 @@ function UserCompletedEvents() {
       <EventsContainer>
         {events.length > 0 && (
           <Events>
-            {events[0].map((event, index) => (
+            {events.map((event, index) => (
               <Col className="p-0" style={styles.cardCol} key={index}>
                 <Card className="h-100 eventCard">
                   {event.userAttend === false ? (
@@ -263,7 +289,7 @@ function UserCompletedEvents() {
         >
           <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
           <Modal.Body style={styles.modalBody}>
-            <Comments></Comments>
+            <Comments />
           </Modal.Body>
         </Modal>
       </EventsContainer>

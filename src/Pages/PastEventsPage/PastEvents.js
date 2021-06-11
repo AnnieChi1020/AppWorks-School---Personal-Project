@@ -25,6 +25,7 @@ const PastEvent = styled.div`
   display: inline-block;
   margin-top: 20px;
   filter: sepia(50%);
+  cursor: pointer;
   & :before {
     content: "";
     position: absolute;
@@ -199,7 +200,7 @@ function PastEvents() {
       return true;
     });
     eventsArray.slice(0, 9);
-    setEvents(eventsArray.slice(0, 9));
+    setEvents(eventsArray);
   };
 
   const getDay = (day) => {
@@ -288,7 +289,7 @@ function PastEvents() {
       <PastEventsContainer>
         <Wrapper>
           {events.map((event, index) => (
-            <PastEvent>
+            <PastEvent key={index}>
               <Polaroid>
                 <PolaroidImage
                   src={event.image}
@@ -298,15 +299,6 @@ function PastEvents() {
               </Polaroid>
             </PastEvent>
           ))}
-          {/* {events.map((event, index) => (
-          <Event key={index}>
-            <EventImage
-              src={event.image}
-              onClick={() => handleEventClick(event.id)}
-            ></EventImage>
-            <EventTitle>{event.title}</EventTitle>
-          </Event>
-        ))} */}
         </Wrapper>
       </PastEventsContainer>
 
@@ -361,48 +353,6 @@ function PastEvents() {
           </UserFeedbacks>
         </Modal.Footer>
       </Modal>
-
-      {/* <PastEventsContainer>
-        {eventResult && (
-          <PastEvent>
-            <PastEventImages>
-              <PastEventImage src={eventResult.eventCoverImage} />
-              {eventResult.resultImage.map((image, index) => (
-                <PastEventImage src={image} />
-              ))}
-            </PastEventImages>
-            <PastEventTitle>{eventResult.eventTitle}</PastEventTitle>
-            <PastEventText>
-              {`活動時間 | ${reformatTimestamp(
-                eventResult.startTime
-              )} ~ ${reformatTimestamp(eventResult.endTime)}`}
-            </PastEventText>
-            <PastEventText>{`活動成果 | ${eventResult.resultContent}`}</PastEventText>
-            <UserFeedbacks>
-              {userFeedback.map((feedback, index) => (
-                <UserFeedback>
-                  <div>
-                    <UseImage
-                      src={`https://image.slidesharecdn.com/random-120815092541-phpapp02/95/cute-cat-1-728.jpg?cb=1345022928`}
-                    />
-                    <UserComment>{feedback.participantName}</UserComment>
-                  </div>
-                  <div>
-                    <ReactStars
-                      count={5}
-                      edit={false}
-                      value={feedback.participantRating}
-                      size={24}
-                      activeColor="#ffd700"
-                    />
-                    <UserComment>{feedback.participantComment}</UserComment>
-                  </div>
-                </UserFeedback>
-              ))}
-            </UserFeedbacks>
-          </PastEvent>
-        )}
-      </PastEventsContainer> */}
     </div>
   );
 }

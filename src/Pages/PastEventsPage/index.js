@@ -30,6 +30,7 @@ const MainContent = styled.div`
   flex-direction: row;
   @media (max-width: 960px) {
     flex-direction: column;
+
   }
 `;
 

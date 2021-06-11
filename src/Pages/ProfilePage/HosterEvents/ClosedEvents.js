@@ -123,8 +123,33 @@ function ClosedEvents() {
   const [noEvent, setNoEvent] = useState(false);
 
   const showResultModal = useSelector((state) => state.modal.result);
+  const resultCompleted = useSelector((state) => state.modal.resultCompleted);
+  const selectedEventId = useSelector((state) => state.modal.eventId);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(selectedEventId);
+    console.log(`result is ${resultCompleted}`);
+    if (resultCompleted) {
+      let currentEventsArray = events;
+      currentEventsArray.map((event) => {
+        if (event.eventId === selectedEventId) {
+          event.resultContent = true;
+          return event;
+        } else {
+          return event;
+        }
+      });
+      setEvents(currentEventsArray);
+      dispatch({ type: "SET_RESULTCOMPLETED", data: false });
+      dispatch({ type: "SET_EVENTID", data: "" });
+    }
+  }, [resultCompleted]);
+
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
   const getHosterEventsData = async () => {
     const newEvents = await getHosterEvents(hosterId, 1);

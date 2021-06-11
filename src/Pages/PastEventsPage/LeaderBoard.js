@@ -14,10 +14,16 @@ const LeaderBoardContainer = styled.div`
   flex-wrap: wrap;
   margin: 0 auto;
   margin-top: 20px;
+  display: grid;
+  grid-template-rows: 340px 1fr;
+  @media (max-width: 960px) {
+    order: -1;
+  }
 `;
 
 const PlantImageContainer = styled.div`
   width: 100%;
+  height: 290px;
   display: flex;
   align-items: center;
   padding: 5px;
@@ -142,11 +148,9 @@ function LeaderBoard() {
   }, []);
 
   useEffect(() => {
-    console.log(leaderboard);
     const sortedArray = leaderboard.sort(function (a, b) {
       return a.number > b.number ? -1 : 1;
     });
-    console.log(sortedArray);
     setSortedData(sortedArray.slice(0, 5));
   }, [leaderboard]);
 

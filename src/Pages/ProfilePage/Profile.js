@@ -452,7 +452,7 @@ function Profile() {
           </PieChartContainer>
           <LabelsContainer>
             {pieChartData.map((label, index) => (
-              <LabelContainer>
+              <LabelContainer key={index}>
                 <ChartLabelIcon style={{ backgroundColor: label.color }} />
                 <ChartLabelText>{label.title}</ChartLabelText>
               </LabelContainer>

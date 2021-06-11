@@ -25,11 +25,11 @@ const TopEventsHeader = styled.div`
   margin-top: 100px;
   padding: 10px 20px;
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 30px;
   text-align: center;
   font-family: "Noto Sans TC", sans-serif;
-  color: #676565;
+  color: #848484;
 `;
 
 const EventsContainer = styled.div`
@@ -117,8 +117,6 @@ function TopEvents() {
       });
       eventArray = eventArray.slice(0, 4);
       setTopEvents(eventArray);
-
-      console.log(eventArray);
     });
   };
 
@@ -126,9 +124,7 @@ function TopEvents() {
     getEventParticipants();
   }, []);
 
-  useEffect(() => {
-    console.log(topEvents);
-  }, [topEvents]);
+  useEffect(() => {}, [topEvents]);
 
   let history = useHistory();
   const handleEventClick = (id) => {
@@ -138,10 +134,10 @@ function TopEvents() {
   return (
     <TopEventsContainer>
       <MainContentContainer>
-        <TopEventsHeader>Top Volunteer Events</TopEventsHeader>
+        <TopEventsHeader>熱門志工活動</TopEventsHeader>
         <EventsContainer>
           {topEvents.map((event, index) => (
-            <Col className="p-1 h-100" style={styles.cardCol}>
+            <Col className="p-1 h-100" style={styles.cardCol} key={index}>
               <Card
                 className="shadow-sm rounded bg-white h-100"
                 onClick={() => handleEventClick(event.id)}

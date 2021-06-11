@@ -18,7 +18,7 @@ function HomePage() {
 
   return (
     <Container
-      className="container-xl mb-5"
+      // className="container-xl mb-5"
       onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
     >
       <Banner />

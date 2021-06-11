@@ -140,9 +140,9 @@ function Header() {
           expanded={expanded}
           // onToggle={ setExpanded(expanded ? false : true)}
         >
-          <Navbar.Brand eventKey="0">
+          <Navbar.Brand eventkey="0">
             <LogoContainer className="ml-3">
-              <LogoImage src={logo} eventKey="0" onClick={handleLogoClick} />
+              <LogoImage src={logo} eventkey="0" onClick={handleLogoClick} />
             </LogoContainer>
           </Navbar.Brand>
           <Navbar.Toggle
@@ -156,7 +156,7 @@ function Header() {
               <Nav.Item>
                 <Nav.Link
                   className="nav-items"
-                  eventKey="1"
+                  eventkey="1"
                   onClick={handleEventsClick}
                 >
                   我要當志工
@@ -165,7 +165,7 @@ function Header() {
               <Nav.Item>
                 <Nav.Link
                   className="nav-items"
-                  eventKey="2"
+                  eventkey="2"
                   onClick={handleCreateEventClick}
                 >
                   招募志工
@@ -174,7 +174,7 @@ function Header() {
               <Nav.Item>
                 <Nav.Link
                   className="nav-items"
-                  eventKey="3"
+                  eventkey="3"
                   onClick={handlePastEventsClick}
                 >
                   活動成果
@@ -185,7 +185,7 @@ function Header() {
               {isLogged === true ? (
                 <Nav.Link
                   onClick={handleProfileClick}
-                  eventKey="4"
+                  eventkey="4"
                   className="mr-3 loginBtn"
                 >
                   我的活動

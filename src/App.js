@@ -34,6 +34,9 @@ const Styles = styled.div`
   * {
     font-family: "Noto Sans TC", sans-serif;
   }
+  input:focus {
+    outline: none !important;
+  }
   .Toastify__toast-container {
     width: 250px;
   }

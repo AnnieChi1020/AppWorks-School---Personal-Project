@@ -202,6 +202,7 @@ function EventResult() {
         position: toast.POSITION.TOP_CENTER,
       });
       dispatch({ type: "SHOW_RESULT", data: false });
+      dispatch({ type: "SET_RESULTCOMPLETED", data: true });
     } else {
       toast.error(errorAlertText("請提供完整資訊"), {
         position: toast.POSITION.TOP_CENTER,

@@ -112,6 +112,11 @@ const Tag = styled.div`
     line-height: 14px;
     padding: 5px 5px;
   }
+  :hover {
+    /* background: #ebfff0; */
+    box-shadow: 1px 1px 1px 1.5px rgba(0, 0, 0, 0.1);
+
+  }
 `;
 
 const TagSelected = styled.div`
@@ -335,7 +340,7 @@ const Styles = styled.div`
     line-height: 20px;
     box-shadow: none;
     text-align: left;
-
+    cursor: pointer;
     .Dropdown-arrow {
       position: absolute;
       top: 45%;

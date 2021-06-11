@@ -25,9 +25,9 @@ const BannerContainer = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   /* filter: brightness(70%); */
-  position: absolute;
+  position: relative;
   /* top: 50px; */
-  left: 0;
+  /* left: 0; */
   align-items: center;
 
   @media (max-width: 960px) {

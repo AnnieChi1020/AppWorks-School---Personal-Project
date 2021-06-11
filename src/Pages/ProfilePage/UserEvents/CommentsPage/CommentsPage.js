@@ -192,7 +192,6 @@ function Comments() {
     return comment;
   };
 
-  // let history = useHistory();
   const handelClickSubmit = async () => {
     if (rating === 0) {
       toast.error(errorAlertText("請填寫活動評分"), {
@@ -210,6 +209,7 @@ function Comments() {
       currentStatus.participantInfo.participantComment = comment;
       currentStatus.participantInfo.participantRating = rating;
       await updateParticipantStatus(eventInfo.id, participantId, currentStatus);
+      dispatch({ type: "SET_FEEDBACKCOMPLETED", data: true });
       toast.success(successAlertText("已送出評價"), {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -218,10 +218,6 @@ function Comments() {
   };
 
   return (
-    // <Container className="container-xl">
-    //   <Background></Background>
-    //   <Mask></Mask>
-    // <CommentContainer>
     <CommentContainer>
       <Event>
         <EventTitle>{eventInfo.title}</EventTitle>
@@ -252,8 +248,6 @@ function Comments() {
         <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
       </ButtonContainer>
     </CommentContainer>
-    // </CommentContainer>
-    // </Container>
   );
 }
 

@@ -33,12 +33,12 @@ const CategoryHeader = styled.div`
   margin-top: 30px;
   padding: 10px 20px;
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 30px;
   text-align: center;
   /* border-bottom: 3px solid #1190cb; */
   font-family: "Noto Sans TC", sans-serif;
-  color: #676565;
+  color: #848484;
 `;
 
 // const CategoriesContainer = styled.div`
@@ -101,7 +101,6 @@ function Category() {
   const dispatch = useDispatch();
 
   const handleCategoryClick = (e) => {
-    console.log(e);
     history.push(`/events`);
     dispatch({ type: "ADD_TAG", data: e });
   };
@@ -109,7 +108,7 @@ function Category() {
   return (
     <CategoryContainer>
       <MainContentContainer>
-        <CategoryHeader>Explore Opportunities</CategoryHeader>
+        <CategoryHeader>探索志工機會</CategoryHeader>
         <Categories>
           <CategoryDiv onClick={() => handleCategoryClick("生態保護")}>
             <CategoryImage src={animal} />
@@ -127,55 +126,6 @@ function Category() {
             <CategoryImage src={education} />
             <CategoryText>文化教育</CategoryText>
           </CategoryDiv>
-
-          {/* <CategoryCard onClick={(e) => handleCardClick("社會福利")}>
-            <ReactCardFlipper width="100%" behavior="hover">
-              <FrontCard>
-                <FrontImage src={welfare} />
-              </FrontCard>
-              <BackCard>
-                <BackText>社會福利</BackText>
-                <BackImage src={welfareBackground} />
-                <BackMask />
-              </BackCard>
-            </ReactCardFlipper>
-          </CategoryCard>
-          <CategoryCard onClick={(e) => handleCardClick("文化教育")}>
-            <ReactCardFlipper width="100%" behavior="hover">
-              <FrontCard>
-                <FrontImage src={education} />
-              </FrontCard>
-              <BackCard>
-                <BackText>文化教育</BackText>
-                <BackImage src={educationBackground} />
-                <BackMask />
-              </BackCard>
-            </ReactCardFlipper>
-          </CategoryCard>
-          <CategoryCard onClick={(e) => handleCardClick("生態保護")}>
-            <ReactCardFlipper width="100%" behavior="hover">
-              <FrontCard>
-                <FrontImage src={animal} />
-              </FrontCard>
-              <BackCard>
-                <BackText>生態保護</BackText>
-                <BackImage src={animalBackground} />
-                <BackMask />
-              </BackCard>
-            </ReactCardFlipper>
-          </CategoryCard>
-          <CategoryCard onClick={(e) => handleCardClick("環境保護")}>
-            <ReactCardFlipper width="100%" behavior="hover">
-              <FrontCard>
-                <FrontImage src={environment} />
-              </FrontCard>
-              <BackCard>
-                <BackText>環境保護</BackText>
-                <BackImage src={environmentBackground} />
-                <BackMask />
-              </BackCard>
-            </ReactCardFlipper>
-          </CategoryCard> */}
         </Categories>
       </MainContentContainer>
     </CategoryContainer>
