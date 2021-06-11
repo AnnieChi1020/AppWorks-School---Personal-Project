@@ -3,9 +3,12 @@ import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 import { useHistory } from "react-router-dom";
 import background from "../../images/background.jpg";
+import photo from "../../images/photo.jpg";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 import {
   createNewDoc,
@@ -125,6 +128,54 @@ const Button = styled.button`
   margin-bottom: 20px;
 `;
 
+const ImagePreviewDiv = styled.div`
+  width: 100%;
+  height: 200px;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+`;
+
+const ImagePreview = styled.img`
+  width: 100%;
+  height: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  border-radius: 5px;
+`;
+
+const StyledFormControl = styled(Form.Control)`
+  width: 100%;
+  height: 200px;
+  margin: 0 auto;
+  overflow: hidden;
+  z-index: 4;
+  ::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+  ::before {
+    width: 100%;
+    height: 200px;
+    content: "選擇檔案";
+    display: inline-block;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: transparent;
+    color: transparent;
+    text-align: center;
+  }
+`;
+
 const Styles = styled.div`
   .form-label {
     @media (max-width: 760px) {
@@ -165,6 +216,8 @@ function CreateEvent() {
   const [imageIsInvalid, setImageIsInvalid] = useState(false);
 
   const [selectedAddress, setSelectedAddress] = useState("");
+
+  const [uploadImage, setUploadImage] = useState(photo);
 
   useEffect(() => {
     setSelectedAddress({ ...selectedAddress, label: "台灣" });
@@ -317,6 +370,12 @@ function CreateEvent() {
   };
 
   // const [validated, setValidated] = useState(false);
+
+  const handleFileChange = (file) => {
+    const fileURL = URL.createObjectURL(file);
+    console.log(fileURL);
+    setUploadImage(fileURL);
+  };
 
   const handleSubmit = async (event) => {
     const inputs = event.currentTarget;
@@ -556,15 +615,21 @@ function CreateEvent() {
             </Form.Group>
             <Form.Group controlId="coverImage">
               <Form.Label>上傳活動封面</Form.Label>
-              <Form.Control
-                type="file"
-                required
-                className="mb-1"
-                isInvalid={imageIsInvalid}
-              />
+              <ImagePreviewDiv>
+                <ImagePreview src={uploadImage} />
+                <StyledFormControl
+                  type="file"
+                  required
+                  className="mb-1"
+                  isInvalid={imageIsInvalid}
+                  onChange={(e) => handleFileChange(e.target.files[0])}
+                />
+              </ImagePreviewDiv>
+
               <Form.Control.Feedback
                 type="invalid"
                 style={{ position: "inherit" }}
+                title=""
               >
                 請選擇封面圖片
               </Form.Control.Feedback>

@@ -7,45 +7,31 @@ import {
   faExclamationCircle,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import { useHistory } from "react-router";
 
-const SuccessAlertDiv = styled.div`
+const AlertDiv = styled.div`
   width: 100%;
   padding: 10px 20px;
   display: flex;
   flex-direction: row;
   font-size: 24px;
+  justify-content: center;
+`;
+
+const SuccessAlertDiv = styled(AlertDiv)`
   color: #57bc90;
-  justify-content: center;
 `;
 
-const ErrorAlertDiv = styled.div`
-  width: 100%;
-  padding: 10px 20px;
-  display: flex;
-  flex-direction: row;
-  font-size: 24px;
+const ErrorAlertDiv = styled(AlertDiv)`
   color: #b02734;
-  justify-content: center;
 `;
 
-const WarningAlertDiv = styled.div`
-  width: 100%;
-  padding: 10px 20px;
-  display: flex;
-  flex-direction: row;
-  font-size: 24px;
+const WarningAlertDiv = styled(AlertDiv)`
   color: #9f7a0e;
-  justify-content: center;
 `;
 
 const SignOutAlertDiv = styled.div`
-  width: 100%;
-  padding: 10px 20px;
-  display: flex;
-  flex-direction: row;
-  font-size: 24px;
   color: #40a3cb;
-  justify-content: center;
 `;
 
 const AlertText = styled.div`
@@ -53,6 +39,35 @@ const AlertText = styled.div`
   flex-grow: 1;
   font-size: 16px;
   line-height: 24px;
+`;
+
+const SignUpAlertDiv = styled(AlertDiv)`
+  color: #57bc90;
+  flex-direction: column;
+`;
+
+const SignUpResult = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+
+const ViewSignUp = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const Button = styled.button`
+  width: 140px;
+  font-size: 16px;
+  line-height: 24px;
+  border: 1px solid #57bc90;
+  border-radius: 20px;
+  background-color: #57bc90;
+  color: white;
+  padding: 3px 10px;
 `;
 
 export const successAlertText = (text) => {
@@ -82,11 +97,25 @@ export const warningAlertText = (text) => {
   );
 };
 
-export const SignOutAlertText = (text) => {
+export const signOutAlertText = (text) => {
   return (
     <SignOutAlertDiv>
       <FontAwesomeIcon icon={faSignOutAlt}></FontAwesomeIcon>
       <AlertText>{text}</AlertText>
     </SignOutAlertDiv>
+  );
+};
+
+export const signUpAlertText = (text, handleBtnClick) => {
+  return (
+    <SignUpAlertDiv>
+      <SignUpResult>
+        <FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon>
+        <AlertText>{text}</AlertText>
+      </SignUpResult>
+      <ViewSignUp>
+        <Button onClick={() => handleBtnClick()}>查看報名狀況</Button>
+      </ViewSignUp>
+    </SignUpAlertDiv>
   );
 };

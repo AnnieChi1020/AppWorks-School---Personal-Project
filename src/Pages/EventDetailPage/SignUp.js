@@ -6,8 +6,13 @@ import { postParticipantInfo } from "../../utils/firebase.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Form, Col } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import { successAlertText, errorAlertText } from "../../components/Alert.js";
+import {
+  successAlertText,
+  errorAlertText,
+  signUpAlertText,
+} from "../../components/Alert.js";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -47,6 +52,7 @@ function EventSignUp() {
   const [nameIsInvalid, setNameIsInvalid] = useState(false);
   const [phoneIsInvalid, setPhoneIsInvalid] = useState(false);
 
+  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -54,9 +60,13 @@ function EventSignUp() {
     dispatch({ type: "ADD_EVENTID", data: eventId });
   }, []);
 
+  const redirectToProfile = () => {
+    history.push("/profile");
+  };
+
   const postParticipantDetail = async (signupData) => {
     await postParticipantInfo(eventId, userId, signupData);
-    toast.success(successAlertText("已送出報名資訊"), {
+    toast.success(signUpAlertText("已送出報名資訊", redirectToProfile), {
       position: toast.POSITION.TOP_CENTER,
     });
   };

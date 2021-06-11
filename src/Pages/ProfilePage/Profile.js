@@ -16,7 +16,7 @@ import { useHistory } from "react-router";
 import { PieChart } from "react-minimal-pie-chart";
 import { ProgressBar } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { SignOutAlertText } from "../../components/Alert.js";
+import { signOutAlertText } from "../../components/Alert.js";
 
 const Container = styled.div`
   width: 300px;
@@ -315,7 +315,7 @@ function Profile() {
       dispatch({ type: "GET_USERID", data: "" });
       dispatch({ type: "GET_USERROLE", data: "" });
 
-      toast.info(SignOutAlertText("已登出"), {
+      toast.info(signOutAlertText("已登出"), {
         position: toast.POSITION.TOP_CENTER,
       });
 

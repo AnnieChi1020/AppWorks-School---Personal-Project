@@ -145,7 +145,7 @@ function App() {
             rtl={false}
             pauseOnFocusLoss={false}
             draggable={false}
-            pauseOnHover={false}
+            pauseOnHover={true}
             closeButton={false}
             limit={1}
           ></ToastContainer>

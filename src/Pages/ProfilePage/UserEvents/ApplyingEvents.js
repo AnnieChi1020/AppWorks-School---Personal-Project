@@ -179,10 +179,12 @@ function UserApplyingEvents() {
 
   const getApplyingEventsInfo = async () => {
     const eventIdArray = await getApplyingEventsId();
+    console.log(eventIdArray);
     let eventInfoArray = [];
     await Promise.all(
       eventIdArray.map(async (id) => {
         const event = await getEventInfo(id);
+        console.log(event);
         const eventPassed = checkEventPassed(event);
 
         if (!eventPassed) {
