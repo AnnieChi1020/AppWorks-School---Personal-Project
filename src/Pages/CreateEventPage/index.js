@@ -86,25 +86,14 @@ const Option = styled.div`
     padding: 5px 15px;
     margin-right: 5px;
   }
+  :hover {
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+  }
 `;
 
-const OptionSelected = styled.div`
-  line-height: 20px;
-  font-size: 1rem;
-  padding: 5px 25px;
-  border: 1px solid #ced4da;
-  border-radius: 20px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  background-color: #636363;
+const OptionSelected = styled(Option)`
+  background-color: #67aeca;
   color: white;
-  text-align: center;
-  cursor: pointer;
-  @media (max-width: 760px) {
-    font-size: 14px;
-    padding: 5px 15px;
-    margin-right: 5px;
-  }
 `;
 
 const Map = styled.iframe`
@@ -202,6 +191,9 @@ const Styles = styled.div`
     @media (max-width: 760px) {
       font-size: 14px;
     }
+  }
+  input:focus {
+    outline: none !important;
   }
 `;
 

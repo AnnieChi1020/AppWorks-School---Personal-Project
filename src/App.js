@@ -27,6 +27,7 @@ import EventComments from "./Pages/ProfilePage/UserEvents/CommentsPage/CommentsP
 import PastEvents from "./Pages/PastEventsPage/index.js";
 import EventResult from "./Pages/ProfilePage/HosterEvents/EventResultPage/EventResultPage.js";
 import EditEvent from "./Pages/ProfilePage/HosterEvents/EditEventPage/EditEventPage.js";
+import NotFound from "./Pages/404Page";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -134,6 +135,7 @@ function App() {
           />
           <Route exact path="/profile/comments/:id" component={EventComments} />
           <Route exact path="/pastEvents" component={PastEvents} />
+          <Route component={NotFound} />
           {/* <Footer /> */}
 
           <ToastContainer
