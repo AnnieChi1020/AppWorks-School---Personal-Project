@@ -212,6 +212,12 @@ function CreateEvent() {
   const [uploadImage, setUploadImage] = useState(photo);
 
   useEffect(() => {
+    if (!hosterId) {
+      history.push("/");
+    }
+  }, [hosterId]);
+
+  useEffect(() => {
     setSelectedAddress({ ...selectedAddress, label: "台灣" });
   }, []);
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Profile from "./Profile.js";
 import HosterEvents from "./HosterEvents/HosterEvents.js";
@@ -35,6 +35,12 @@ const Background = styled.div`
 function ProfilePage() {
   const role = useSelector((state) => state.isLogged.userRole);
   const history = useHistory();
+
+  useEffect(() => {
+    if (role !== 0 || 1) {
+      history.push("/");
+    }
+  }, [role]);
 
   const dispatch = useDispatch();
 
