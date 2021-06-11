@@ -279,7 +279,7 @@ function UserConfirmedEvents() {
                     </EventInfo>
                     <EventStatus>
                       {event.eventStatus === 9 ? (
-                        <CancelButton>已取消報名</CancelButton>
+                        <CancelButton disabled>已取消報名</CancelButton>
                       ) : (
                         <CancelButton
                           onClick={(e) => {
