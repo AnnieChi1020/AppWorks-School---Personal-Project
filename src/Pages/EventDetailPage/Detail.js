@@ -283,7 +283,7 @@ function EventDetail() {
 
   return (
     <Styles>
-      {eventExist ? (
+      {eventExist === true && (
         <Container>
           <EventImage src={event.image}></EventImage>
           <EventMainContianer>
@@ -352,9 +352,8 @@ function EventDetail() {
             </Modal.Body>
           </Modal>
         </Container>
-      ) : (
-        <div />
       )}
+      {eventExist === false && <NotFound />}
     </Styles>
   );
 }

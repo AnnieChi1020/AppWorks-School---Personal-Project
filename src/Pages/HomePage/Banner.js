@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 // import banner from "../../images/background.jpg";
-import join from "../../images/join_text_2.png";
+// import join from "../../images/join_text_2.png";
 // import banner from "../../images/banner.svg";
 import banner from "../../images/banner_3.png";
 
@@ -87,21 +87,21 @@ const TextContainer = styled.div`
   }
 `;
 
-const Slogan = styled.img`
-  width: auto;
-  height: 150px;
-  object-fit: contain;
-  filter: none;
-  margin: 0 auto;
-  margin-top: 0px;
-  margin-left: 0;
-  @media (max-width: 960px) {
-    height: 100px;
-  }
-  @media (max-width: 540px) {
-    height: 80px;
-  }
-`;
+// const Slogan = styled.img`
+//   width: auto;
+//   height: 150px;
+//   object-fit: contain;
+//   filter: none;
+//   margin: 0 auto;
+//   margin-top: 0px;
+//   margin-left: 0;
+//   @media (max-width: 960px) {
+//     height: 100px;
+//   }
+//   @media (max-width: 540px) {
+//     height: 80px;
+//   }
+// `;
 
 const TextSubtitle = styled.div`
   width: 100%;

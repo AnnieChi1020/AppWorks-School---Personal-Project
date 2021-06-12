@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import React, {  useEffect } from "react";
 import Login from "./Login.js";
 // import logo from "../images/logo_3.png";
 import logo from "../images/newLogo.png";
@@ -73,6 +73,16 @@ function Header() {
   const expanded = useSelector((state) => state.expanded.collapseNav);
 
   // const [expanded, setExpanded] = useState("false");
+
+  // const [getLoggedStatus, setGetLoggedStatus] = useState(false);
+
+  // useEffect(() => {
+  //   setGetLoggedStatus(true);
+  // }, [isLogged]);
+
+  useEffect(() => {
+    console.log(isLogged);
+  }, [isLogged]);
 
   const dispatch = useDispatch();
 
@@ -181,8 +191,9 @@ function Header() {
                 </Nav.Link>
               </Nav.Item>
             </Nav>
+
             <Nav>
-              {isLogged === true ? (
+              {isLogged === true && (
                 <Nav.Link
                   onClick={handleProfileClick}
                   eventkey="4"
@@ -190,7 +201,8 @@ function Header() {
                 >
                   我的活動
                 </Nav.Link>
-              ) : (
+              )}
+              {isLogged === false && (
                 <Nav.Link
                   onClick={() => handleLoginClick()}
                   className="mr-3 loginBtn"

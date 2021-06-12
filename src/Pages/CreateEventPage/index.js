@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
@@ -7,8 +8,8 @@ import photo from "../../images/photo.jpg";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import background from "../../images/manageBackground.jpg";
 
 import {
@@ -252,7 +253,7 @@ function CreateEvent() {
     endTime: getCurrentTime().time,
   });
 
-  const [address, setAddress] = useState("台灣");
+  // const [address, setAddress] = useState("台灣");
 
   const [tags, setTags] = useState([
     { name: "社會福利", id: "社會福利", select: false },

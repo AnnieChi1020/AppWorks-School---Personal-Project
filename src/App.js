@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
+import {  useDispatch } from "react-redux";
 import {
   getEvents,
   updateEvent,
@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Header from "./components/Header.js";
-import Footer from "./components/Footer.js";
+// import Footer from "./components/Footer.js";
 import HomePage from "./Pages/HomePage/index.js";
 import CreateEvent from "./Pages/CreateEventPage/index.js";
 import EventDetail from "./Pages/EventDetailPage/index.js";
