@@ -83,14 +83,14 @@ function EventSignUp() {
     }
 
     const validRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!inputs.email.value.match(validRegex)) {
       setEmailIsInvalid(true);
     } else {
       setEmailIsInvalid(false);
     }
 
-    const phoneno = /^\d{10}$/;
+    const phoneno = /^[09]{2}[0-9]{8}$/;
     if (!inputs.phone.value.match(phoneno)) {
       setPhoneIsInvalid(true);
     } else {
@@ -165,7 +165,7 @@ function EventSignUp() {
               type="invalid"
               style={{ position: "inherit" }}
             >
-              請輸入連絡電話
+              請輸入正確的連絡電話
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} controlId="email">

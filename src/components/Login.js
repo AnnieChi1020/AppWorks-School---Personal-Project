@@ -151,6 +151,9 @@ function Login() {
   };
 
   const handleActionChange = (e) => {
+    console.log(e.key === "Enter");
+    console.log(e.shiftKey === false);
+
     setAction(e.target.id);
     setValidated(false);
     clearValidationStatus();
@@ -260,7 +263,7 @@ function Login() {
   const handleLoginSubmit = async (event) => {
     const inputs = event.currentTarget;
     const validRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     console.log(inputs.email.value);
     if (!inputs.email.value.match(validRegex)) {
       setEmailIsInvalid(true);
@@ -309,7 +312,7 @@ function Login() {
     }
 
     if (inputs.phone) {
-      const phoneno = /^\d{10}$/;
+      const phoneno = /^[09]{2}[0-9]{8}$/;
       if (!inputs.phone.value.match(phoneno)) {
         setPhoneIsInvalid(true);
       } else {
@@ -393,6 +396,9 @@ function Login() {
               className="mb-1 formInput"
               required
               isInvalid={emailIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -410,6 +416,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={passwordIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -440,6 +449,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={emailIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -455,6 +467,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={passwordIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -491,6 +506,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={nameIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -506,6 +524,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={emailIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -521,6 +542,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={passwordIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -551,6 +575,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={nameIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -566,6 +593,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={emailIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -581,6 +611,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={passwordIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
@@ -596,6 +629,9 @@ function Login() {
               className="mb-1"
               required
               isInvalid={phoneIsInvalid}
+              onKeyPress={(e) => {
+                e.key === "Enter" && e.preventDefault();
+              }}
             />
             <Form.Control.Feedback
               type="invalid"
