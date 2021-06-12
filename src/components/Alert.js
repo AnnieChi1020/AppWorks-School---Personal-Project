@@ -30,7 +30,7 @@ const WarningAlertDiv = styled(AlertDiv)`
   color: #9f7a0e;
 `;
 
-const SignOutAlertDiv = styled.div`
+const SignOutAlertDiv = styled(AlertDiv)`
   color: #40a3cb;
 `;
 

@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 const CategoryContainer = styled.div`
   width: 100%;
   margin: 0 auto;
-  padding: 100px 20px 170px 20px;
+  padding: 100px 20px 190px 20px;
   @media (max-width: 760px) {
     padding: 90px 20px 120px 20px;
   }

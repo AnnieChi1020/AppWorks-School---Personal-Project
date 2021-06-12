@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 import { useHistory } from "react-router-dom";
-import background from "../../images/background.jpg";
+// import background from "../../images/background.jpg";
 import photo from "../../images/photo.jpg";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import background from "../../images/manageBackground.jpg";
 
 import {
   createNewDoc,
