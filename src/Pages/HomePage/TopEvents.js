@@ -36,6 +36,16 @@ const TopEventsHeader = styled.div`
   font-family: "Noto Sans TC", sans-serif;
   color: white;
   letter-spacing: 2px;
+  @media (max-width: 960px) {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 34px;
+  }
+  @media (max-width: 540px) {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 28px;
+  }
 `;
 
 const EventsContainer = styled.div`

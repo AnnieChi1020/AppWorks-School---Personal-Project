@@ -17,7 +17,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header.js";
 import Footer from "./components/Footer.js";
 import HomePage from "./Pages/HomePage/index.js";
-import LoginPage from "./Pages/LoginPage/index.js";
 import CreateEvent from "./Pages/CreateEventPage/index.js";
 import EventDetail from "./Pages/EventDetailPage/index.js";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
@@ -117,7 +116,6 @@ function App() {
           <Header />
           <Switch>
             <Route exact path="/" component={HomePage} />
-            <Route exact path="/login" component={LoginPage} />
             <Route exact path="/createEvent" component={CreateEvent} />
             <Route exact path="/events" component={EventsPage} />
             <Route exact path="/events/:id" component={EventDetail} />

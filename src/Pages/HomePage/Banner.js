@@ -1,12 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 // import banner from "../../images/background.jpg";
-import slogan from "../../images/slogan.png";
-import join from "../../images/join_text.png";
-import animal from "../../images/animal.png";
-import welfare from "../../images/welfare.png";
-import environment from "../../images/environment.png";
-import education from "../../images/education.png";
+import join from "../../images/join_text_2.png";
 // import banner from "../../images/banner.svg";
 import banner from "../../images/banner_3.png";
 
@@ -54,7 +49,8 @@ const Mask = styled.div`
 `;
 
 const MainContentContainer = styled.div`
-  width: 100%;
+  width: 90%;
+  max-width: 1200px;
   height: calc(100% - 50px);
   margin-top: 50px;
   padding: 50px;
@@ -62,8 +58,11 @@ const MainContentContainer = styled.div`
   @media (max-width: 960px) {
     padding: 40px;
   }
-  @media (max-width: 540px) {
+  @media (max-width: 760px) {
     padding: 20px;
+  }
+  @media (max-width: 540px) {
+    padding: 0px;
   }
 
   /* display: flex;
@@ -76,7 +75,7 @@ const MainContentContainer = styled.div`
 `;
 
 const TextContainer = styled.div`
-  width: 600px;
+  width: 500px;
   height: 100%;
   flex-grow: 0;
   position: relative;
@@ -106,18 +105,27 @@ const Slogan = styled.img`
 
 const TextSubtitle = styled.div`
   width: 100%;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 24px;
-  padding: 5px 20px;
-  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
-    sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 50px;
+  padding: 10px 0;
   color: #ffffff;
-  text-align: center;
+  text-align: left;
   margin-top: 0px;
+
   @media (max-width: 960px) {
-    font-size: 16px;
-    text-align: center;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 40px;
+    padding: 5px 0;
+    margin-left: 20px;
+  }
+  @media (max-width: 540px) {
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 30px;
+    padding: 3px 0;
+    margin-left: 20px;
   }
 `;
 
@@ -156,7 +164,8 @@ const TextSubtitle = styled.div`
 
 const Button = styled.button`
   width: 130px;
-  margin-left: 90px;
+  /* margin-left: 90px; */
+  margin-left: 5px;
   margin-top: 50px;
   padding: 5px 10px;
   border-radius: 20px;
@@ -184,7 +193,7 @@ const Button = styled.button`
   @media (max-width: 960px) {
     width: 110px;
     margin-top: 40px;
-    margin-left: 50px;
+    margin-left: 25px;
     font-size: 16px;
     padding: 3px 5px;
   }
@@ -192,7 +201,7 @@ const Button = styled.button`
     width: 90px;
     margin-top: 20px;
     margin-left: 20px;
-    font-size: 14px;
+    font-size: 12px;
     padding: 3px 5px;
   }
 `;
@@ -212,9 +221,11 @@ function Banner() {
       <MainContentContainer className="container-xl">
         <TextContainer>
           {/* <Slogan src={slogan} /> */}
-          <Slogan src={join} />
+          {/* <Slogan src={join} /> */}
 
-          {/* <TextSubtitle>加入志工的行列，一起改變世界！</TextSubtitle> */}
+          <TextSubtitle>加入志工的行列</TextSubtitle>
+          <TextSubtitle>一起改變世界</TextSubtitle>
+
           {/* <TextSubtitle>加入志工的行列，一起改變世界！</TextSubtitle> */}
 
           <Button onClick={handleButtonClick}>我要報名</Button>

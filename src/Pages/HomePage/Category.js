@@ -12,6 +12,12 @@ const CategoryContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   padding: 100px 20px 170px 20px;
+  @media (max-width: 760px) {
+    padding: 90px 20px 120px 20px;
+  }
+  @media (max-width: 540px) {
+    padding: 60px 20px 70px 20px;
+  }
 `;
 
 const MainContentContainer = styled.div`
@@ -31,6 +37,16 @@ const CategoryHeader = styled.div`
   font-family: "Noto Sans TC", sans-serif;
   color: #989898;
   letter-spacing: 2px;
+  @media (max-width: 960px) {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 34px;
+  }
+  @media (max-width: 540px) {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 28px;
+  }
 `;
 
 const Categories = styled.div`
