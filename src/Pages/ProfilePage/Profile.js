@@ -247,8 +247,6 @@ function Profile() {
   const id = useSelector((state) => state.isLogged.userId);
   const role = useSelector((state) => state.isLogged.userRole);
 
-  
-
   const [userId, setUserId] = useState("");
   const [levelStatus, setLevelStatus] = useState({
     current: {
@@ -261,10 +259,17 @@ function Profile() {
     },
   });
 
-  const [attendedEventNotExist, setAttendedEventNotExist] = useState(false);
+  const [attendedEventNotExist, setAttendedEventNotExist] = useState("");
   const [pieChartData, setPieChartData] = useState([
     { title: "沒有活動", value: 1, color: "#e9ecef" },
   ]);
+
+  const pieChartLabel = [
+    { title: "社會福利", color: "#67aeca" },
+    { title: "文化教育", color: "#57BC90" },
+    { title: "環境保護", color: "#67caae" },
+    { title: "生態保護", color: "#67c6ca" },
+  ];
 
   const levels = [
     { name: "志工小菜鳥", number: 0 },
@@ -356,16 +361,9 @@ function Profile() {
     }
   }, [userData.attendedNum]);
 
-  const checkEventPassed = (event) => {
-    const startT = event.startTime.seconds * 1000;
-    const currentT = new Date().getTime();
-    const eventPassed = startT < currentT;
-    return eventPassed;
-  };
-
   const getCompletedEventIds = async () => {
-    const applyingEvents = await getUserEvents(userId, 1);
-    return applyingEvents;
+    const completedEvents = await getUserAttendedEvents(userId);
+    return completedEvents;
   };
 
   const getCompletedEventsInfo = async () => {
@@ -377,10 +375,12 @@ function Profile() {
       { title: "生態保護", value: 0, color: "#67c6ca" },
     ];
 
-    await Promise.all(
-      eventIdArray.map(async (id) => {
-        const event = await getEventInfo(id);
-        if (checkEventPassed(event)) {
+    if (eventIdArray.length === 0) {
+      dataMock = [{ title: "沒有活動", value: 1, color: "#e9ecef" }];
+    } else {
+      await Promise.all(
+        eventIdArray.map(async (id) => {
+          const event = await getEventInfo(id);
           dataMock.forEach((type) => {
             if (event.eventTags.includes(type.title)) {
               type.value++;
@@ -389,30 +389,16 @@ function Profile() {
               return;
             }
           });
-        }
-      })
-    );
-
-    // console.log(eventExist);
-    // if (eventExist === 0) {
-    //   dataMock = [{ title: "沒有活動", value: 1, color: "#e9ecef" }];
-    // }
+        })
+      );
+    }
     setPieChartData(dataMock);
-    console.log(dataMock);
     return dataMock;
   };
 
   useEffect(() => {
-    console.log(getCompletedEventsInfo());
+    getCompletedEventsInfo();
   }, [userId]);
-
-  useEffect(() => {
-    console.log(pieChartData);
-  }, [pieChartData]);
-
-  useEffect(() => {
-    console.log(attendedEventNotExist);
-  }, [attendedEventNotExist]);
 
   const renderLevelData = () => {
     return (
@@ -453,7 +439,7 @@ function Profile() {
             />
           </PieChartContainer>
           <LabelsContainer>
-            {pieChartData.map((label, index) => (
+            {pieChartLabel.map((label, index) => (
               <LabelContainer key={index}>
                 <ChartLabelIcon style={{ backgroundColor: label.color }} />
                 <ChartLabelText>{label.title}</ChartLabelText>
