@@ -218,7 +218,7 @@ const Selector = styled.select`
 
 const MainContainer = styled.div`
   width: 100%;
-  min-height: calc(100vh - 67px); ;
+  min-height: calc(100vh - 110px); ;
 `;
 
 const Events = styled.div`
@@ -226,7 +226,7 @@ const Events = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 20px 15px;
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 20px 0 80px 0;
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr;
   }
@@ -600,40 +600,42 @@ function AllEvents() {
           <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
         </Buttons> */}
           </FilterContainer>
-
-          <Events>
-            {events.map((event, index) => (
-              <Col className="p-0 " style={styles.cardCol} key={index}>
-                <Card
-                  className="shadow-sm rounded bg-white h-100 eventCard"
-                  onClick={() => handleEventClick(event.eventId)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="bg-image hover-overlay hover-zoom">
-                    <Card.Img
-                      variant="top"
-                      src={event.eventCoverImage}
-                      className="cardImage"
-                    ></Card.Img>
-                  </div>
-                  <Card.Body
-                    className="py-2 px-3"
-                    style={{ position: "relative" }}
+          {events.length > 0 && (
+            <Events>
+              {events.map((event, index) => (
+                <Col className="p-0 " style={styles.cardCol} key={index}>
+                  <Card
+                    className="shadow-sm rounded bg-white h-100 eventCard"
+                    onClick={() => handleEventClick(event.eventId)}
+                    style={{ cursor: "pointer" }}
                   >
-                    {/* <TagIcon></TagIcon> */}
-                    <EventTagContianer>
-                      {event.eventTags.map((tag, index) => (
-                        <EventTag key={index}>{tag}</EventTag>
-                      ))}
-                      <EventTag>{event.eventAddress}</EventTag>
-                    </EventTagContianer>
-                    <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
-                    <EventTitle>{event.eventTitle}</EventTitle>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Events>
+                    <div className="bg-image hover-overlay hover-zoom">
+                      <Card.Img
+                        variant="top"
+                        src={event.eventCoverImage}
+                        className="cardImage"
+                      ></Card.Img>
+                    </div>
+                    <Card.Body
+                      className="py-2 px-3"
+                      style={{ position: "relative" }}
+                    >
+                      {/* <TagIcon></TagIcon> */}
+                      <EventTagContianer>
+                        {event.eventTags.map((tag, index) => (
+                          <EventTag key={index}>{tag}</EventTag>
+                        ))}
+                        <EventTag>{event.eventAddress}</EventTag>
+                      </EventTagContianer>
+                      <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
+                      <EventTitle>{event.eventTitle}</EventTitle>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Events>
+          )}
+
           {noEvent ? (
             <NoEvent>
               <NoEventImage src={noEventImage} />
