@@ -83,11 +83,19 @@ const CancelButton = styled.button`
 const StyledHeader = styled(Modal.Header)`
   border: none;
   justify-content: center;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
-  padding: 15px 16px 10px 16px;
-  color: #5d5d5d;
-  background-color: #9dc7d878;
+  padding: 25px 30px 20px 30px;
+  color: #818181;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #ececec;
+  /* background-color: #9dc7d878; */
+`;
+
+const CancelText = styled.div`
+  width: 100%;
+  text-align: center;
 `;
 
 const StyledBody = styled(Modal.Body)`
@@ -306,7 +314,9 @@ function UserConfirmedEvents() {
         dialogClassName="cancel-modal"
         size="sm"
       >
-        <StyledHeader>確定要取消活動嗎</StyledHeader>
+        <StyledHeader>
+          <CancelText>確定要取消嗎</CancelText>
+        </StyledHeader>
         <StyledBody>
           <ButtonsContainer>
             <SecondaryButton onClick={() => handleClose()}>
