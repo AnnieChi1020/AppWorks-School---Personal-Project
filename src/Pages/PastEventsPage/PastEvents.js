@@ -174,9 +174,9 @@ const PageButton = styled.div`
   height: 30px; */
   /* border-radius: 50%; */
   border: 1px solid transparent;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -184,22 +184,24 @@ const PageButton = styled.div`
   padding: 5px 3px;
   color: #747474;
   cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
   :hover {
-    color: #444444;
+    color: #57bc90;
   }
 `;
 
 const SelectedPageButton = styled(PageButton)`
   border-bottom: 1px solid #747474;
   cursor: inherit;
+  pointer-events: none;
 `;
 
 const DisabledPageButton = styled(PageButton)`
   cursor: inherit;
-  opacity: 0.5;
-  :hover {
-    border-bottom: 1px solid transparent;
-  }
+  opacity: 0.3;
+  pointer-events: none;
 `;
 
 const NoResultDiv = styled.div`
