@@ -11,6 +11,11 @@ import ReactStars from "react-rating-stars-component";
 import { Modal } from "react-bootstrap";
 
 import sadFace from "../../images/sad.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 const PastEventsContainer = styled.div`
   width: calc(100% - 20px);
@@ -22,6 +27,7 @@ const PastEventsContainer = styled.div`
 
 const PastEvent = styled.div`
   width: 33%;
+
   display: inline-block;
   margin-top: 20px;
   filter: sepia(50%);
@@ -49,6 +55,8 @@ const Wrapper = styled.div`
   width: 100%;
   margin: 0 auto;
   display: flex;
+  /* grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr; */
   flex-wrap: wrap;
   justify-content: center;
   & ${PastEvent}:nth-of-type(n) {
@@ -152,6 +160,48 @@ const UserComment = styled.div`
   line-height: 18px;
 `;
 
+const PageButtonsContainer = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 50px 0 0 0;
+`;
+
+const PageButton = styled.div`
+  /* width: 30px;
+  height: 30px; */
+  /* border-radius: 50%; */
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 8px;
+  padding: 5px 3px;
+  color: #747474;
+  cursor: pointer;
+  :hover {
+    color: #444444;
+  }
+`;
+
+const SelectedPageButton = styled(PageButton)`
+  border-bottom: 1px solid #747474;
+  cursor: inherit;
+`;
+
+const DisabledPageButton = styled(PageButton)`
+  cursor: inherit;
+  opacity: 0.5;
+  :hover {
+    border-bottom: 1px solid transparent;
+  }
+`;
+
 const NoResultDiv = styled.div`
   width: 100%;
   font-size: 14px;
@@ -184,6 +234,8 @@ function PastEvents() {
     eventResult: "",
   });
   const [userFeedback, setUserFeedback] = useState([]);
+  const [pageNumber, setPageNumber] = useState([]);
+  const [showPageNum, setShowPageNum] = useState(1);
 
   const getPastEvents = async () => {
     const newEvents = await getEvents(1);
@@ -224,7 +276,24 @@ function PastEvents() {
     getPastEvents();
   }, []);
 
-  useEffect(() => {}, [eventResult]);
+  const getTotalPages = (events) => {
+    const totalPages = Math.ceil(events.length / 9);
+    let pageArray = [];
+    for (let i = 0; i < totalPages; i++) {
+      pageArray.push(i + 1);
+    }
+    console.log(pageArray);
+    setPageNumber([...pageArray]);
+    console.log(totalPages);
+  };
+
+  useEffect(() => {
+    console.log(pageNumber);
+  }, [pageNumber]);
+
+  useEffect(() => {
+    getTotalPages(events);
+  }, [events]);
 
   // let history = useHistory();
   const handleEventClick = (id) => {
@@ -265,12 +334,92 @@ function PastEvents() {
 
   const handleClose = () => setShow(false);
 
-  const renderNoResultMessage = () => {
+  const handlePageChange = (page) => {
+    setShowPageNum(parseInt(page));
+    window.scrollTo(0, 0);
+  };
+
+  const handleNextPage = () => {
+    setShowPageNum(showPageNum + 1);
+    window.scrollTo(0, 0);
+  };
+
+  const handlePrevPage = () => {
+    setShowPageNum(showPageNum - 1);
+    window.scrollTo(0, 0);
+  };
+
+  const renderPastEvents = (page) => {
+    const startItem = (page - 1) * 9;
+    const endItem = startItem + 9;
     return (
-      <NoResultDiv>
-        <NoResultImage src={sadFace} />
-        <div>還沒有活動成果哦</div>
-      </NoResultDiv>
+      <Wrapper>
+        {events.slice(startItem, endItem).map((event, index) => (
+          <PastEvent key={index}>
+            <Polaroid>
+              <PolaroidImage
+                src={event.image}
+                onClick={() => handleEventClick(event.id)}
+              />
+              <PolaroidCaption>{event.title}</PolaroidCaption>
+            </Polaroid>
+          </PastEvent>
+        ))}
+      </Wrapper>
+    );
+  };
+
+  const renderPageButton = () => {
+    return (
+      <PageButtonsContainer>
+        {showPageNum === 1 ? (
+          <DisabledPageButton>
+            <FontAwesomeIcon disabled icon={faChevronLeft} />
+          </DisabledPageButton>
+        ) : (
+          <PageButton
+            onClick={() => {
+              handlePrevPage();
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </PageButton>
+        )}
+
+        {pageNumber.map((page, index) =>
+          showPageNum === page ? (
+            <SelectedPageButton
+              key={index}
+              id={`${page}`}
+              disabled
+              onClick={(e) => handlePageChange(e.target.id)}
+            >
+              {page}
+            </SelectedPageButton>
+          ) : (
+            <PageButton
+              key={index}
+              id={`${page}`}
+              onClick={(e) => handlePageChange(e.target.id)}
+            >
+              {page}
+            </PageButton>
+          )
+        )}
+        {showPageNum === pageNumber.length ? (
+          <DisabledPageButton>
+            <FontAwesomeIcon disabled icon={faChevronRight} />
+          </DisabledPageButton>
+        ) : (
+          <PageButton
+            onClick={() => {
+              handleNextPage();
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronRight} />
+          </PageButton>
+        )}
+      </PageButtonsContainer>
     );
   };
 
@@ -287,8 +436,8 @@ function PastEvents() {
   return (
     <div>
       <PastEventsContainer>
-        <Wrapper>
-          {events.map((event, index) => (
+        {/* <Wrapper>
+          {events.slice(0, 9).map((event, index) => (
             <PastEvent key={index}>
               <Polaroid>
                 <PolaroidImage
@@ -299,7 +448,9 @@ function PastEvents() {
               </Polaroid>
             </PastEvent>
           ))}
-        </Wrapper>
+        </Wrapper> */}
+        {renderPastEvents(showPageNum)}
+        {renderPageButton(showPageNum)}
       </PastEventsContainer>
 
       <Modal show={show} onHide={handleClose} size="lg">
