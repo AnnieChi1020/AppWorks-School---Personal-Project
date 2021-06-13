@@ -4,6 +4,7 @@ import ApplyingEvents from "./ApplyingEvents.js";
 import ConfirmedEvents from "./ConfirmedEvents.js";
 import CompletedEvents from "./CompletedEvents.js";
 import CancelledEvents from "./CancelledEvents.js";
+import { Tooltip } from "@material-ui/core";
 
 const TabsContainer = styled.div`
   width: 100%;

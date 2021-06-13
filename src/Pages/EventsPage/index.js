@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: calc(100vh - 67px);
 `;
 
 const Background = styled.div`
@@ -26,7 +26,7 @@ function EventsPage() {
 
   return (
     <Container
-      className="container-xl mb-5"
+      className="container-xl"
       onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
     >
       <Background />

@@ -8,7 +8,7 @@ import {
   onSnapshotParticipantInfo,
 } from "../../../utils/firebase.js";
 import { useDispatch, useSelector } from "react-redux";
-import { Col, Card, Modal } from "react-bootstrap";
+import { Col, Card, Modal, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import NoEvent from "../components/NoEvent.js";
 import Comments from "./CommentsPage/CommentsPage.js";
@@ -111,6 +111,13 @@ const styles = {
 const Styles = styled.div`
   .eventCard {
     border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+  .rate-tooltip {
+    position: absolute;
+    will-change: transform;
+    top: 0px;
+    left: 0px;
+    transform: translate3d(563px, 60px, 0px);
   }
 `;
 
@@ -254,9 +261,19 @@ function UserCompletedEvents() {
                     </EventInfo>
                     <EventStatus>
                       {event.userAttend === false ? (
-                        <RateButton disabled style={{ opacity: ".5" }}>
-                          評價活動
-                        </RateButton>
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={
+                            <Tooltip id={`tooltip-top`}>
+                              待確認出席即可評價活動
+                            </Tooltip>
+                          }
+                        >
+                          <RateButton disabled style={{ opacity: ".5" }}>
+                            評價活動
+                          </RateButton>
+                        </OverlayTrigger>
                       ) : (
                         <div />
                       )}

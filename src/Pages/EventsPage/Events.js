@@ -7,7 +7,10 @@ import { useHistory } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import noEventImage from "../../images/noEvent.png";
-import eventBanner from "../../images/eventBanner.png";
+// import eventBanner from "../../images/eventBanner.png";
+import eventBanner from "../../images/events_header.png";
+import eventsBackground from "../../images/events_header_2.png";
+
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 
@@ -26,27 +29,55 @@ const Container = styled.div`
 
 const BannerContainer = styled.div`
   width: 100%;
-  height: 300px;
-  padding: 20px 0;
+  /* height: 300px; */
+  padding: 30px 0;
   margin: 0 auto;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   text-align: center;
+  position: relative;
   @media (max-width: 760px) {
-    height: 200px;
-    margin-bottom: 20px;
   }
   @media (max-width: 540px) {
-    height: 160px;
-    margin-bottom: 10px;
   }
 `;
 
 const BannerImage = styled.img`
   width: 100%;
-  height: 100%;
+  height: 250px;
   object-fit: cover;
   margin: 0 auto;
   border-radius: 10px;
+  @media (max-width: 760px) {
+    height: 200px;
+  }
+  @media (max-width: 540px) {
+    height: 150px;
+  }
+`;
+
+const BannerText = styled.div`
+  width: 300px;
+  font-size: 44px;
+  line-height: 48px;
+  font-weight: 900;
+  color: #6ca68d;
+  margin: 0 auto;
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  @media (max-width: 760px) {
+    font-size: 36px;
+    line-height: 40px;
+    font-weight: 900;
+    top: 130px;
+  }
+  @media (max-width: 540px) {
+    font-size: 28px;
+    line-height: 32px;
+    font-weight: 900;
+    top: 100px;
+  }
 `;
 
 const FilterContainer = styled.div`
@@ -115,7 +146,6 @@ const Tag = styled.div`
   :hover {
     /* background: #ebfff0; */
     box-shadow: 1px 1px 1px 1.5px rgba(0, 0, 0, 0.1);
-
   }
 `;
 
@@ -184,6 +214,11 @@ const Selector = styled.select`
   select.decorated option:hover {
     background-color: grey;
   }
+`;
+
+const MainContainer = styled.div`
+  width: 100%;
+  min-height: calc(100vh - 67px); ;
 `;
 
 const Events = styled.div`
@@ -380,6 +415,10 @@ function AllEvents() {
   let selectedCity = useSelector((state) => state.filter.city);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch({ type: "ADD_CITY", data: "" });
+  }, []);
+
   const [rawEvents, setRawEvents] = useState([]);
   const [events, setEvents] = useState([]);
 
@@ -521,86 +560,89 @@ function AllEvents() {
   return (
     <Styles>
       <Container>
-        <BannerContainer>
-          <BannerImage src={eventBanner} />
-        </BannerContainer>
-        <FilterContainer>
-          <Filter>
-            <Tags>
-              {tagArray.map((tag, index) =>
-                selectedTag === tag ? (
-                  <TagSelected
-                  // onClick={(e) => handleTagClick(e)}
-                  // key={index}
-                  >
-                    {tag}
-                  </TagSelected>
-                ) : (
-                  <Tag onClick={(e) => handleTagClick(e)} key={index}>
-                    {tag}
-                  </Tag>
-                )
-              )}
-            </Tags>
-            <SelectContainer>
-              <Dropdown
-                options={cityArray}
-                onChange={(e) => handleCitySelect(e.value)}
-                placeholder="活動縣市 "
-                controlClassName="city-select"
-                menuClassName="city-select-menu"
-                value={defaultOption}
-              />
-              <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
-            </SelectContainer>
-          </Filter>
-          {/* <Buttons>
+        <MainContainer>
+          <BannerContainer>
+            <BannerText>探索志工機會</BannerText>
+            <BannerImage src={eventsBackground} />
+          </BannerContainer>
+          <FilterContainer>
+            <Filter>
+              <Tags>
+                {tagArray.map((tag, index) =>
+                  selectedTag === tag ? (
+                    <TagSelected
+                    // onClick={(e) => handleTagClick(e)}
+                    // key={index}
+                    >
+                      {tag}
+                    </TagSelected>
+                  ) : (
+                    <Tag onClick={(e) => handleTagClick(e)} key={index}>
+                      {tag}
+                    </Tag>
+                  )
+                )}
+              </Tags>
+              <SelectContainer>
+                <Dropdown
+                  options={cityArray}
+                  onChange={(e) => handleCitySelect(e.value)}
+                  placeholder="活動縣市 "
+                  controlClassName="city-select"
+                  menuClassName="city-select-menu"
+                  value={defaultOption}
+                />
+                <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
+              </SelectContainer>
+            </Filter>
+            {/* <Buttons>
           <Button>搜尋活動</Button>
           <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
         </Buttons> */}
-        </FilterContainer>
+          </FilterContainer>
 
-        <Events>
-          {events.map((event, index) => (
-            <Col className="p-0 " style={styles.cardCol} key={index}>
-              <Card
-                className="shadow-sm rounded bg-white h-100 eventCard"
-                onClick={() => handleEventClick(event.eventId)}
-                style={{ cursor: "pointer" }}
-              >
-                <div className="bg-image hover-overlay hover-zoom">
-                  <Card.Img
-                    variant="top"
-                    src={event.eventCoverImage}
-                    className="cardImage"
-                  ></Card.Img>
-                </div>
-                <Card.Body
-                  className="py-2 px-3"
-                  style={{ position: "relative" }}
+          <Events>
+            {events.map((event, index) => (
+              <Col className="p-0 " style={styles.cardCol} key={index}>
+                <Card
+                  className="shadow-sm rounded bg-white h-100 eventCard"
+                  onClick={() => handleEventClick(event.eventId)}
+                  style={{ cursor: "pointer" }}
                 >
-                  {/* <TagIcon></TagIcon> */}
-                  <EventTagContianer>
-                    {event.eventTags.map((tag, index) => (
-                      <EventTag key={index}>{tag}</EventTag>
-                    ))}
-                    <EventTag>{event.eventAddress}</EventTag>
-                  </EventTagContianer>
-                  <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
-                  <EventTitle>{event.eventTitle}</EventTitle>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Events>
-        {noEvent ? (
-          <NoEvent>
-            <NoEventImage src={noEventImage} />
-            <NoEventText>目前沒有活動哦</NoEventText>
-          </NoEvent>
-        ) : (
-          <div />
-        )}
+                  <div className="bg-image hover-overlay hover-zoom">
+                    <Card.Img
+                      variant="top"
+                      src={event.eventCoverImage}
+                      className="cardImage"
+                    ></Card.Img>
+                  </div>
+                  <Card.Body
+                    className="py-2 px-3"
+                    style={{ position: "relative" }}
+                  >
+                    {/* <TagIcon></TagIcon> */}
+                    <EventTagContianer>
+                      {event.eventTags.map((tag, index) => (
+                        <EventTag key={index}>{tag}</EventTag>
+                      ))}
+                      <EventTag>{event.eventAddress}</EventTag>
+                    </EventTagContianer>
+                    <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
+                    <EventTitle>{event.eventTitle}</EventTitle>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Events>
+          {noEvent ? (
+            <NoEvent>
+              <NoEventImage src={noEventImage} />
+              <NoEventText>目前沒有活動哦</NoEventText>
+            </NoEvent>
+          ) : (
+            <div />
+          )}
+        </MainContainer>
       </Container>
     </Styles>
   );
