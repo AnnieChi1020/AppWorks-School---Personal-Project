@@ -128,6 +128,7 @@ const PastEventImage = styled.img`
   position: relative;
   object-fit: cover;
   vertical-align: bottom;
+  border-radius: 5px;
 `;
 
 const PastEventText = styled.div`
@@ -180,9 +181,9 @@ const PageButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 8px;
-  padding: 5px 3px;
-  color: #747474;
+  margin: 0 10px;
+  padding: 5px 1px;
+  color: #a4a3a3;
   cursor: pointer;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
@@ -196,6 +197,7 @@ const SelectedPageButton = styled(PageButton)`
   border-bottom: 1px solid #747474;
   cursor: inherit;
   pointer-events: none;
+  color: #4f4f4f;
 `;
 
 const DisabledPageButton = styled(PageButton)`
@@ -298,11 +300,11 @@ function PastEvents() {
   }, [events]);
 
   // let history = useHistory();
-  const handleEventClick = (id) => {
+  const handleEventClick = async (id) => {
     // setViewEvent(id);
+    await getPastEventInfo(id);
+    await getUserFeedbacks(id);
     setShow(true);
-    getPastEventInfo(id);
-    getUserFeedbacks(id);
     // history.push(`/past-events/${id}`);
   };
 
@@ -351,9 +353,10 @@ function PastEvents() {
     window.scrollTo(0, 0);
   };
 
+  const itemLimit = 9;
   const renderPastEvents = (page) => {
-    const startItem = (page - 1) * 9;
-    const endItem = startItem + 9;
+    const startItem = (page - 1) * itemLimit;
+    const endItem = startItem + itemLimit;
     return (
       <Wrapper>
         {events.slice(startItem, endItem).map((event, index) => (

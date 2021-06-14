@@ -90,7 +90,7 @@ const EventTitle = styled.div`
   font-size: 18px;
   margin-top: 5px;
   margin-bottom: 5px;
-  color: #3e3e3e;
+  color: #787878;
   font-weight: 600;
   @media (max-width: 966px) {
     font-size: 14px;
@@ -104,13 +104,15 @@ const EventText = styled.div`
   margin: 0 auto;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: #3e3e3e;
+  color: #b6b3b3;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   color: #8c8a8a;
-
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
   @media (max-width: 966px) {
     font-size: 14px;
   }

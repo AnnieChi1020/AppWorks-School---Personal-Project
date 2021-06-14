@@ -468,11 +468,9 @@ function CreateEvent() {
       setImageIsInvalid(true);
       document.querySelector("#coverImage").style.border = "1px solid red";
       document.querySelector("#coverImage").style.borderRadius = "5px";
-      console.log("123");
     } else {
       setImageIsInvalid(false);
       document.querySelector("#coverImage").style.border = "none";
-      console.log("456");
     }
 
     event.preventDefault();

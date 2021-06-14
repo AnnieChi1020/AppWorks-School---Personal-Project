@@ -106,10 +106,13 @@ const styles = {
   modalHeader: {
     border: "none",
   },
-  modal: {
-    marginTop: "70px",
-  },
 };
+
+const StyledModal = styled(Modal)`
+  margin-top: 50px;
+  margin-bottom: 100px;
+  padding-bottom: 50px;
+`;
 
 const Styles = styled.div`
   .eventCard {
@@ -261,12 +264,12 @@ function ClosedEvents() {
           </Events>
         )}
         {renderNoEventMessage()}
-        <Modal show={showResultModal} onHide={handleClose} style={styles.modal}>
+        <StyledModal size="md" show={showResultModal} onHide={handleClose}>
           <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
           <Modal.Body style={styles.modalBody}>
             <Results></Results>
           </Modal.Body>
-        </Modal>
+        </StyledModal>
       </EventsContainer>
     </Styles>
   );

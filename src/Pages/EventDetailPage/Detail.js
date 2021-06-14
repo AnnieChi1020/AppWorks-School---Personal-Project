@@ -271,8 +271,8 @@ function EventDetail() {
     dispatch({ type: "ADD_USERID", data: logStatus.userId });
   }, []);
 
-  const renderButton = (e) => {
-    return e.status === 0 ? (
+  const renderButton = (status) => {
+    return status === 0 ? (
       <Button onClick={handleShow}>我要報名</Button>
     ) : (
       <Button disabled style={{ opacity: ".6" }}>
@@ -334,7 +334,7 @@ function EventDetail() {
                   <EventText>{event.orgContact}</EventText>
                 </SubtitleTextContainer>
               </SubtitleContainer>
-              {renderButton(event)}
+              {renderButton(event.status)}
               <MapContainer>
                 <MapTitle>志工活動地圖</MapTitle>
               </MapContainer>

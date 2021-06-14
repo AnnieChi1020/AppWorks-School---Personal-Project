@@ -94,6 +94,9 @@ const TextContainer = styled.div`
   flex-grow: 1;
   display: flex;
   align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
 `;
 
 const NumContainer = styled.div`
@@ -101,6 +104,9 @@ const NumContainer = styled.div`
   flex-grow: 0;
   display: flex;
   align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
 `;
 
 const StarContainer = styled.div`

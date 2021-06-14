@@ -372,9 +372,14 @@ function CreateEvent() {
   // const [validated, setValidated] = useState(false);
 
   const handleFileChange = (file) => {
-    const fileURL = URL.createObjectURL(file);
+    let fileURL;
+    if (file) {
+      fileURL = URL.createObjectURL(file);
+      setUploadImage(fileURL);
+    } else {
+      setUploadImage(photo);
+    }
     console.log(fileURL);
-    setUploadImage(fileURL);
   };
 
   const handleSubmit = async (event) => {
@@ -408,10 +413,19 @@ function CreateEvent() {
         "1px solid hsl(0, 0%, 80%)";
     }
 
+    // if (!inputs.coverImage.files[0]) {
+    //   setImageIsInvalid(true);
+    // } else {
+    //   setImageIsInvalid(false);
+    // }
+
     if (!inputs.coverImage.files[0]) {
       setImageIsInvalid(true);
+      document.querySelector("#coverImage").style.border = "1px solid red";
+      document.querySelector("#coverImage").style.borderRadius = "5px";
     } else {
       setImageIsInvalid(false);
+      document.querySelector("#coverImage").style.border = "none";
     }
 
     event.preventDefault();

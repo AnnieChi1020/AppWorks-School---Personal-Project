@@ -27,8 +27,8 @@ const CreateEventContainer = styled.div`
   background-color: white;
   border-radius: 8px;
   @media (max-width: 720px) {
-    width: 90%;
-    padding: 20px 20px;
+    width: 100%;
+    padding: 0 10px;
   }
 `;
 
@@ -61,11 +61,19 @@ const EventInfo = styled.div`
 
 const EventImage = styled.img`
   width: 100%;
-  height: 15vw;
+  height: 150px;
   max-height: 250px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 20px;
+`;
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0 20px 0;
 `;
 
 const Button = styled.button`
@@ -77,19 +85,29 @@ const Button = styled.button`
   font-size: 1rem;
   line-height: 1.5;
   padding: 5px 20px;
-  margin-left: calc(50% - 75px);
-  margin-top: 40px;
-  margin-bottom: 20px;
   @media (max-width: 540px) {
     width: 100%;
-    margin-right: auto;
-    margin-left: auto;
   }
 `;
 
 const Styles = styled.div`
   .invalid-feedback {
     margin-top: 5px;
+  }
+  .form-label {
+    @media (max-width: 720px) {
+      font-size: 14px;
+    }
+  }
+  .form-control-file {
+    @media (max-width: 720px) {
+      font-size: 14px;
+    }
+  }
+  .form-control {
+    @media (max-width: 720px) {
+      font-size: 14px;
+    }
   }
 `;
 
@@ -261,7 +279,9 @@ function EventResult() {
               請選擇至少3張活動照片
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit">送出成果資料</Button>
+          <ButtonContainer>
+            <Button type="submit">送出成果資料</Button>
+          </ButtonContainer>
         </Form>
       </CreateEventContainer>
     </Styles>
