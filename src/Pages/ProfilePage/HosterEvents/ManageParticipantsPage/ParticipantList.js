@@ -196,8 +196,6 @@ function ParticipantList() {
   useEffect(() => {
     async function getEventDetail() {
       const data = await getEventInfo(eventId);
-      const startDate = data.startTime.toDate().toLocaleDateString();
-      const endDate = data.endTime.toDate().toLocaleDateString();
 
       setEvent({
         ...event,
@@ -215,17 +213,14 @@ function ParticipantList() {
   }, []);
 
   const handleAttendClick = async (eventId, userId) => {
-    console.log(eventId, userId);
     let currentStatus = await getParticipantInfo(eventId, userId);
     currentStatus.participantInfo.participantAttended = true;
     updateParticipantStatus(eventId, userId, currentStatus);
   };
 
   const renderButton = (e) => {
-    console.log(event);
     const startT = event.startTime.seconds * 1000;
     const currentT = new Date().getTime();
-    console.log(startT, currentT);
     const eventPassed = startT < currentT;
     return e.participantAttended === false && eventPassed ? (
       <ConfirmButton

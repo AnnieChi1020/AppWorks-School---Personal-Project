@@ -8,11 +8,7 @@ import { useEffect, useState } from "react";
 import { Form, Col } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  successAlertText,
-  errorAlertText,
-  signUpAlertText,
-} from "../../components/Alert.js";
+import { errorAlertText, signUpAlertText } from "../../components/Alert.js";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -83,7 +79,7 @@ function EventSignUp() {
     }
 
     const validRegex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!inputs.email.value.match(validRegex)) {
       setEmailIsInvalid(true);
     } else {
@@ -126,9 +122,6 @@ function EventSignUp() {
     }
   };
 
-  useEffect(() => {
-    console.log(nameIsInvalid);
-  }, [nameIsInvalid]);
 
   return (
     <Wrapper>

@@ -183,7 +183,6 @@ function EventDetail() {
   const logStatus = useSelector((state) => state.isLogged);
   const signupModal = useSelector((state) => state.modal.signup);
 
-  console.log(signupModal);
 
   const dispatch = useDispatch();
 
@@ -215,9 +214,7 @@ function EventDetail() {
     data ? setEventExist(true) : setEventExist(false);
     if (data) {
       const hosterInfo = await getUserProfile(data.hosterId);
-      console.log(hosterInfo);
       const passed = checkEventPassed(data);
-      console.log(passed);
       const address = data.eventAddress.formatted_address;
       const startDate = data.startTime.toDate().toLocaleDateString();
       const startTime = data.startTime.toDate().toLocaleTimeString("en-US", {
@@ -257,7 +254,6 @@ function EventDetail() {
 
   const handleClose = () => dispatch({ type: "SIGNUP", data: false });
   const handleShow = () => {
-    console.log(logStatus);
     if (logStatus.userRole === 0) {
       dispatch({ type: "SIGNUP", data: true });
     } else {

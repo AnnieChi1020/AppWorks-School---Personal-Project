@@ -223,10 +223,6 @@ function CreateEvent() {
     setSelectedAddress({ ...selectedAddress, label: "台灣" });
   }, []);
 
-  useEffect(() => {
-    console.log(selectedAddress.label);
-  }, [selectedAddress]);
-
   const getCurrentTime = () => {
     const tzoffset = new Date().getTimezoneOffset() * 60000;
     const localISOTime = new Date(Date.now() - tzoffset)
@@ -314,9 +310,7 @@ function CreateEvent() {
     // const geopoint = await getGeopoint(address);
     const geopoint = await getGeopoint(selectedAddress.label);
 
-    console.log(geopoint);
     const newEventRef = createNewDoc();
-    console.log(imageUrl);
     const eventData = {
       eventId: newEventRef.id,
       eventTitle: inputs.title.value,
@@ -359,7 +353,6 @@ function CreateEvent() {
       eventTime.startDate + " " + eventTime.startTime
     ).valueOf();
     const end = new Date(eventTime.endDate + " " + eventTime.endTime).valueOf();
-    console.log(start < end);
     if (start >= end) {
       setTimeIsInvalid(true);
       return false;
@@ -379,7 +372,6 @@ function CreateEvent() {
     } else {
       setUploadImage(photo);
     }
-    console.log(fileURL);
   };
 
   const handleSubmit = async (event) => {
@@ -437,7 +429,6 @@ function CreateEvent() {
       selectedAddress.value
     ) {
       const eventData = await constructEventData(inputs);
-      console.log(eventData);
       await postEventInfo(eventData.id, eventData.data);
       toast.success(successAlertText("已創建志工活動"), {
         position: toast.POSITION.TOP_CENTER,
@@ -447,10 +438,6 @@ function CreateEvent() {
       toast.error(errorAlertText("請確認活動資料"));
     }
   };
-
-  useEffect(() => {
-    console.log(selectedAddress);
-  }, [selectedAddress]);
 
   return (
     <Styles>

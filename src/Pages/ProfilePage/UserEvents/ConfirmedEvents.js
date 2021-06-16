@@ -190,15 +190,10 @@ function UserConfirmedEvents() {
         return eventInfoArray;
       })
     );
-    console.log(eventInfoArray);
     if (eventInfoArray.length === 0) {
       setNoEvent(true);
     }
   };
-
-  useEffect(() => {
-    console.log(noEvent);
-  }, [noEvent]);
 
   useEffect(() => {
     getApplyingEventsInfo();
@@ -251,7 +246,6 @@ function UserConfirmedEvents() {
 
   const renderNoEventMessage = () => {
     if (noEvent) {
-      console.log("noooo");
       return <NoEvent></NoEvent>;
     }
   };

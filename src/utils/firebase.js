@@ -178,7 +178,6 @@ export const getUserProfile = (id) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        console.log(doc.data());
         return doc.data();
       } else {
       }
@@ -214,9 +213,7 @@ export const getUserAttendedEvents = (userId) => {
   return userRef
     .get()
     .then((querySnapshot) => {
-      // console.log(userId);
       querySnapshot.forEach((doc) => {
-        // console.log(doc.data().participantInfo.eventId);
         events.push(doc.data().participantInfo.eventId);
       });
       return events;
@@ -336,8 +333,6 @@ export const checkAuthStatus = async () => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         let userId = user.uid;
-        let email = user.email;
-        console.log(userId, email);
         resolve(userId);
       } else {
         resolve(false);

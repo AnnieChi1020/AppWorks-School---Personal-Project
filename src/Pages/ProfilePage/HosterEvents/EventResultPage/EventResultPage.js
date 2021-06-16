@@ -1,14 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
 import {
   getEventInfo,
   getImageURL,
   updateEvent,
 } from "../../../../utils/firebase.js";
-import background from "../../../../images/background.jpg";
 import { Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -170,7 +167,6 @@ function EventResult() {
     let imageArray = [];
     for (let i = 0; i < files.length; i++) {
       let imageFile = files[i];
-      console.log(imageFile);
       const url = await getImageURL(hosterId, imageFile);
       imageArray.push(url);
     }
@@ -186,11 +182,6 @@ function EventResult() {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log(inputs.images.files);
-    console.log(inputs.result.value);
-
-    console.log(typeof inputs.images.files);
-
     if (!inputs.result.value) {
       setResultIsInvalid(true);
     } else {
@@ -203,18 +194,11 @@ function EventResult() {
       setFilesIsInvalid(false);
     }
 
-    // setValidated(true);
-
-    console.log(inputs.images.files);
-    console.log(inputs.result.value);
-
     if (inputs.result.value && inputs.images.files.length > 2) {
-      console.log(inputs.images.files);
       const eventData = await getEventInfo(eventId);
       const imageUrl = await uploadImage(inputs.images.files);
       eventData.resultContent = inputs.result.value;
       eventData.resultImage = imageUrl;
-      console.log(eventData);
       await updateEvent(eventId, eventData);
       toast.success(successAlertText("已上傳活動成果"), {
         position: toast.POSITION.TOP_CENTER,
@@ -227,10 +211,6 @@ function EventResult() {
       });
     }
   };
-
-  useEffect(() => {
-    console.log(filesIsInvalid);
-  }, [filesIsInvalid]);
 
   return (
     <Styles>
@@ -270,7 +250,7 @@ function EventResult() {
               multiple="multiple"
               required
               isInvalid={filesIsInvalid}
-              onChange={(e) => console.log(e.target.files)}
+            
             ></Form.Control>
             <Form.Control.Feedback
               type="invalid"

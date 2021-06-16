@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createUserAuth,
@@ -13,12 +13,6 @@ import { successAlertText, errorAlertText } from "../components/Alert.js";
 
 import { toast } from "react-toastify";
 // import ErrorIcon from "@material-ui/icons/Error";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheckCircle,
-  faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
 
 const Wrapper = styled.div`
   width: 50%;
@@ -71,13 +65,6 @@ const SubmitButton = styled.button`
   padding: 0 10px;
   background-color: #40a3cb;
   color: white;
-`;
-
-const TestAccount = styled.div`
-  padding: 5px 12px 5px 5px;
-  font-size: 12px;
-  line-height: 14px;
-  color: #a5a5a5;
 `;
 
 const styles = {
@@ -151,9 +138,6 @@ function Login() {
   };
 
   const handleActionChange = (e) => {
-    console.log(e.key === "Enter");
-    console.log(e.shiftKey === false);
-
     setAction(e.target.id);
     setValidated(false);
     clearValidationStatus();
@@ -263,8 +247,7 @@ function Login() {
   const handleLoginSubmit = async (event) => {
     const inputs = event.currentTarget;
     const validRegex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    console.log(inputs.email.value);
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!inputs.email.value.match(validRegex)) {
       setEmailIsInvalid(true);
     } else {

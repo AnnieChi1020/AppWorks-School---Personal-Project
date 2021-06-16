@@ -5,7 +5,6 @@ import {
   getUserProfile,
   userSignOut,
   getUserAttendedEvents,
-  getUserEvents,
   getEventInfo,
 } from "../../utils/firebase.js";
 import { useSelector, useDispatch } from "react-redux";
@@ -259,7 +258,7 @@ function Profile() {
     },
   });
 
-  const [attendedEventNotExist, setAttendedEventNotExist] = useState("");
+  // const [attendedEventNotExist, setAttendedEventNotExist] = useState("");
   const [pieChartData, setPieChartData] = useState([
     { title: "沒有活動", value: 1, color: "#e9ecef" },
   ]);

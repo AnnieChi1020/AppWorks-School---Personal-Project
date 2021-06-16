@@ -132,8 +132,6 @@ function ClosedEvents() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(selectedEventId);
-    console.log(`result is ${resultCompleted}`);
     if (resultCompleted) {
       let currentEventsArray = events;
       currentEventsArray.map((event) => {
@@ -149,10 +147,6 @@ function ClosedEvents() {
       dispatch({ type: "SET_EVENTID", data: "" });
     }
   }, [resultCompleted]);
-
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
 
   const getHosterEventsData = async () => {
     const newEvents = await getHosterEvents(hosterId, 1);
@@ -209,7 +203,6 @@ function ClosedEvents() {
 
   const renderNoEventMessage = () => {
     if (noEvent) {
-      console.log("noooo");
       return <NoEvent></NoEvent>;
     }
   };

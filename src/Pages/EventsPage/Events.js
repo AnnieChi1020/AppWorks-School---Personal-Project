@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
-import React, { useEffect, useState, Component } from "react";
-import Select from "react-select";
+import React, { useEffect, useState } from "react";
 import { getEvents } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import noEventImage from "../../images/noEvent.png";
 // import eventBanner from "../../images/eventBanner.png";
-import eventBanner from "../../images/events_header.png";
 import eventsBackground from "../../images/events_header_2.png";
 
 import Dropdown from "react-dropdown";
@@ -186,33 +184,6 @@ const SelectContainer = styled.div`
     margin-top: 10px;
     margin-left: 0px;
     justify-content: flex-start;
-  }
-`;
-
-const Selector = styled.select`
-  width: 120px;
-  height: 32px;
-  border: solid 1px #57bb92;
-  border-radius: 10px;
-  padding: 0 10px;
-  color: #57bb92;
-  font-size: 16px;
-
-  @media (max-width: 760px) {
-    height: 28px;
-    font-size: 14px;
-    line-height: 16px;
-  }
-
-  @media (max-width: 540px) {
-    padding: 0 5px;
-    height: 26px;
-    font-size: 12px;
-    line-height: 14px;
-  }
-
-  select.decorated option:hover {
-    background-color: grey;
   }
 `;
 
@@ -446,15 +417,13 @@ function AllEvents() {
 
   const getAllEvents = async () => {
     const newEvents = await getEvents(0);
-    newEvents.map((event) => {
+    newEvents.forEach((event) => {
       event.startTime = reformatTimestamp(event.startTime);
       event.endTime = reformatTimestamp(event.endTime);
       event.eventAddress = getAdministrativeArea(event);
-      return true;
     });
     setRawEvents(newEvents);
     setEvents(newEvents);
-    console.log(selectedTag);
   };
 
   const getDay = (day) => {
@@ -517,7 +486,6 @@ function AllEvents() {
       });
     } else if (tag) {
       eventArray.forEach((event) => {
-        console.log("here");
         if (event.eventTags.includes(tag)) {
           filteredEvents.push(event);
         }
@@ -531,7 +499,6 @@ function AllEvents() {
     } else {
       filteredEvents = rawEvents;
     }
-    console.log(filteredEvents.length);
     if (rawEvents.length > 0 && filteredEvents.length === 0) {
       setNoEvent(true);
     }

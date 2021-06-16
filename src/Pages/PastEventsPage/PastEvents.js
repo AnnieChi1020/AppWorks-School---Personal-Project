@@ -286,14 +286,9 @@ function PastEvents() {
     for (let i = 0; i < totalPages; i++) {
       pageArray.push(i + 1);
     }
-    console.log(pageArray);
     setPageNumber([...pageArray]);
-    console.log(totalPages);
   };
 
-  useEffect(() => {
-    console.log(pageNumber);
-  }, [pageNumber]);
 
   useEffect(() => {
     getTotalPages(events);

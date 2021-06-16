@@ -1,10 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ReactStars from "react-rating-stars-component";
-import { useHistory } from "react-router-dom";
-import background from "../../../../images/background.jpg";
 import {
   getEventInfo,
   getParticipantInfo,
@@ -183,7 +180,6 @@ function Comments() {
 
   const ratingChanged = (newRating) => {
     rating = newRating;
-    console.log(rating);
     return rating;
   };
 

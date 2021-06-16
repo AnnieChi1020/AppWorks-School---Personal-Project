@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Events from "./Events.js";
-import { useEffect } from "react";
 import React from "react";
 import { useDispatch } from "react-redux";
 

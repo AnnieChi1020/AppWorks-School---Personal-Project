@@ -5,7 +5,6 @@ import {
   getUserEvents,
   getEventInfo,
   getParticipantInfo,
-  onSnapshotParticipantInfo,
 } from "../../../utils/firebase.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Card, Modal, Tooltip, OverlayTrigger } from "react-bootstrap";
@@ -132,8 +131,6 @@ function UserCompletedEvents() {
   const selectedEventId = useSelector((state) => state.modal.eventId);
 
   useEffect(() => {
-    console.log(selectedEventId);
-    console.log(`feedback is ${feedbackCompleted}`);
     if (feedbackCompleted) {
       let currentEventsArray = events;
       currentEventsArray.map((event) => {
@@ -150,7 +147,6 @@ function UserCompletedEvents() {
     }
   }, [feedbackCompleted]);
 
-  console.log(events);
 
   const dispatch = useDispatch();
 
@@ -180,7 +176,6 @@ function UserCompletedEvents() {
         return eventInfoArray;
       })
     );
-    console.log(eventInfoArray);
     if (eventInfoArray.length === 0) {
       setNoEvent(true);
     }
@@ -214,7 +209,6 @@ function UserCompletedEvents() {
   // };
 
   const renderNoEventMessage = () => {
-    console.log("Hi");
     if (noEvent) {
       return <NoEvent></NoEvent>;
     }

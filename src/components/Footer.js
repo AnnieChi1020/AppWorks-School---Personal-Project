@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import React from "react";
 import {} from "../utils/firebase.js";
-import logo from "../images/logo.jpg";
-import logoText from "../images/logo_3.png";
+// import logo from "../images/logo.jpg";
+// import logoText from "../images/logo_3.png";
 
 const Container = styled.div`
   width: 100%;
@@ -22,17 +22,17 @@ const FooterContent = styled.div`
   justify-content: flex-start;
 `;
 
-const LogoImage = styled.img`
-  width: 30px;
-  height: 30px;
-  margin-left: 30px;
-`;
+// const LogoImage = styled.img`
+//   width: 30px;
+//   height: 30px;
+//   margin-left: 30px;
+// `;
 
-const LogoText = styled.img`
-  width: auto;
-  height: 40px;
-  margin-left: 20px;
-`;
+// const LogoText = styled.img`
+//   width: auto;
+//   height: 40px;
+//   margin-left: 20px;
+// `;
 
 function Header() {
   return (

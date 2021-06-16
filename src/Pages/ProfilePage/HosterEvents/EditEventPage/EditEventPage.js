@@ -234,10 +234,6 @@ function CreateEvent() {
     }
   }, [eventExist]);
 
-  useEffect(() => {
-    console.log(selectedAddress.label);
-  }, [selectedAddress]);
-
   const getCurrentTime = () => {
     const tzoffset = new Date().getTimezoneOffset() * 60000;
     const localISOTime = new Date(Date.now() - tzoffset)
@@ -315,9 +311,6 @@ function CreateEvent() {
     getEventInformation();
   }, []);
 
-  useEffect(() => {
-    console.log(eventInfo);
-  }, [eventInfo]);
 
   const getGeopoint = async (address) => {
     let location;
@@ -414,7 +407,6 @@ function CreateEvent() {
       eventTime.startDate + " " + eventTime.startTime
     ).valueOf();
     const end = new Date(eventTime.endDate + " " + eventTime.endTime).valueOf();
-    console.log(start < end);
     if (start >= end) {
       setTimeIsInvalid(true);
       return false;
@@ -432,12 +424,10 @@ function CreateEvent() {
     } else {
       setUploadImage(photo);
     }
-    console.log(fileURL);
   };
 
   const handleSubmit = async (event) => {
     const inputs = event.currentTarget;
-    console.log(inputs);
 
     if (!inputs.title.value) {
       setTitleIsInvalid(true);
@@ -484,7 +474,6 @@ function CreateEvent() {
       (uploadImage === eventInfo.eventCoverImage || inputs.coverImage.files[0])
     ) {
       const eventData = await constructEventData(inputs);
-      console.log(eventData);
       await updateEvent(eventId, eventData);
       toast.success(successAlertText("已更新活動資訊"), {
         position: toast.POSITION.TOP_CENTER,
@@ -494,10 +483,6 @@ function CreateEvent() {
       toast.error(errorAlertText("請確認活動資料"));
     }
   };
-
-  useEffect(() => {
-    console.log(selectedAddress);
-  }, [selectedAddress]);
 
   return (
     <Styles>

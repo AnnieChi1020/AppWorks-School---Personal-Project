@@ -13,7 +13,6 @@ import { useHistory } from "react-router-dom";
 import NoEvent from "../components/NoEvent.js";
 import { toast } from "react-toastify";
 import { successAlertText } from "../../../components/Alert.js";
-import sadDog from "../../../images/sad-dog-face.png";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -95,11 +94,11 @@ const StyledHeader = styled(Modal.Header)`
   /* background-color: #9dc7d878; */
 `;
 
-const CancelImg = styled.img`
-  width: 80px;
-  height: auto;
-  object-fit: contain;
-`;
+// const CancelImg = styled.img`
+//   width: 80px;
+//   height: auto;
+//   object-fit: contain;
+// `;
 
 const CancelText = styled.div`
   width: 100%;
@@ -195,17 +194,14 @@ function UserApplyingEvents() {
 
   const getApplyingEventsInfo = async () => {
     const eventIdArray = await getApplyingEventsId();
-    console.log(eventIdArray);
     let eventInfoArray = [];
     await Promise.all(
       eventIdArray.map(async (id) => {
         const event = await getEventInfo(id);
-        console.log(event);
         const eventPassed = checkEventPassed(event);
 
         if (!eventPassed) {
           eventInfoArray.push(event);
-          console.log(event);
           setEvents([...eventInfoArray]);
         }
         return eventInfoArray;
@@ -263,7 +259,6 @@ function UserApplyingEvents() {
 
   const renderNoEventMessage = () => {
     if (noEvent) {
-      console.log("noooo");
       return <NoEvent></NoEvent>;
     }
   };
@@ -273,10 +268,6 @@ function UserApplyingEvents() {
     setShowCancelModal(true);
     setCancelEvent({ ...cancelEvent, eventId: eventId, userId: userId });
   };
-
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
 
   return (
     <Styles>

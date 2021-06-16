@@ -288,7 +288,6 @@ function ActiveEvents() {
 
   const renderNoEventMessage = () => {
     if (noEvent) {
-      console.log("noooo");
       return (
         <div>
           <NoEvent></NoEvent>

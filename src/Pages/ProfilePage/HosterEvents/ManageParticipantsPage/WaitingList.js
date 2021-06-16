@@ -9,7 +9,6 @@ import {
 } from "../../../../utils/firebase.js";
 import { useParams } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
-import sadFace from "../../../../images/sad.svg";
 import noApplicantImage from "../../../../images/noApplicant.png";
 
 const EventsContainer = styled.div`
@@ -177,7 +176,6 @@ function WaitingList() {
     await Promise.all(
       newApplicants.map((applicant) => {
         applicant.participantInfo.click = false;
-        console.log(applicant);
         applicantsArray.push(applicant.participantInfo);
         return true;
       })
@@ -187,10 +185,6 @@ function WaitingList() {
     }
     setApplicants(applicantsArray);
   };
-
-  useEffect(() => {
-    console.log(applicants);
-  }, [applicants]);
 
   useEffect(() => {
     getApplicantsData();
@@ -265,7 +259,6 @@ function WaitingList() {
   };
 
   const renderRejectButton = (e) => {
-    console.log(event);
     const startT = event.startTime.seconds * 1000;
     const currentT = new Date().getTime();
     const eventPassed = startT < currentT;
@@ -294,10 +287,8 @@ function WaitingList() {
       if (applicant.participantId === e.target.id) {
         applicant.click = true;
       }
-      console.log(applicant);
       return applicant;
     });
-    console.log(updatedApplicants);
     setApplicants([...updatedApplicants]);
   };
 

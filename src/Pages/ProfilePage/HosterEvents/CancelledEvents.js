@@ -116,7 +116,6 @@ function CancelledEvents() {
 
   const renderNoEventMessage = () => {
     if (noEvent) {
-      console.log("noooo");
       return <NoEvent></NoEvent>;
     }
   };

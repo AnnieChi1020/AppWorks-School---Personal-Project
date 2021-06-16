@@ -80,9 +80,6 @@ function Header() {
   //   setGetLoggedStatus(true);
   // }, [isLogged]);
 
-  useEffect(() => {
-    console.log(isLogged);
-  }, [isLogged]);
 
   const dispatch = useDispatch();
 

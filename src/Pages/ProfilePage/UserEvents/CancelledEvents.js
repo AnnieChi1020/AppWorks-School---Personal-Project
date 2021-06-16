@@ -101,10 +101,6 @@ function UserCancelledEvents() {
   const [events, setEvents] = useState("");
   const [noEvent, setNoEvent] = useState(false);
 
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
-
   const userId = useSelector((state) => state.isLogged.userId);
 
   const checkEventPassed = (event) => {
@@ -130,9 +126,7 @@ function UserCancelledEvents() {
     await Promise.all(
       await applyingIdArray.map(async (id) => {
         const event = await getEventInfo(id);
-        console.log(event);
         const eventPassed = checkEventPassed(event);
-        console.log(eventPassed);
         if (eventPassed) {
           event.passed = true;
           eventInfoArray.push(event);
@@ -181,9 +175,7 @@ function UserCancelledEvents() {
   };
 
   const renderNoEventMessage = () => {
-    console.log("Hi");
     if (noEvent) {
-      console.log("noooo");
       return <NoEvent></NoEvent>;
     }
   };
