@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createUserAuth,
@@ -8,13 +8,12 @@ import {
   getCurrentUser,
   getUserProfile,
 } from "../utils/firebase.js";
+import { validateEmail, validatePassword } from "../utils/validation.js";
 import { Modal, Form } from "react-bootstrap";
 import { successAlertText, errorAlertText } from "../components/Alert.js";
-
 import { toast } from "react-toastify";
-// import ErrorIcon from "@material-ui/icons/Error";
 
-const Wrapper = styled.div`
+const Container = styled.div`
   width: 50%;
   margin: 0 auto;
 `;
@@ -28,13 +27,16 @@ const Header = styled.div`
   cursor: pointer;
 `;
 
-const HeaderActive = styled.div`
-  width: 100%;
-  font-size: 20px;
-  text-align: center;
-  padding-bottom: 10px;
+const UserHeaderActive = styled(Header)`
   font-weight: 600;
   cursor: default;
+  border-bottom: 2px solid #40a3cb;
+  color: #40a3cb;
+`;
+
+const OrgHeaderActive = styled(UserHeaderActive)`
+  border-bottom: 2px solid #54a783;
+  color: #54a783;
 `;
 
 const ButtonContainer = styled.div`
@@ -45,18 +47,7 @@ const ButtonContainer = styled.div`
   grid-gap: 10px;
 `;
 
-const SwitchButton = styled.button`
-  width: 100%;
-  height: 30px;
-  margin-top: 20px;
-  border-radius: 8px;
-  border: solid 1px #40a3cb;
-  padding: 0 10px;
-  background-color: white;
-  color: #40a3cb;
-`;
-
-const SubmitButton = styled.button`
+const PrimaryButton = styled.button`
   width: 100%;
   height: 30px;
   margin-top: 20px;
@@ -67,21 +58,29 @@ const SubmitButton = styled.button`
   color: white;
 `;
 
-const styles = {
-  modal: {
-    marginTop: "100px",
-  },
-  modalHeader: {
-    justifyContent: "space-evenly",
-    border: "none",
-  },
-  modalTitle: {
-    paddingBottom: "5px",
-  },
-  modalFooter: {
-    border: "none",
-  },
-};
+const SecondaryButton = styled(PrimaryButton)`
+  border-color: #40a3cb;
+  background-color: white;
+  color: #40a3cb;
+`;
+
+const OrgPrimaryButton = styled(PrimaryButton)`
+  background-color: #57bc90;
+`;
+
+const OrgSecondaryButton = styled(SecondaryButton)`
+  border-color: #57bc90;
+  color: #57bc90;
+`;
+
+const StyledModal = styled(Modal)`
+  margin-top: 100px;
+`;
+
+const StyledModalHeader = styled(Modal.Header)`
+  justify-content: space-evenly;
+  border: none;
+`;
 
 const Styles = styled.div`
   .invalid-feedback {
@@ -130,7 +129,7 @@ function Login() {
     return hosterData;
   };
 
-  const clearValidationStatus = () => {
+  const initValidationStatus = () => {
     setEmailIsInvalid(false);
     setPasswordIsInvalid(false);
     setNameIsInvalid(false);
@@ -139,8 +138,7 @@ function Login() {
 
   const handleActionChange = (e) => {
     setAction(e.target.id);
-    setValidated(false);
-    clearValidationStatus();
+    initValidationStatus();
     const inputs = document.querySelectorAll("input");
     inputs.forEach((input) => {
       input.value = "";
@@ -149,8 +147,7 @@ function Login() {
 
   const handleIdentityChange = (e) => {
     setIdentity(e.target.id);
-    setValidated(false);
-    clearValidationStatus();
+    initValidationStatus();
     const inputs = document.querySelectorAll("input");
     inputs.forEach((input) => {
       input.value = "";
@@ -240,27 +237,18 @@ function Login() {
         }
       }
     }
-  };
-
-  const [validated, setValidated] = useState(false);
+  }; 
 
   const handleLoginSubmit = async (event) => {
     const inputs = event.currentTarget;
-    const validRegex =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!inputs.email.value.match(validRegex)) {
-      setEmailIsInvalid(true);
-    } else {
-      setEmailIsInvalid(false);
-    }
 
-    if (inputs.password.value.length < 6) {
-      setPasswordIsInvalid(true);
-    } else {
-      setPasswordIsInvalid(false);
-    }
+    const emailIsValid = validateEmail(inputs.email.value, setEmailIsInvalid);
+    const passwordIsValid = validatePassword(
+      inputs.password.value,
+      setPasswordIsInvalid
+    );
 
-    if (inputs.checkValidity() === true) {
+    if (emailIsValid && passwordIsValid) {
       login(inputs);
     }
 
@@ -271,24 +259,16 @@ function Login() {
   const handleSignupSubmit = async (event) => {
     const inputs = event.currentTarget;
 
-    event.preventDefault();
-    event.stopPropagation();
-
     if (!inputs.name.value) {
       setNameIsInvalid(true);
     } else {
       setNameIsInvalid(false);
     }
 
-    const validRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (!inputs.email.value.match(validRegex)) {
-      setEmailIsInvalid(true);
-    } else {
-      setEmailIsInvalid(false);
-    }
+    validateEmail(inputs);
 
     if (inputs.password.value.length < 6) {
+      console.log("less than 6 digits");
       setPasswordIsInvalid(true);
     } else {
       setPasswordIsInvalid(false);
@@ -303,75 +283,69 @@ function Login() {
       }
     }
 
-    if (inputs.checkValidity() === true) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (
+      !nameIsInvalid &&
+      !emailIsInvalid &&
+      !passwordIsInvalid &&
+      !phoneIsInvalid
+    ) {
       signup(inputs);
     }
   };
 
   const renderModalHeader = () => {
     return identity === "user" && action === "login" ? (
-      <Modal.Header style={styles.modalHeader} className="mx-2 pb-0">
-        <HeaderActive
-          id={"user"}
-          style={{ borderBottom: "2px solid #40a3cb", color: "#40a3cb" }}
-          onClick={(e) => handleIdentityChange(e)}
-        >
+      <StyledModalHeader className="mx-2 pb-0">
+        <UserHeaderActive id={"user"} onClick={(e) => handleIdentityChange(e)}>
           志工登入
-        </HeaderActive>
+        </UserHeaderActive>
         <Header id={"organization"} onClick={(e) => handleIdentityChange(e)}>
           機構登入
         </Header>
-      </Modal.Header>
+      </StyledModalHeader>
     ) : identity === "user" ? (
-      <Modal.Header style={styles.modalHeader} className="mx-2 pb-0">
-        <HeaderActive
-          id={"user"}
-          style={{ borderBottom: "2px solid #40a3cb", color: "#40a3cb" }}
-          onClick={(e) => handleIdentityChange(e)}
-        >
+      <StyledModalHeader className="mx-2 pb-0">
+        <UserHeaderActive id={"user"} onClick={(e) => handleIdentityChange(e)}>
           志工註冊
-        </HeaderActive>
+        </UserHeaderActive>
         <Header id={"organization"} onClick={(e) => handleIdentityChange(e)}>
           機構註冊
         </Header>
-      </Modal.Header>
+      </StyledModalHeader>
     ) : action === "login" ? (
-      <Modal.Header style={styles.modalHeader} className="mx-2 pb-0">
+      <StyledModalHeader className="mx-2 pb-0">
         <Header id={"user"} onClick={(e) => handleIdentityChange(e)}>
           志工登入
         </Header>
-        <HeaderActive
+        <OrgHeaderActive
           id={"organization"}
           onClick={(e) => handleIdentityChange(e)}
-          style={{ borderBottom: "2px solid #54a783", color: "#54a783" }}
         >
           機構登入
-        </HeaderActive>
-      </Modal.Header>
+        </OrgHeaderActive>
+      </StyledModalHeader>
     ) : (
-      <Modal.Header style={styles.modalHeader} className="mx-2 pb-0">
+      <StyledModalHeader className="mx-2 pb-0">
         <Header id={"user"} onClick={(e) => handleIdentityChange(e)}>
           志工註冊
         </Header>
-        <HeaderActive
+        <OrgHeaderActive
           id={"organization"}
           onClick={(e) => handleIdentityChange(e)}
-          style={{ borderBottom: "2px solid #54a783", color: "#54a783" }}
         >
           機構註冊
-        </HeaderActive>
-      </Modal.Header>
+        </OrgHeaderActive>
+      </StyledModalHeader>
     );
   };
 
   const userLogin = () => {
     return (
       <Styles>
-        <Form
-          noValidate
-          // validated={validated}
-          onSubmit={handleLoginSubmit}
-        >
+        <Form noValidate onSubmit={handleLoginSubmit}>
           <Form.Group controlId="email">
             <Form.Control
               type="email"
@@ -389,8 +363,6 @@ function Login() {
             >
               請輸入正確的email
             </Form.Control.Feedback>
-
-            {/* <TestAccount>測試帳號：jeannie@gmail.com</TestAccount> */}
           </Form.Group>
           <Form.Group controlId="password">
             <Form.Control
@@ -411,10 +383,10 @@ function Login() {
             </Form.Control.Feedback>
           </Form.Group>
           <ButtonContainer>
-            <SwitchButton id="signup" onClick={(e) => handleActionChange(e)}>
+            <SecondaryButton id="signup" onClick={(e) => handleActionChange(e)}>
               立即註冊
-            </SwitchButton>
-            <SubmitButton type="submit">登入</SubmitButton>
+            </SecondaryButton>
+            <PrimaryButton type="submit">登入</PrimaryButton>
           </ButtonContainer>
         </Form>
       </Styles>
@@ -424,7 +396,7 @@ function Login() {
   const organizationLogin = () => {
     return (
       <Styles>
-        <Form noValidate validated={validated} onSubmit={handleLoginSubmit}>
+        <Form noValidate onSubmit={handleLoginSubmit}>
           <Form.Group controlId="email">
             <Form.Control
               type="email"
@@ -462,16 +434,13 @@ function Login() {
             </Form.Control.Feedback>
           </Form.Group>
           <ButtonContainer>
-            <SwitchButton
+            <OrgSecondaryButton
               id="signup"
               onClick={(e) => handleActionChange(e)}
-              style={{ border: "1px solid #57BC90", color: "#57BC90" }}
             >
               立即註冊
-            </SwitchButton>
-            <SubmitButton type="submit" style={{ backgroundColor: "#57BC90" }}>
-              登入
-            </SubmitButton>
+            </OrgSecondaryButton>
+            <OrgPrimaryButton type="submit">登入</OrgPrimaryButton>
           </ButtonContainer>
         </Form>
       </Styles>
@@ -481,7 +450,7 @@ function Login() {
   const userSignup = () => {
     return (
       <Styles>
-        <Form noValidate validated={validated} onSubmit={handleSignupSubmit}>
+        <Form noValidate onSubmit={handleSignupSubmit}>
           <Form.Group controlId="name">
             <Form.Control
               type="name"
@@ -537,10 +506,10 @@ function Login() {
             </Form.Control.Feedback>
           </Form.Group>
           <ButtonContainer>
-            <SwitchButton id="login" onClick={(e) => handleActionChange(e)}>
+            <SecondaryButton id="login" onClick={(e) => handleActionChange(e)}>
               立即登入
-            </SwitchButton>
-            <SubmitButton type="submit">註冊</SubmitButton>
+            </SecondaryButton>
+            <PrimaryButton type="submit">註冊</PrimaryButton>
           </ButtonContainer>
         </Form>
       </Styles>
@@ -550,7 +519,7 @@ function Login() {
   const organizationSignup = () => {
     return (
       <Styles>
-        <Form noValidate validated={validated} onSubmit={handleSignupSubmit}>
+        <Form noValidate onSubmit={handleSignupSubmit}>
           <Form.Group controlId="name">
             <Form.Control
               type="name"
@@ -620,20 +589,20 @@ function Login() {
               type="invalid"
               style={{ position: "inherit" }}
             >
-              請輸入連絡電話
+              請輸入正確的連絡電話
             </Form.Control.Feedback>
           </Form.Group>
           <ButtonContainer>
-            <SwitchButton
+            <SecondaryButton
               id="login"
               onClick={(e) => handleActionChange(e)}
               style={{ border: "1px solid #57BC90", color: "#57BC90" }}
             >
               立即登入
-            </SwitchButton>
-            <SubmitButton type="submit" style={{ backgroundColor: "#57BC90" }}>
+            </SecondaryButton>
+            <PrimaryButton type="submit" style={{ backgroundColor: "#57BC90" }}>
               註冊
-            </SubmitButton>
+            </PrimaryButton>
           </ButtonContainer>
         </Form>
       </Styles>
@@ -641,13 +610,8 @@ function Login() {
   };
 
   return (
-    <Wrapper>
-      <Modal
-        show={loginModal}
-        onHide={handleClose}
-        style={styles.modal}
-        size="sm"
-      >
+    <Container>
+      <StyledModal show={loginModal} onHide={handleClose} size="sm">
         {renderModalHeader()}
         <Modal.Body className="mx-2 py-4">
           {action === "login" && identity === "user"
@@ -658,8 +622,8 @@ function Login() {
             ? userSignup()
             : organizationSignup()}
         </Modal.Body>
-      </Modal>
-    </Wrapper>
+      </StyledModal>
+    </Container>
   );
 }
 

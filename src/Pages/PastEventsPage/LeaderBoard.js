@@ -151,6 +151,7 @@ function LeaderBoard() {
 
   useEffect(() => {
     getCompletedNumber();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
