@@ -19,3 +19,24 @@ export const validatePassword = (password, callback) => {
     return true;
   }
 };
+
+export const validatePhoneNum = (phoneNum, callback) => {
+  const phoneno = /^[09]{2}[0-9]{8}$/;
+  if (!phoneNum.match(phoneno)) {
+    callback(true);
+    return false;
+  } else {
+    callback(false);
+    return true;
+  }
+};
+
+export const validateName = (name, callback) => {
+  if (!name) {
+    callback(true);
+    return false;
+  } else {
+    callback(false);
+    return true;
+  }
+};

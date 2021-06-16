@@ -8,7 +8,12 @@ import {
   getCurrentUser,
   getUserProfile,
 } from "../utils/firebase.js";
-import { validateEmail, validatePassword } from "../utils/validation.js";
+import {
+  validateEmail,
+  validatePassword,
+  validatePhoneNum,
+  validateName,
+} from "../utils/validation.js";
 import { Modal, Form } from "react-bootstrap";
 import { successAlertText, errorAlertText } from "../components/Alert.js";
 import { toast } from "react-toastify";
@@ -82,14 +87,11 @@ const StyledModalHeader = styled(Modal.Header)`
   border: none;
 `;
 
-const Styles = styled.div`
-  .invalid-feedback {
-    margin-top: 5px;
-  }
-  input:focus {
-    outline: none !important;
-  }
+const StyledFormControlFeedback = styled(Form.Control.Feedback)`
+  position: inherit !important;
 `;
+
+const Styles = styled.div``;
 
 function Login() {
   const loginModal = useSelector((state) => state.modal.login);
@@ -107,7 +109,7 @@ function Login() {
   const dispatch = useDispatch();
 
   const constructUserData = (userId, email, name) => {
-    let userData = {
+    const userData = {
       id: userId,
       role: 0,
       userEmail: email,
@@ -118,7 +120,7 @@ function Login() {
   };
 
   const constructHosterData = (userId, email, name, phone) => {
-    let hosterData = {
+    const hosterData = {
       id: userId,
       role: 1,
       orgEmail: email,
@@ -136,23 +138,23 @@ function Login() {
     setPhoneIsInvalid(false);
   };
 
-  const handleActionChange = (e) => {
-    setAction(e.target.id);
-    initValidationStatus();
+  const resetInputs = () => {
     const inputs = document.querySelectorAll("input");
     inputs.forEach((input) => {
       input.value = "";
     });
   };
 
+  const handleActionChange = (e) => {
+    setAction(e.target.id);
+    initValidationStatus();
+    resetInputs();
+  };
+
   const handleIdentityChange = (e) => {
     setIdentity(e.target.id);
     initValidationStatus();
-    const inputs = document.querySelectorAll("input");
-    inputs.forEach((input) => {
-      input.value = "";
-    });
-    return;
+    resetInputs();
   };
 
   const signup = async (inputs) => {
@@ -237,9 +239,12 @@ function Login() {
         }
       }
     }
-  }; 
+  };
 
   const handleLoginSubmit = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     const inputs = event.currentTarget;
 
     const emailIsValid = validateEmail(inputs.email.value, setEmailIsInvalid);
@@ -251,46 +256,32 @@ function Login() {
     if (emailIsValid && passwordIsValid) {
       login(inputs);
     }
-
-    event.preventDefault();
-    event.stopPropagation();
   };
 
   const handleSignupSubmit = async (event) => {
-    const inputs = event.currentTarget;
-
-    if (!inputs.name.value) {
-      setNameIsInvalid(true);
-    } else {
-      setNameIsInvalid(false);
-    }
-
-    validateEmail(inputs);
-
-    if (inputs.password.value.length < 6) {
-      console.log("less than 6 digits");
-      setPasswordIsInvalid(true);
-    } else {
-      setPasswordIsInvalid(false);
-    }
-
-    if (inputs.phone) {
-      const phoneno = /^[09]{2}[0-9]{8}$/;
-      if (!inputs.phone.value.match(phoneno)) {
-        setPhoneIsInvalid(true);
-      } else {
-        setPhoneIsInvalid(false);
-      }
-    }
-
     event.preventDefault();
     event.stopPropagation();
 
+    const inputs = event.currentTarget;
+
+    const nameIsValid = validateName(inputs.name.value, setNameIsInvalid);
+    const emailIsValid = validateEmail(inputs.email.value, setEmailIsInvalid);
+    const passwordIsValid = validatePassword(
+      inputs.password.value,
+      setPasswordIsInvalid
+    );
+    let phoneIsValid;
+    if (inputs.phone) {
+      phoneIsValid = validatePhoneNum(inputs.phone.value, setPhoneIsInvalid);
+    } else {
+      phoneIsValid = null;
+    }
+
     if (
-      !nameIsInvalid &&
-      !emailIsInvalid &&
-      !passwordIsInvalid &&
-      !phoneIsInvalid
+      nameIsValid &&
+      emailIsValid &&
+      passwordIsValid &&
+      (phoneIsValid || phoneIsValid === null)
     ) {
       signup(inputs);
     }
@@ -342,7 +333,7 @@ function Login() {
     );
   };
 
-  const userLogin = () => {
+  const renderUserLogin = () => {
     return (
       <Styles>
         <Form noValidate onSubmit={handleLoginSubmit}>
@@ -350,37 +341,29 @@ function Login() {
             <Form.Control
               type="email"
               placeholder="jennie@gmail.com"
-              className="mb-1 formInput"
               required
               isInvalid={emailIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請輸入正確的email
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group controlId="password">
             <Form.Control
               type="password"
               placeholder="000000"
-              className="mb-1"
               required
               isInvalid={passwordIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               密碼需超過6個字元
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <ButtonContainer>
             <SecondaryButton id="signup" onClick={(e) => handleActionChange(e)}>
@@ -393,7 +376,7 @@ function Login() {
     );
   };
 
-  const organizationLogin = () => {
+  const renderOrgLogin = () => {
     return (
       <Styles>
         <Form noValidate onSubmit={handleLoginSubmit}>
@@ -401,37 +384,29 @@ function Login() {
             <Form.Control
               type="email"
               placeholder="doggy_place@gmail.com"
-              className="mb-1"
               required
               isInvalid={emailIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請輸入正確的email
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group controlId="password">
             <Form.Control
               type="password"
               placeholder="000000"
-              className="mb-1"
               required
               isInvalid={passwordIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               密碼需超過6個字元
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <ButtonContainer>
             <OrgSecondaryButton
@@ -447,7 +422,7 @@ function Login() {
     );
   };
 
-  const userSignup = () => {
+  const renderUserSignup = () => {
     return (
       <Styles>
         <Form noValidate onSubmit={handleSignupSubmit}>
@@ -455,55 +430,43 @@ function Login() {
             <Form.Control
               type="name"
               placeholder="姓名"
-              className="mb-1"
               required
               isInvalid={nameIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請輸入姓名
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group controlId="email">
             <Form.Control
               type="email"
               placeholder="Email"
-              className="mb-1"
               required
               isInvalid={emailIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請輸入正確的email
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group controlId="password">
             <Form.Control
               type="password"
               placeholder="密碼"
-              className="mb-1"
               required
               isInvalid={passwordIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               密碼需超過6個字元
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <ButtonContainer>
             <SecondaryButton id="login" onClick={(e) => handleActionChange(e)}>
@@ -516,7 +479,7 @@ function Login() {
     );
   };
 
-  const organizationSignup = () => {
+  const renderOrgSignup = () => {
     return (
       <Styles>
         <Form noValidate onSubmit={handleSignupSubmit}>
@@ -524,85 +487,66 @@ function Login() {
             <Form.Control
               type="name"
               placeholder="機構名稱"
-              className="mb-1"
               required
               isInvalid={nameIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請輸入機構名稱
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group controlId="email">
             <Form.Control
               type="email"
               placeholder="Email"
-              className="mb-1"
               required
               isInvalid={emailIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請輸入正確的email
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group controlId="password">
             <Form.Control
               type="password"
               placeholder="密碼"
-              className="mb-1"
               required
               isInvalid={passwordIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               密碼需超過6個字元
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group controlId="phone">
             <Form.Control
               type="text"
               placeholder="0912345678"
-              className="mb-1"
               required
               isInvalid={phoneIsInvalid}
               onKeyPress={(e) => {
                 e.key === "Enter" && e.preventDefault();
               }}
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請輸入正確的連絡電話
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <ButtonContainer>
-            <SecondaryButton
+            <OrgSecondaryButton
               id="login"
               onClick={(e) => handleActionChange(e)}
-              style={{ border: "1px solid #57BC90", color: "#57BC90" }}
             >
               立即登入
-            </SecondaryButton>
-            <PrimaryButton type="submit" style={{ backgroundColor: "#57BC90" }}>
-              註冊
-            </PrimaryButton>
+            </OrgSecondaryButton>
+            <OrgPrimaryButton type="submit">註冊</OrgPrimaryButton>
           </ButtonContainer>
         </Form>
       </Styles>
@@ -615,12 +559,12 @@ function Login() {
         {renderModalHeader()}
         <Modal.Body className="mx-2 py-4">
           {action === "login" && identity === "user"
-            ? userLogin()
+            ? renderUserLogin()
             : action === "login" && identity === "organization"
-            ? organizationLogin()
+            ? renderOrgLogin()
             : identity === "user"
-            ? userSignup()
-            : organizationSignup()}
+            ? renderUserSignup()
+            : renderOrgSignup()}
         </Modal.Body>
       </StyledModal>
     </Container>
