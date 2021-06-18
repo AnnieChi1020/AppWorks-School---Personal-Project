@@ -85,13 +85,12 @@ function HosterEvents() {
   const handleTabClick = (tabId) => {
     setEventStatus(tabId);
     let currentTabs = tabs;
-    currentTabs.map((tab) => {
+    currentTabs.forEach((tab) => {
       if (tab.name === tabId) {
         tab.selected = true;
       } else {
         tab.selected = false;
       }
-      return null;
     });
     setTabs(currentTabs);
   };

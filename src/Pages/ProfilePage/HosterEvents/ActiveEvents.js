@@ -14,6 +14,7 @@ import { Col, Card, Modal } from "react-bootstrap";
 import NoEvent from "../components/NoEvent.js";
 import { toast } from "react-toastify";
 import { successAlertText } from "../../../components/Alert.js";
+import { reformatTimestamp } from "../../../utils/time.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -81,15 +82,10 @@ const PrimaryButton = styled.button`
   color: white;
 `;
 
-const SecondaryButton = styled.button`
+const SecondaryButton = styled(PrimaryButton)`
   width: 75px;
-  flex-grow: 1;
-  font-size: 14px;
-  line-height: 20px;
-  padding: 3px 5px;
   margin-left: 5px;
-  border: 1px solid #89b485;
-  border-radius: 5px;
+  border-color: #89b485;
   background-color: white;
   color: #719b6d;
 `;
@@ -151,17 +147,10 @@ const ModalPrimaryButton = styled.button`
   cursor: pointer;
 `;
 
-const ModalSecondaryButton = styled.button`
-  width: 100%;
-  font-size: 14px;
-  line-height: 20px;
-  padding: 3px 5px;
-  border: 1px solid #89b485;
-  border-radius: 5px;
+const ModalSecondaryButton = styled(ModalPrimaryButton)`
+  border-color: #89b485;
   background-color: white;
   color: #719b6d;
-  margin: 0 auto;
-  cursor: pointer;
 `;
 
 const styles = {
@@ -191,6 +180,12 @@ const Styles = styled.div`
 `;
 
 function ActiveEvents() {
+  const USER_APPLYING = 0;
+  const USER_CONFIRMED = 1;
+  const USER_CANCELLED = 9;
+  const EVENT_ACTIVE = 0;
+  const EVENT_CANCELLED = 9;
+
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
@@ -201,8 +196,8 @@ function ActiveEvents() {
     eventId: "",
   });
 
-  const getHosterEventsData = async () => {
-    const newEvents = await getHosterEvents(hosterId, 0);
+  const getActiveEvents = async () => {
+    const newEvents = await getHosterEvents(hosterId, EVENT_ACTIVE);
     setEvents(newEvents);
     if (newEvents.length === 0) {
       setNoEvent(true);
@@ -210,7 +205,7 @@ function ActiveEvents() {
   };
 
   useEffect(() => {
-    getHosterEventsData();
+    getActiveEvents();
   }, []);
 
   useEffect(() => {}, [events]);
@@ -223,53 +218,37 @@ function ActiveEvents() {
     history.push(`profile/edit-event/${id}`);
   };
 
+  const updateParticipantsStatus = async (eventId, currentStatus) => {
+    const participants = await getParticipants(eventId, currentStatus);
+    participants.forEach((participant) => {
+      participant.participantInfo.participantStatus = USER_CANCELLED;
+      updateParticipantStatus(
+        eventId,
+        participant.participantInfo.participantId,
+        participant
+      );
+    });
+  };
+
   const handleCancelClick = async (id) => {
     const eventData = await getEventInfo(id);
-    eventData.eventStatus = 9;
+    eventData.eventStatus = EVENT_CANCELLED;
     updateEvent(id, eventData);
     let newEventsArray = events;
-    newEventsArray.map((event) => {
+    newEventsArray.forEach((event) => {
       if (event.eventId === id) {
-        event.eventStatus = 9;
-        return event;
-      } else {
-        return event;
+        event.eventStatus = EVENT_CANCELLED;
       }
     });
     setEvents(newEventsArray);
 
-    const applyingUserData = await getParticipants(id, 0);
-    applyingUserData.map((user) => {
-      user.participantInfo.participantStatus = 9;
-      updateParticipantStatus(id, user.participantInfo.participantId, user);
-      return true;
-    });
-
-    const confirmedUserData = await getParticipants(id, 1);
-    confirmedUserData.map((user) => {
-      user.participantInfo.participantStatus = 9;
-      updateParticipantStatus(id, user.participantInfo.participantId, user);
-      return true;
-    });
+    updateParticipantsStatus(id, USER_APPLYING);
+    updateParticipantsStatus(id, USER_CONFIRMED);
 
     toast.success(successAlertText("成功取消活動"), {
       position: toast.POSITION.TOP_CENTER,
     });
     setShowCancelModal(false);
-  };
-
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const reformatedTime = `${year}-${month}-${date} (${day})`;
-    return reformatedTime;
   };
 
   const handleEventClick = (e) => {
@@ -339,15 +318,13 @@ function ActiveEvents() {
                       >
                         編輯活動
                       </SecondaryButton>
-                      {event.eventStatus === 9 ? (
+                      {event.eventStatus === EVENT_CANCELLED ? (
                         <SecondaryButton disabled style={{ opacity: ".6" }}>
                           已取消
                         </SecondaryButton>
                       ) : (
                         <SecondaryButton
-                          // onClick={(e) => handleCancelClick(event.eventId, e)}
                           onClick={(e) => {
-                            // handleCancelClick(event.eventId, userId, e);
                             handleShow(event.eventId);
                           }}
                         >

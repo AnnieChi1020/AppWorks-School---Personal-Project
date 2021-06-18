@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Col, Card, Modal } from "react-bootstrap";
 import NoEvent from "../components/NoEvent.js";
 import Results from "./EventResultPage/EventResultPage.js";
+import { reformatTimestamp } from "../../../utils/time.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -121,6 +122,8 @@ const Styles = styled.div`
 `;
 
 function ClosedEvents() {
+  const EVENT_COMPLETED = 1;
+
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
@@ -148,8 +151,8 @@ function ClosedEvents() {
     }
   }, [resultCompleted]);
 
-  const getHosterEventsData = async () => {
-    const newEvents = await getHosterEvents(hosterId, 1);
+  const getClosedEvents = async () => {
+    const newEvents = await getHosterEvents(hosterId, EVENT_COMPLETED);
     setEvents(newEvents);
     if (newEvents.length === 0) {
       setNoEvent(true);
@@ -157,29 +160,12 @@ function ClosedEvents() {
   };
 
   useEffect(() => {
-    getHosterEventsData();
+    getClosedEvents();
   }, []);
 
   let history = useHistory();
   const handleParticipantClick = (id) => {
     history.push(`profile/manage-participants/${id}`);
-  };
-  // const handleResultClick = (id) => {
-  //   history.push(`profile/event-result/${id}`);
-  // };
-
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const reformatedTime = `${year}-${month}-${date} (${day})`;
-    return reformatedTime;
   };
 
   const handleEventClick = (e) => {
@@ -188,10 +174,7 @@ function ClosedEvents() {
 
   const renderResultButton = (event) => {
     return !event.resultContent ? (
-      <SecondaryButton
-        // onClick={() => handleResultClick(event.eventId)}
-        onClick={() => handleShow(event.eventId)}
-      >
+      <SecondaryButton onClick={() => handleShow(event.eventId)}>
         分享活動成果
       </SecondaryButton>
     ) : (

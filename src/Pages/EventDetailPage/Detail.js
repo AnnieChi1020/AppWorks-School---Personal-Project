@@ -29,51 +29,6 @@ const EventImage = styled.img`
   object-fit: cover;
 `;
 
-const EventDetailContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  /* width: calc(100% - 270px); */
-  width: 100%;
-  position: relative;
-`;
-
-const EventMainContianer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-`;
-
-const SubtitleContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  margin-top: 15px;
-  align-items: flex-start;
-`;
-
-const Subtitle = styled.div`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 700;
-  margin-bottom: 5px;
-  @media (max-width: 540px) {
-    font-size: 14px;
-    line-height: 20px;
-  }
-`;
-
-const SubtitleIconContainer = styled.div`
-  width: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-`;
-
-const SubtitleTextContainer = styled.div`
-  width: calc(100% - 30px);
-`;
-
 const EventTitle = styled.h2`
   font-size: 28px;
   line-height: 32px;
@@ -86,6 +41,53 @@ const EventTitle = styled.h2`
     line-height: 28px;
     margin-top: 20px;
     margin-bottom: 10px;
+  }
+`;
+
+const EventDetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+`;
+
+const SubtitleContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  align-items: flex-start;
+`;
+
+const IconContainer = styled.div`
+  width: 25px;
+  margin-right: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+  text-align: left;
+  margin-top: 2px;
+  color: #6c757d;
+  display: flex;
+  justify-content: flex-start;
+`;
+
+const TextContainer = styled.div`
+  width: calc(100% - 25px);
+`;
+
+const Subtitle = styled.div`
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  @media (max-width: 540px) {
+    font-size: 14px;
+    line-height: 20px;
   }
 `;
 
@@ -145,15 +147,6 @@ const Button = styled.button`
 `;
 
 const styles = {
-  subtitleIcon: {
-    textAlign: "left",
-    width: "25px",
-    marginRight: "5px",
-    marginTop: "2px",
-    color: "#6c757d",
-    display: "flex",
-    justifyContent: "flex-start",
-  },
   modal: {
     top: "10%",
   },
@@ -182,7 +175,6 @@ function EventDetail() {
   let eventId = id;
   const logStatus = useSelector((state) => state.isLogged);
   const signupModal = useSelector((state) => state.modal.signup);
-
 
   const dispatch = useDispatch();
 
@@ -282,64 +274,56 @@ function EventDetail() {
       {eventExist === true && (
         <Container>
           <EventImage src={event.image}></EventImage>
-          <EventMainContianer>
-            <EventDetailContainer>
-              <EventTitle>{event.title}</EventTitle>
-              <SubtitleContainer>
-                <SubtitleIconContainer>
-                  <FontAwesomeIcon icon={faClock} style={styles.subtitleIcon} />
-                </SubtitleIconContainer>
-                <SubtitleTextContainer>
-                  <Subtitle>活動時間</Subtitle>
-                  <EventText>
-                    {event.startTime} - {event.endTime}
-                  </EventText>
-                </SubtitleTextContainer>
-              </SubtitleContainer>
-              <SubtitleContainer>
-                <SubtitleIconContainer>
-                  <FontAwesomeIcon
-                    icon={faMapMarker}
-                    style={styles.subtitleIcon}
-                  />
-                </SubtitleIconContainer>
-                <SubtitleTextContainer>
-                  <Subtitle>活動地址</Subtitle>
-                  <EventText>{event.address}</EventText>
-                </SubtitleTextContainer>
-              </SubtitleContainer>
-              <SubtitleContainer>
-                <SubtitleIconContainer>
-                  <FontAwesomeIcon
-                    icon={faStickyNote}
-                    style={styles.subtitleIcon}
-                  />
-                </SubtitleIconContainer>
-                <SubtitleTextContainer>
-                  <Subtitle>工作內容</Subtitle>
-                  <EventText>{event.content}</EventText>
-                </SubtitleTextContainer>
-              </SubtitleContainer>
-              <SubtitleContainer>
-                <SubtitleIconContainer>
-                  <FontAwesomeIcon icon={faHome} style={styles.subtitleIcon} />
-                </SubtitleIconContainer>
-                <SubtitleTextContainer>
-                  <Subtitle>活動單位</Subtitle>
-                  <EventText>{event.orgName}</EventText>
-                  <EventText>{event.orgContact}</EventText>
-                </SubtitleTextContainer>
-              </SubtitleContainer>
-              {renderButton(event.status)}
-              <MapContainer>
-                <MapTitle>志工活動地圖</MapTitle>
-              </MapContainer>
-              <Map
-                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
+          <EventDetailContainer>
+            <EventTitle>{event.title}</EventTitle>
+            <SubtitleContainer>
+              <IconContainer>
+                <Icon icon={faClock} />
+              </IconContainer>
+              <TextContainer>
+                <Subtitle>活動時間</Subtitle>
+                <EventText>
+                  {event.startTime} - {event.endTime}
+                </EventText>
+              </TextContainer>
+            </SubtitleContainer>
+            <SubtitleContainer>
+              <IconContainer>
+                <Icon icon={faMapMarker} />
+              </IconContainer>
+              <TextContainer>
+                <Subtitle>活動地址</Subtitle>
+                <EventText>{event.address}</EventText>
+              </TextContainer>
+            </SubtitleContainer>
+            <SubtitleContainer>
+              <IconContainer>
+                <Icon icon={faStickyNote} Icon />
+              </IconContainer>
+              <TextContainer>
+                <Subtitle>工作內容</Subtitle>
+                <EventText>{event.content}</EventText>
+              </TextContainer>
+            </SubtitleContainer>
+            <SubtitleContainer>
+              <IconContainer>
+                <Icon icon={faHome} />
+              </IconContainer>
+              <TextContainer>
+                <Subtitle>活動單位</Subtitle>
+                <EventText>{event.orgName}</EventText>
+                <EventText>{event.orgContact}</EventText>
+              </TextContainer>
+            </SubtitleContainer>
+            {renderButton(event.status)}
+            <MapContainer>
+              <MapTitle>志工活動地圖</MapTitle>
+            </MapContainer>
+            <Map
+              src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
     &q=${event.address}`}
-              ></Map>
-            </EventDetailContainer>
-          </EventMainContianer>
+            ></Map>
+          </EventDetailContainer>
 
           <Modal show={signupModal} onHide={handleClose} style={styles.modal}>
             <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>

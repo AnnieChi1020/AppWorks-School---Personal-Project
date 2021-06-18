@@ -24,10 +24,11 @@ export const postEventInfo = (newEventRef, eventDetail) => {
   return newEventRef
     .set(eventDetail)
     .then(() => {
-      return newEventRef.id;
+      return true;
     })
     .catch((error) => {
       console.error("Error writing document: ", error);
+      return false;
     });
 };
 

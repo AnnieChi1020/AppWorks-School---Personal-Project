@@ -244,7 +244,7 @@ function PastEvents() {
   const getPastEvents = async () => {
     const newEvents = await getEvents(1);
     let eventsArray = [];
-    newEvents.map((event) => {
+    newEvents.forEach((event) => {
       const pastEvent = {
         id: event.eventId,
         image: event.eventCoverImage,
@@ -253,7 +253,6 @@ function PastEvents() {
         endTime: reformatTimestamp(event.endTime),
       };
       eventsArray.push(pastEvent);
-      return true;
     });
     eventsArray.slice(0, 9);
     setEvents(eventsArray);
@@ -289,7 +288,6 @@ function PastEvents() {
     setPageNumber([...pageArray]);
   };
 
-
   useEffect(() => {
     getTotalPages(events);
   }, [events]);
@@ -320,11 +318,10 @@ function PastEvents() {
   const getUserFeedbacks = async (id) => {
     const userData = await getParticipants(id, 1);
     let currentFeedback = [];
-    userData.map((e) => {
+    userData.forEach((e) => {
       if (e.participantInfo.participantRating !== 0) {
         currentFeedback.push(e.participantInfo);
       }
-      return true;
     });
     setUserFeedback(currentFeedback);
   };
@@ -436,19 +433,6 @@ function PastEvents() {
   return (
     <div>
       <PastEventsContainer>
-        {/* <Wrapper>
-          {events.slice(0, 9).map((event, index) => (
-            <PastEvent key={index}>
-              <Polaroid>
-                <PolaroidImage
-                  src={event.image}
-                  onClick={() => handleEventClick(event.id)}
-                />
-                <PolaroidCaption>{event.title}</PolaroidCaption>
-              </Polaroid>
-            </PastEvent>
-          ))}
-        </Wrapper> */}
         {renderPastEvents(showPageNum)}
         {renderPageButton(showPageNum)}
       </PastEventsContainer>

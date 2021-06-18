@@ -166,12 +166,11 @@ function ParticipantList() {
   const getParticipantsData = async () => {
     const newParticipants = await getParticipants(eventId, 1);
     let participantsArray = [];
-    await Promise.all(
-      newParticipants.map((e) => {
-        participantsArray.push(e.participantInfo);
-        return true;
-      })
-    );
+
+    newParticipants.forEach((e) => {
+      participantsArray.push(e.participantInfo);
+    });
+
     if (participantsArray.length === 0) {
       setNoParticipant(true);
     }

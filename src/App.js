@@ -1,32 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import {  useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   getEvents,
   updateEvent,
   checkAuthStatus,
   getUserProfile,
 } from "./utils/firebase.js";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Header from "./components/Header.js";
 // import Footer from "./components/Footer.js";
-import HomePage from "./Pages/HomePage/index.js";
-import CreateEvent from "./Pages/CreateEventPage/index.js";
-import EventDetail from "./Pages/EventDetailPage/index.js";
-import ProfilePage from "./Pages/ProfilePage/ProfilePage.js";
-import EventsPage from "./Pages/EventsPage/index.js";
-import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage/index.js";
-import EventComments from "./Pages/ProfilePage/UserEvents/CommentsPage/CommentsPage.js";
-import PastEvents from "./Pages/PastEventsPage/index.js";
-import EventResult from "./Pages/ProfilePage/HosterEvents/EventResultPage/EventResultPage.js";
-import EditEvent from "./Pages/ProfilePage/HosterEvents/EditEventPage/EditEventPage.js";
-import NotFound from "./Pages/404Page";
+import HomePage from "./Pages/HomePage";
+import CreateEvent from "./Pages/CreateEventPage";
+import EventDetail from "./Pages/EventDetailPage";
+import ProfilePage from "./Pages/ProfilePage";
+import EventsPage from "./Pages/EventsPage";
+import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage";
+import PastEvents from "./Pages/PastEventsPage";
+import EditEvent from "./Pages/ProfilePage/HosterEvents/EditEventPage";
+import NotFound from "./Pages/NotFoundPage";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -74,12 +70,14 @@ function App() {
 
   const checkLoginStatus = async () => {
     const userId = await checkAuthStatus();
-
     if (userId) {
       const userProfile = await getUserProfile(userId);
       dispatch({ type: "SIGN_IN", data: true });
       dispatch({ type: "GET_USERID", data: userId });
       dispatch({ type: "GET_USERROLE", data: userProfile.role });
+    } else {
+      dispatch({ type: "SIGN_IN", data: false });
+      dispatch({ type: "GET_USERROLE", data: false });
     }
     return;
   };
@@ -90,14 +88,13 @@ function App() {
 
   const updatePassedEvent = async () => {
     const activeEvents = await getEvents(0);
-    activeEvents.map((event) => {
+    activeEvents.forEach((event) => {
       const startT = event.startTime.seconds * 1000;
       const currentT = new Date().getTime();
       if (startT < currentT) {
         event.eventStatus = 1;
         updateEvent(event.eventId, event);
       }
-      return true;
     });
   };
   updatePassedEvent();
@@ -125,17 +122,6 @@ function App() {
               component={ManageParticipantPage}
             />
             <Route exact path="/profile/edit-event/:id" component={EditEvent} />
-
-            <Route
-              exact
-              path="/profile/event-result/:id"
-              component={EventResult}
-            />
-            <Route
-              exact
-              path="/profile/comments/:id"
-              component={EventComments}
-            />
             <Route exact path="/pastEvents" component={PastEvents} />
             <Route component={NotFound} />
           </Switch>

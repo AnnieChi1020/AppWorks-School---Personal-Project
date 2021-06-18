@@ -6,7 +6,6 @@ import { useHistory } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import noEventImage from "../../images/noEvent.png";
-// import eventBanner from "../../images/eventBanner.png";
 import eventsBackground from "../../images/events_header_2.png";
 
 import Dropdown from "react-dropdown";
@@ -27,7 +26,6 @@ const Container = styled.div`
 
 const BannerContainer = styled.div`
   width: 100%;
-  /* height: 300px; */
   padding: 30px 0;
   margin: 0 auto;
   margin-bottom: 10px;
@@ -99,22 +97,12 @@ const Filter = styled.div`
   }
 `;
 
-// const Buttons = styled.div`
-//   width: 100%;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: flex-end;
-// `;
-
 const Tags = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   flex-grow: 0;
   align-items: center;
-  @media (max-width: 760px) {
-    /* flex-wrap: wrap; */
-  }
 `;
 
 const Tag = styled.div`
@@ -142,7 +130,6 @@ const Tag = styled.div`
     padding: 5px 5px;
   }
   :hover {
-    /* background: #ebfff0; */
     box-shadow: 1px 1px 1px 1.5px rgba(0, 0, 0, 0.1);
   }
 `;
@@ -228,17 +215,6 @@ const EventTag = styled.div`
   }
 `;
 
-// const TagIcon = styled.div`
-//   width: 20px;
-//   height: 20px;
-//   background-color: white;
-//   position: absolute;
-//   border: 1px solid grey;
-//   border-radius: 50%;
-//   top: -10px;
-//   right: 10px;
-// `;
-
 const EventTime = styled.div`
   font-size: 12px;
   line-height: 16px;
@@ -255,19 +231,6 @@ const EventTitle = styled.div`
     font-size: 16px;
   }
 `;
-
-// const Button = styled.button`
-//   width: 120px;
-//   height: 35px;
-//   background-color: #0085ca;
-//   color: white;
-//   border: none;
-//   border-radius: 5px;
-//   font-size: 16px;
-//   line-height: 20px;
-//   margin-left: 20px;
-//   cursor: pointer;
-// `;
 
 const ClearButton = styled.button`
   width: 100px;
@@ -464,7 +427,6 @@ function AllEvents() {
   };
 
   const handleCitySelect = async (e) => {
-    // const newCity = e.target.value;
     const newCity = e;
     dispatch({ type: "ADD_CITY", data: newCity });
   };
@@ -537,12 +499,7 @@ function AllEvents() {
               <Tags>
                 {tagArray.map((tag, index) =>
                   selectedTag === tag ? (
-                    <TagSelected
-                    // onClick={(e) => handleTagClick(e)}
-                    // key={index}
-                    >
-                      {tag}
-                    </TagSelected>
+                    <TagSelected>{tag}</TagSelected>
                   ) : (
                     <Tag onClick={(e) => handleTagClick(e)} key={index}>
                       {tag}
@@ -562,10 +519,6 @@ function AllEvents() {
                 <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
               </SelectContainer>
             </Filter>
-            {/* <Buttons>
-          <Button>搜尋活動</Button>
-          <ClearButton onClick={handleClearButton}>清除篩選</ClearButton>
-        </Buttons> */}
           </FilterContainer>
           {events.length > 0 && (
             <Events>
@@ -587,7 +540,6 @@ function AllEvents() {
                       className="py-2 px-3"
                       style={{ position: "relative" }}
                     >
-                      {/* <TagIcon></TagIcon> */}
                       <EventTagContianer>
                         {event.eventTags.map((tag, index) => (
                           <EventTag key={index}>{tag}</EventTag>

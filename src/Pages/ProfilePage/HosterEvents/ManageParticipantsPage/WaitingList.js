@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
 import noApplicantImage from "../../../../images/noApplicant.png";
 
-const EventsContainer = styled.div`
+const Container = styled.div`
   width: 90%;
   max-width: 800px;
   display: flex;
@@ -23,6 +23,17 @@ const EventsContainer = styled.div`
   border-radius: 20px;
 `;
 
+const Title = styled.div`
+  font-size: 20px;
+  line-height: 30px;
+  padding: 5px;
+  margin: 0 auto;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  text-align: center;
+  border-bottom: 3px solid #1190cb;
+`;
+
 const Events = styled.div`
   width: 100%;
   display: flex;
@@ -31,12 +42,27 @@ const Events = styled.div`
   justify-content: center;
   margin: 0 auto;
   padding: 20px 0;
-  /* @media (max-width: 768px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-  } */
+`;
+
+const StyledCol = styled(Col)`
+  min-width: 200px !important;
+  flex-grow: 0;
+  justify-content: flex-start;
+  overflow: hidden;
+`;
+
+const StyledCard = styled(Card)`
+  border: 1px solid rgba(0, 0, 0, 0.125);
+`;
+
+const StyledCardTitle = styled(Card.Title)`
+  font-size: 16px;
+`;
+
+const StyledCardBody = styled(Card.Body)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const EventInfo = styled.div`
@@ -60,16 +86,6 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-// const NoEvent = styled.div`
-//   width: 90%;
-//   margin: 0 auto;
-//   padding: 10px 0;
-//   font-size: 16px;
-//   line-height: 24px;
-//   margin-top: 20px;
-//   text-align: center;
-// `;
-
 const RejectButton = styled.button`
   width: 75px;
   font-size: 14px;
@@ -90,38 +106,6 @@ const ConfirmButton = styled.button`
   border-radius: 5px;
   background-color: #1190cb;
   color: white;
-`;
-
-const styles = {
-  cardImage: {
-    objectFit: "cover",
-    width: "100%",
-    height: "150px",
-    cursor: "pointer",
-  },
-  cardBody: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  cardTitle: {
-    fontSize: "16px",
-  },
-  cardCol: {
-    overflow: "hidden",
-    minWidth: "200px",
-  },
-};
-
-const Title = styled.div`
-  font-size: 20px;
-  line-height: 30px;
-  padding: 5px;
-  margin: 0 auto;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  text-align: center;
-  border-bottom: 3px solid #1190cb;
 `;
 
 const NoResultDiv = styled.div`
@@ -152,18 +136,13 @@ const NoResultText = styled.div`
   color: #3d3d3d;
 `;
 
-const Styles = styled.div`
-  .eventCard {
-    border: 1px solid rgba(0, 0, 0, 0.125);
-  }
-  .col {
-    min-width: 200px !important;
-    flex-grow: 0;
-    justify-content: flex-start;
-  }
-`;
+const Styles = styled.div``;
 
 function WaitingList() {
+  const USER_APPLYING = 0;
+  const USER_CONFIRMED = 1;
+  const USER_CANCELLED = 9;
+
   let { id } = useParams();
   const eventId = id;
 
@@ -172,14 +151,13 @@ function WaitingList() {
 
   const getApplicantsData = async () => {
     let applicantsArray = [];
-    const newApplicants = await getParticipants(eventId, 0);
-    await Promise.all(
-      newApplicants.map((applicant) => {
-        applicant.participantInfo.click = false;
-        applicantsArray.push(applicant.participantInfo);
-        return true;
-      })
-    );
+    const newApplicants = await getParticipants(eventId, USER_APPLYING);
+
+    newApplicants.forEach((applicant) => {
+      applicant.participantInfo.click = false;
+      applicantsArray.push(applicant.participantInfo);
+    });
+
     if (applicantsArray.length === 0) {
       setNoApplicant(true);
     }
@@ -204,8 +182,6 @@ function WaitingList() {
   useEffect(() => {
     async function getEventDetail() {
       const data = await getEventInfo(eventId);
-      // const startDate = data.startTime.toDate().toLocaleDateString();
-      // const endDate = data.endTime.toDate().toLocaleDateString();
 
       setEvent({
         ...event,
@@ -224,13 +200,13 @@ function WaitingList() {
 
   const handleConfirmClick = async (eventId, userId) => {
     let currentStatus = await getParticipantInfo(eventId, userId);
-    currentStatus.participantInfo.participantStatus = 1;
+    currentStatus.participantInfo.participantStatus = USER_CONFIRMED;
     updateParticipantStatus(eventId, userId, currentStatus);
   };
 
   const handleRejectClick = async (eventId, userId) => {
     let currentStatus = await getParticipantInfo(eventId, userId);
-    currentStatus.participantInfo.participantStatus = 9;
+    currentStatus.participantInfo.participantStatus = USER_CANCELLED;
     updateParticipantStatus(eventId, userId, currentStatus);
   };
 
@@ -305,17 +281,17 @@ function WaitingList() {
 
   return (
     <Styles>
-      <EventsContainer>
+      <Container>
         <Title>志工活動申請</Title>
         <Events>
           {applicants.map((applicant, index) => (
-            <Col className="p-0 m-1 col" key={index}>
-              <Card className="h-100 eventCard">
-                <Card.Body style={styles.cardBody}>
+            <StyledCol className="p-0 m-1 col" key={index}>
+              <StyledCard className="h-100">
+                <StyledCardBody>
                   <EventInfo>
-                    <Card.Title style={styles.cardTitle}>
+                    <StyledCardTitle>
                       {applicant.participantName}
-                    </Card.Title>
+                    </StyledCardTitle>
                     <Card.Text>
                       <EventText>{applicant.participantPhone}</EventText>
                       <EventText>{applicant.participantEmail}</EventText>
@@ -325,13 +301,13 @@ function WaitingList() {
                     {renderConfirmButton(applicant)}
                     {renderRejectButton(applicant)}
                   </ButtonsContainer>
-                </Card.Body>
-              </Card>
-            </Col>
+                </StyledCardBody>
+              </StyledCard>
+            </StyledCol>
           ))}
           {renderNoFeedbackMessage()}
         </Events>
-      </EventsContainer>
+      </Container>
     </Styles>
   );
 }

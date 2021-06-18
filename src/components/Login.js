@@ -12,7 +12,7 @@ import {
   validateEmail,
   validatePassword,
   validatePhoneNum,
-  validateName,
+  validateInput,
 } from "../utils/validation.js";
 import { Modal, Form } from "react-bootstrap";
 import { successAlertText, errorAlertText } from "../components/Alert.js";
@@ -264,7 +264,7 @@ function Login() {
 
     const inputs = event.currentTarget;
 
-    const nameIsValid = validateName(inputs.name.value, setNameIsInvalid);
+    const nameIsValid = validateInput(inputs.name.value, setNameIsInvalid);
     const emailIsValid = validateEmail(inputs.email.value, setEmailIsInvalid);
     const passwordIsValid = validatePassword(
       inputs.password.value,

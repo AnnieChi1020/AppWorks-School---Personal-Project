@@ -79,12 +79,14 @@ const Styles = styled.div`
 `;
 
 function CancelledEvents() {
+  const EVENT_CANCELLED = 9;
+
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
 
-  const getHosterEventsData = async () => {
-    const newEvents = await getHosterEvents(hosterId, 9);
+  const getCancelledEvents = async () => {
+    const newEvents = await getHosterEvents(hosterId, EVENT_CANCELLED);
     setEvents(newEvents);
     if (newEvents.length === 0) {
       setNoEvent(true);
@@ -92,7 +94,7 @@ function CancelledEvents() {
   };
 
   useEffect(() => {
-    getHosterEventsData();
+    getCancelledEvents();
   }, []);
 
   const getDay = (day) => {

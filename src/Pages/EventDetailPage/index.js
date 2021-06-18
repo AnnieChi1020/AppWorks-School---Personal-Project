@@ -11,7 +11,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-function EventDetail() {
+function EventDetailPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -28,4 +28,4 @@ function EventDetail() {
   );
 }
 
-export default EventDetail;
+export default EventDetailPage;

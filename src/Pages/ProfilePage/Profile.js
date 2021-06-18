@@ -383,11 +383,9 @@ function Profile() {
           dataMock.forEach((type) => {
             if (event.eventTags.includes(type.title)) {
               type.value++;
-              return;
-            } else {
-              return;
             }
           });
+          return null;
         })
       );
     }

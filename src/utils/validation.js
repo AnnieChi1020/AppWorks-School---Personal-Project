@@ -31,8 +31,22 @@ export const validatePhoneNum = (phoneNum, callback) => {
   }
 };
 
-export const validateName = (name, callback) => {
-  if (!name) {
+export const validateInput = (input, callback) => {
+  if (!input) {
+    callback(true);
+    return false;
+  } else {
+    callback(false);
+    return true;
+  }
+};
+
+export const validateEventTime = (eventTime, callback) => {
+  const start = new Date(
+    eventTime.startDate + " " + eventTime.startTime
+  ).valueOf();
+  const end = new Date(eventTime.endDate + " " + eventTime.endTime).valueOf();
+  if (start >= end) {
     callback(true);
     return false;
   } else {
