@@ -20,7 +20,6 @@ export const reformatTimestamp = (timestamp) => {
     const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
     return dayArray[day];
   };
-
   const year = timestamp.toDate().getFullYear();
   const month = timestamp.toDate().getMonth() + 1;
   const date = timestamp.toDate().getDate();

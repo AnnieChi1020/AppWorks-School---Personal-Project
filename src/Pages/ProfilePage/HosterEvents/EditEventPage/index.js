@@ -3,22 +3,24 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 import { useHistory, useParams } from "react-router-dom";
-// import background from "../../images/background.jpg";
 import photo from "../../../../images/photo.jpg";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import background from "../../../../images/manageBackground.jpg";
-// import NotFound from "../../../../components/NotFound.js";
-
+import {
+  getReformatedLocalTime,
+  getTomorrowDate,
+} from "../../../../utils/time.js";
+import {
+  validateInput,
+  validateEventTime,
+} from "../../../../utils/validation.js";
 import {
   getImageURL,
   getEventInfo,
   updateEvent,
 } from "../../../../utils/firebase.js";
-
 import { toast } from "react-toastify";
 import {
   successAlertText,
@@ -234,25 +236,6 @@ function CreateEvent() {
     }
   }, [eventExist]);
 
-  const getCurrentTime = () => {
-    const tzoffset = new Date().getTimezoneOffset() * 60000;
-    const localISOTime = new Date(Date.now() - tzoffset)
-      .toISOString()
-      .slice(0, -1);
-    const localDate = localISOTime.split("T")[0];
-    const localTime = localISOTime.split("T")[1].slice(0, 5);
-    return { date: localDate, time: localTime };
-  };
-
-  const getTomorrow = () => {
-    const tzoffset = new Date().getTimezoneOffset() * 60000;
-    const localISOTime = new Date(Date.now() + 43200000 - tzoffset)
-      .toISOString()
-      .slice(0, -1);
-    const localDate = localISOTime.split("T")[0];
-    return localDate;
-  };
-
   const getReformatedTime = (time) => {
     const tzoffset = new Date().getTimezoneOffset() * 60000;
     const localISOTime = new Date(time - tzoffset).toISOString().slice(0, -1);
@@ -261,14 +244,15 @@ function CreateEvent() {
     return { date: localDate, time: localTime };
   };
 
-  const [eventTime, setEventTime] = useState({
-    startDate: getTomorrow(),
-    startTime: getCurrentTime().time,
-    endDate: getTomorrow(),
-    endTime: getCurrentTime().time,
-  });
+  const currentTime = getReformatedLocalTime(Date.now());
+  const tomorrowDate = getTomorrowDate(Date.now());
 
-  // const [address, setAddress] = useState("台灣");
+  const [eventTime, setEventTime] = useState({
+    startDate: tomorrowDate,
+    startTime: currentTime.time,
+    endDate: tomorrowDate,
+    endTime: currentTime.time,
+  });
 
   const [tags, setTags] = useState([
     { name: "社會福利", id: "社會福利", select: false },
@@ -311,7 +295,6 @@ function CreateEvent() {
     getEventInformation();
   }, []);
 
-
   const getGeopoint = async (address) => {
     let location;
     await fetch(
@@ -327,14 +310,10 @@ function CreateEvent() {
   let history = useHistory();
 
   const handleTagClick = (tag) => {
-    let selectedId = tag.target.id;
+    const selectedTagId = tag.target.id;
     setTags(
       tags.map((tag) =>
-        tag.id === selectedId && tag.select === false
-          ? { ...tag, select: true }
-          : tag.id === selectedId && tag.select === true
-          ? { ...tag, select: false }
-          : tag
+        tag.id === selectedTagId ? { ...tag, select: !tag.select } : tag
       )
     );
   };
@@ -387,34 +366,28 @@ function CreateEvent() {
   };
 
   const handleTimeChange = (input, value) => {
-    if (input === "startDate") {
-      setEventTime({ ...eventTime, startDate: value });
-    } else if (input === "startTime") {
-      setEventTime({ ...eventTime, startTime: value });
-    } else if (input === "endDate") {
-      setEventTime({ ...eventTime, endDate: value });
-    } else {
-      setEventTime({ ...eventTime, endTime: value });
+    const inputType = input;
+    switch (inputType) {
+      case "startDate":
+        setEventTime({ ...eventTime, startDate: value });
+        break;
+      case "startTime":
+        setEventTime({ ...eventTime, startTime: value });
+        break;
+      case "endDate":
+        setEventTime({ ...eventTime, endDate: value });
+        break;
+      case "endTime":
+        setEventTime({ ...eventTime, endTime: value });
+        break;
+      default:
+        return null;
     }
   };
 
   useEffect(() => {
     setTimeIsInvalid(false);
   }, []);
-
-  const checkIfTimeIsInvalid = () => {
-    const start = new Date(
-      eventTime.startDate + " " + eventTime.startTime
-    ).valueOf();
-    const end = new Date(eventTime.endDate + " " + eventTime.endTime).valueOf();
-    if (start >= end) {
-      setTimeIsInvalid(true);
-      return false;
-    } else {
-      setTimeIsInvalid(false);
-      return true;
-    }
-  };
 
   const handleFileChange = (file) => {
     let fileURL;
@@ -426,22 +399,27 @@ function CreateEvent() {
     }
   };
 
+  const updateEventInfo = async (inputs) => {
+    const eventData = await constructEventData(inputs);
+    await updateEvent(eventId, eventData);
+    toast.success(successAlertText("已更新活動資訊"), {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    history.push("/profile");
+  };
+
   const handleSubmit = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     const inputs = event.currentTarget;
 
-    if (!inputs.title.value) {
-      setTitleIsInvalid(true);
-    } else {
-      setTitleIsInvalid(false);
-    }
-
-    if (!inputs.content.value) {
-      setContentIsInvalid(true);
-    } else {
-      setContentIsInvalid(false);
-    }
-
-    const timeIsValid = checkIfTimeIsInvalid();
+    const titleIsValid = validateInput(inputs.title.value, setTitleIsInvalid);
+    const contentIsValid = validateInput(
+      inputs.content.value,
+      setContentIsInvalid
+    );
+    const timeIsValid = validateEventTime(eventTime, setTimeIsInvalid);
 
     if (!selectedAddress.label) {
       document.querySelector(".css-yk16xz-control").style.border =
@@ -463,22 +441,14 @@ function CreateEvent() {
       document.querySelector("#coverImage").style.border = "none";
     }
 
-    event.preventDefault();
-    event.stopPropagation();
-
     if (
-      inputs.title.value &&
-      inputs.content.value &&
+      titleIsValid &&
+      contentIsValid &&
       timeIsValid &&
       selectedAddress.label &&
       (uploadImage === eventInfo.eventCoverImage || inputs.coverImage.files[0])
     ) {
-      const eventData = await constructEventData(inputs);
-      await updateEvent(eventId, eventData);
-      toast.success(successAlertText("已更新活動資訊"), {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      history.push("/profile");
+      updateEventInfo(inputs);
     } else {
       toast.error(errorAlertText("請確認活動資料"));
     }
@@ -499,7 +469,6 @@ function CreateEvent() {
               <Form
                 className="px-0 py-3 p-4"
                 noValidate
-                // validated={validated}
                 onSubmit={handleSubmit}
               >
                 <Form.Group controlId="title">
@@ -543,7 +512,7 @@ function CreateEvent() {
                       <Form.Control
                         type="date"
                         defaultValue={eventInfo.startTime.date}
-                        min={getTomorrow()}
+                        min={tomorrowDate}
                         className="mb-1"
                         isInvalid={timeIsInvalid}
                         onChange={(e) => {
