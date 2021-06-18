@@ -33,28 +33,22 @@ const Background = styled.div`
 `;
 
 function ProfilePage() {
+  const USER = 0;
+  const ORGANIZATION = 1;
+
   const role = useSelector((state) => state.isLogged.userRole);
   const history = useHistory();
-
-  // useEffect(() => {
-  //   if ((role && role !== 0) || (role && role !== 1)) {
-  //     history.push("/");
-  //   }
-  // }, [role]);
 
   const dispatch = useDispatch();
 
   const renderEventsData = () => {
-    if (role === 0) {
+    if (role === USER) {
       return <UserEvents />;
-    } else if (role === 1) {
+    } else if (role === ORGANIZATION) {
       return <HosterEvents />;
     } else {
       history.push("/");
     }
-    // else {
-    //   history.push("/");
-    // }
   };
 
   return (

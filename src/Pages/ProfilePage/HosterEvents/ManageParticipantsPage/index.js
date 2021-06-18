@@ -1,10 +1,11 @@
-// import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import WaitingList from "./WaitingList.js";
 import ParticipantList from "./ParticipantList.js";
-// import { getHosterEvents } from "../../utils/firebase.js";
-// import { useHistory, useParams } from "react-router-dom";
 import background from "../../../../images/manageBackground.jpg";
+import { useParams } from "react-router-dom";
+import { getEventInfo } from "../../../../utils/firebase.js";
+import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -36,14 +37,42 @@ const Mask = styled.div`
   z-index: -1;
 `;
 
+const Styles = styled.div``;
+
 function ManageParticipant() {
+  let { id } = useParams();
+  const eventId = id;
+
+  const history = useHistory();
+
+  const [eventExist, setEventExist] = useState("");
+
+  const checkIfEventExist = async (eid) => {
+    const eventInfo = await getEventInfo(eid);
+    if (!eventInfo) {
+      history.push("/");
+    } else {
+      setEventExist(true);
+    }
+    return eventInfo;
+  };
+
+  useEffect(() => {
+    checkIfEventExist(eventId);
+    // eslint-disable-next-line
+  }, []);
+
   return (
-    <Container className="container-xl mb-5">
-      <Background />
-      <Mask />
-      <WaitingList />
-      <ParticipantList />
-    </Container>
+    <Styles>
+      {eventExist && (
+        <Container className="container-xl mb-5">
+          <Background />
+          <Mask />
+          <WaitingList />
+          <ParticipantList />
+        </Container>
+      )}
+    </Styles>
   );
 }
 

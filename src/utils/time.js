@@ -27,3 +27,23 @@ export const reformatTimestamp = (timestamp) => {
   const reformatedTime = `${year}-${month}-${date} (${day})`;
   return reformatedTime;
 };
+
+export const reformatTimestamp2 = (timestamp) => {
+  const getDay = (day) => {
+    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
+    return dayArray[day];
+  };
+  const year = timestamp.toDate().getFullYear();
+  const month = timestamp.toDate().getMonth() + 1;
+  const date = timestamp.toDate().getDate();
+  const day = getDay(timestamp.toDate().getDay());
+  const reformatedTime = `${year}/${month}/${date} (${day})`;
+  return reformatedTime;
+};
+
+export const checkEventPassed = (event) => {
+  const startT = event.startTime.seconds * 1000;
+  const currentT = new Date().getTime();
+  const eventPassed = startT < currentT;
+  return eventPassed;
+};

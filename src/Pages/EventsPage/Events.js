@@ -7,11 +7,11 @@ import { Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import noEventImage from "../../images/noEvent.png";
 import eventsBackground from "../../images/events_header_2.png";
-
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
-
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
+import { reformatTimestamp } from "../../utils/time.js";
+import ReactLoading from "react-loading";
 
 const Container = styled.div`
   width: 100%;
@@ -281,9 +281,14 @@ const NoEventText = styled.div`
   color: #656565; ;
 `;
 
-const styles = {
-  cardImage: {},
-};
+const LoadingContainer = styled.div`
+  width: 100%;
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+`;
+
+const styles = {};
 
 const Styles = styled.div`
   .eventCard {
@@ -356,6 +361,8 @@ function AllEvents() {
   const [rawEvents, setRawEvents] = useState([]);
   const [events, setEvents] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [noEvent, setNoEvent] = useState(false);
 
   const cityArray = [
@@ -387,20 +394,7 @@ function AllEvents() {
     });
     setRawEvents(newEvents);
     setEvents(newEvents);
-  };
-
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const reformatedTime = `${year}-${month}-${date} (${day})`;
-    return reformatedTime;
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -412,7 +406,7 @@ function AllEvents() {
     getAllEvents();
   }, []);
 
-  let history = useHistory();
+  const history = useHistory();
   const handleEventClick = (id) => {
     history.push(`/events/${id}`);
   };
@@ -461,9 +455,11 @@ function AllEvents() {
     } else {
       filteredEvents = rawEvents;
     }
+
     if (rawEvents.length > 0 && filteredEvents.length === 0) {
       setNoEvent(true);
     }
+
     setEvents(filteredEvents);
   };
 
@@ -499,7 +495,7 @@ function AllEvents() {
               <Tags>
                 {tagArray.map((tag, index) =>
                   selectedTag === tag ? (
-                    <TagSelected>{tag}</TagSelected>
+                    <TagSelected key={index}>{tag}</TagSelected>
                   ) : (
                     <Tag onClick={(e) => handleTagClick(e)} key={index}>
                       {tag}
@@ -520,39 +516,53 @@ function AllEvents() {
               </SelectContainer>
             </Filter>
           </FilterContainer>
-          {events.length > 0 && (
-            <Events>
-              {events.map((event, index) => (
-                <Col className="p-0 " style={styles.cardCol} key={index}>
-                  <Card
-                    className="shadow-sm rounded bg-white h-100 eventCard"
-                    onClick={() => handleEventClick(event.eventId)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="bg-image hover-overlay hover-zoom">
-                      <Card.Img
-                        variant="top"
-                        src={event.eventCoverImage}
-                        className="cardImage"
-                      ></Card.Img>
-                    </div>
-                    <Card.Body
-                      className="py-2 px-3"
-                      style={{ position: "relative" }}
-                    >
-                      <EventTagContianer>
-                        {event.eventTags.map((tag, index) => (
-                          <EventTag key={index}>{tag}</EventTag>
-                        ))}
-                        <EventTag>{event.eventAddress}</EventTag>
-                      </EventTagContianer>
-                      <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
-                      <EventTitle>{event.eventTitle}</EventTitle>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Events>
+
+          {isLoading ? (
+            <LoadingContainer>
+              <ReactLoading
+                type={"spinningBubbles"}
+                color={"#d1d1d1"}
+                height={"150px"}
+                width={"150px"}
+              />
+            </LoadingContainer>
+          ) : (
+            <div>
+              {events.length > 0 && (
+                <Events>
+                  {events.map((event, index) => (
+                    <Col className="p-0 " style={styles.cardCol} key={index}>
+                      <Card
+                        className="shadow-sm rounded bg-white h-100 eventCard"
+                        onClick={() => handleEventClick(event.eventId)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <div className="bg-image hover-overlay hover-zoom">
+                          <Card.Img
+                            variant="top"
+                            src={event.eventCoverImage}
+                            className="cardImage"
+                          ></Card.Img>
+                        </div>
+                        <Card.Body
+                          className="py-2 px-3"
+                          style={{ position: "relative" }}
+                        >
+                          <EventTagContianer>
+                            {event.eventTags.map((tag, index) => (
+                              <EventTag key={index}>{tag}</EventTag>
+                            ))}
+                            <EventTag>{event.eventAddress}</EventTag>
+                          </EventTagContianer>
+                          <EventTime>{`${event.startTime} ~ ${event.endTime}`}</EventTime>
+                          <EventTitle>{event.eventTitle}</EventTitle>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </Events>
+              )}
+            </div>
           )}
 
           {noEvent ? (

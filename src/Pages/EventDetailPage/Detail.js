@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { warningAlertText } from "../../components/Alert.js";
 import NotFound from "../../components/NotFound.js";
+import { checkEventPassed, reformatTimestamp2 } from "../../utils/time.js";
 
 const Container = styled.div`
   width: 90%;
@@ -181,25 +182,8 @@ function EventDetail() {
   const [eventExist, setEventExist] = useState("");
 
   const [event, setEvent] = useState({
-    id: "",
-    image: "",
-    title: "",
-    content: "",
     address: "台灣",
-    location: {},
-    startTime: "",
-    endTime: "",
-    orgName: "",
-    orgEmail: "",
-    orgContact: "",
   });
-
-  const checkEventPassed = (event) => {
-    const startT = event.startTime.seconds * 1000;
-    const currentT = new Date().getTime();
-    const eventPassed = startT < currentT;
-    return eventPassed;
-  };
 
   const getEventDetail = async () => {
     const data = await getEventInfo(eventId);
@@ -208,13 +192,13 @@ function EventDetail() {
       const hosterInfo = await getUserProfile(data.hosterId);
       const passed = checkEventPassed(data);
       const address = data.eventAddress.formatted_address;
-      const startDate = data.startTime.toDate().toLocaleDateString();
+      const startDate = reformatTimestamp2(data.startTime);
       const startTime = data.startTime.toDate().toLocaleTimeString("en-US", {
         hour12: false,
         hour: "2-digit",
         minute: "2-digit",
       });
-      const endDate = data.endTime.toDate().toLocaleDateString();
+      const endDate = reformatTimestamp2(data.endTime);
       const endTime = data.endTime.toDate().toLocaleTimeString("en-US", {
         hour12: false,
         hour: "2-digit",
@@ -255,10 +239,6 @@ function EventDetail() {
     }
   };
 
-  useEffect(() => {
-    dispatch({ type: "ADD_USERID", data: logStatus.userId });
-  }, []);
-
   const renderButton = (status) => {
     return status === 0 ? (
       <Button onClick={handleShow}>我要報名</Button>
@@ -298,7 +278,7 @@ function EventDetail() {
             </SubtitleContainer>
             <SubtitleContainer>
               <IconContainer>
-                <Icon icon={faStickyNote} Icon />
+                <Icon icon={faStickyNote} />
               </IconContainer>
               <TextContainer>
                 <Subtitle>工作內容</Subtitle>

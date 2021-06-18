@@ -194,6 +194,9 @@ const Styles = styled.div`
 `;
 
 function CreateEvent() {
+  // const USER = 0;
+  const ORGANIZATION = 1;
+
   const dispatch = useDispatch();
   const hosterId = useSelector((state) => state.isLogged.userId);
   const userRole = useSelector((state) => state.isLogged.userRole);
@@ -211,7 +214,7 @@ function CreateEvent() {
 
   const history = useHistory();
   useEffect(() => {
-    if (userRole === 0 || userRole === false) {
+    if (userRole !== ORGANIZATION) {
       history.push("/");
     }
   }, [userRole, history]);
