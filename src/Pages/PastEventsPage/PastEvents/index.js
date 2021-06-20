@@ -230,9 +230,9 @@ function PastEvents() {
 
   const eventModalProps = {
     show: show,
-    handleClose: handleClose,
     eventResult: eventResult,
     feedbacks: userFeedback,
+    handleClose: handleClose,
   };
 
   return (

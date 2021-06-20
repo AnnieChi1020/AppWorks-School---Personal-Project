@@ -14,6 +14,7 @@ import {
   successAlertText,
   errorAlertText,
 } from "../../../../components/Alert.js";
+import { reformatDateAndTime } from "../../../../utils/time.js";
 
 const CreateEventContainer = styled.div`
   width: 100%;
@@ -109,9 +110,6 @@ const Styles = styled.div`
 `;
 
 function EventResult() {
-  // const { id } = useParams();
-  // const eventId = id;
-
   const dispatch = useDispatch();
 
   const eventId = useSelector((state) => state.modal.eventId);
@@ -119,21 +117,6 @@ function EventResult() {
 
   const [resultIsInvalid, setResultIsInvalid] = useState(false);
   const [filesIsInvalid, setFilesIsInvalid] = useState(false);
-
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const time = timestamp.toDate().toTimeString().slice(0, 5);
-    const reformatedTime = `${year}-${month}-${date}(${day}) ${time}`;
-    return reformatedTime;
-  };
 
   const [eventInfo, setEventInfo] = useState({
     id: "",
@@ -151,8 +134,8 @@ function EventResult() {
       ...eventInfo,
       id: event.eventId,
       title: event.eventTitle,
-      startTime: reformatTimestamp(event.startTime),
-      endTime: reformatTimestamp(event.endTime),
+      startTime: reformatDateAndTime(event.startTime),
+      endTime: reformatDateAndTime(event.endTime),
       address: event.eventAddress.formatted_address,
       content: event.eventContent,
       image: event.eventCoverImage,
@@ -170,11 +153,8 @@ function EventResult() {
       const url = await getImageURL(hosterId, imageFile);
       imageArray.push(url);
     }
-    // setFiles(imageArray);
     return imageArray;
   };
-
-  // const [validated, setValidated] = useState(false);
 
   const handleSubmit = async (event) => {
     const inputs = event.currentTarget;
@@ -182,10 +162,10 @@ function EventResult() {
     event.preventDefault();
     event.stopPropagation();
 
-    if (!inputs.result.value) {
-      setResultIsInvalid(true);
-    } else {
+    if (inputs.result.value) {
       setResultIsInvalid(false);
+    } else {
+      setResultIsInvalid(true);
     }
 
     if (inputs.images.files.length < 3) {
@@ -250,7 +230,6 @@ function EventResult() {
               multiple="multiple"
               required
               isInvalid={filesIsInvalid}
-            
             ></Form.Control>
             <Form.Control.Feedback
               type="invalid"

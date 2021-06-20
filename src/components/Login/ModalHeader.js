@@ -1,9 +1,9 @@
-import { Modal, Form } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import styled from "styled-components";
 
 const StyledModalHeader = styled(Modal.Header)`
-justify-content: space-evenly;
-border: none;
+  justify-content: space-evenly;
+  border: none;
 `;
 
 const Header = styled.div`
@@ -27,8 +27,7 @@ const OrgHeaderActive = styled(UserHeaderActive)`
   color: #54a783;
 `;
 
-
-function ModalHeader  (props)  {
+function ModalHeader(props) {
   return props.identity === "user" && props.action === "login" ? (
     <StyledModalHeader className="mx-2 pb-0">
       <UserHeaderActive id={"user"} onClick={(e) => props.changeIdentity(e)}>
@@ -72,6 +71,6 @@ function ModalHeader  (props)  {
       </OrgHeaderActive>
     </StyledModalHeader>
   );
-};
+}
 
-export default ModalHeader
+export default ModalHeader;
