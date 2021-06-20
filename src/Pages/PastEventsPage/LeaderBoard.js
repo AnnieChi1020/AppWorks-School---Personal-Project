@@ -66,7 +66,6 @@ const Title = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  /* border-bottom: 1px solid #ced4da; ; */
 `;
 
 const Row = styled.div`
@@ -74,11 +73,6 @@ const Row = styled.div`
   display: flex;
   flex-direction: row;
 `;
-
-// const ImageContainer = styled.div`
-//   width: 50px;
-//   flex-grow: 0;
-// `;
 
 const Image = styled.img`
   width: 30px;

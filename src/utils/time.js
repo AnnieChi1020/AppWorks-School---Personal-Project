@@ -41,6 +41,20 @@ export const reformatTimestamp2 = (timestamp) => {
   return reformatedTime;
 };
 
+export const reformatDateAndTime = (timestamp) => {
+  const getDay = (day) => {
+    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
+    return dayArray[day];
+  };
+  const year = timestamp.toDate().getFullYear();
+  const month = timestamp.toDate().getMonth() + 1;
+  const date = timestamp.toDate().getDate();
+  const day = getDay(timestamp.toDate().getDay());
+  const time = timestamp.toDate().toTimeString().slice(0, 5);
+  const reformatedTime = `${year}-${month}-${date}(${day}) ${time}`;
+  return reformatedTime;
+};
+
 
 
 

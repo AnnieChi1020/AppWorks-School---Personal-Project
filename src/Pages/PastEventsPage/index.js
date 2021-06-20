@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import PastEvents from "./PastEvents.js";
+import PastEvents from "./PastEvents";
 import LeaderBoard from "./LeaderBoard.js";
 import whiteWall from "../../images/white_wall.jpg";
 import React from "react";
@@ -17,7 +17,6 @@ const Background = styled.div`
   height: 100vh;
   background-image: url(${whiteWall});
   filter: sepia(10%);
-  /* background-color: #80808012; */
   position: fixed;
   top: 0;
   left: 0;
@@ -30,7 +29,6 @@ const MainContent = styled.div`
   flex-direction: row;
   @media (max-width: 960px) {
     flex-direction: column;
-
   }
 `;
 
