@@ -1,18 +1,8 @@
 import React from "react";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
-import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-  waitFor,
-  getByRole,
-  getByTestId,
-} from "@testing-library/react";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import "@testing-library/jest-dom/extend-expect";
-import { Router } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import Banner from "./Banner.js";
 
 afterEach(cleanup);
@@ -20,7 +10,16 @@ afterEach(cleanup);
 const renderWithRouter = (component) => {
   const history = createMemoryHistory();
   return {
-    ...render(<Router history={history}>{component}</Router>),
+    ...render(
+      <Router history={history}>
+        {component}
+        <Switch>
+          <Route exact path="/events">
+            <p>活動時間</p>
+          </Route>
+        </Switch>
+      </Router>
+    ),
   };
 };
 
@@ -47,18 +46,9 @@ describe("Should render the banner", () => {
 
   test("triggers path change", async () => {
     const history = createMemoryHistory();
-
     const { container, getByTestId } = renderWithRouter(<Banner />);
-
-    expect(history.location.pathname).toBe("/");
-
-    const signUpButton = getByTestId("signUpButton");
-    await fireEvent.click(signUpButton);
-    await waitFor(() => expect(history.location.pathname).toBe("/events"));
-
-
-    // const button = getByTestId(container, "signUpButton");
-    // fireEvent.click(button);
-    // expect(await history.location.pathname).toBe("/events");
+    expect(container.innerHTML).toMatch("加入志工的行列");
+    fireEvent.click(getByTestId("signUpButton"));
+    expect(container.innerHTML).toMatch("活動時間");
   });
 });

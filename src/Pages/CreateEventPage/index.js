@@ -245,6 +245,7 @@ function CreateEvent() {
     );
   };
 
+  // 改成map
   const getSelectedTags = (tags) => {
     const selectedTags = [];
     tags.forEach((tag) => {
@@ -337,6 +338,7 @@ function CreateEvent() {
     );
     const timeIsValid = validateEventTime(eventTime, setTimeIsInvalid);
 
+    //不要用!去判斷
     if (!selectedAddress.value) {
       document.querySelector(".css-yk16xz-control").style.border =
         "1px solid red";
