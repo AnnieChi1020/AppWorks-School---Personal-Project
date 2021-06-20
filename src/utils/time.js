@@ -41,6 +41,9 @@ export const reformatTimestamp2 = (timestamp) => {
   return reformatedTime;
 };
 
+
+
+
 export const checkEventPassed = (event) => {
   const startT = event.startTime.seconds * 1000;
   const currentT = new Date().getTime();

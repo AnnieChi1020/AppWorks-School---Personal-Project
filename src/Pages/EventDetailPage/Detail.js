@@ -186,6 +186,7 @@ function EventDetail() {
   });
 
   const getEventDetail = async () => {
+    console.log(process.env);
     const data = await getEventInfo(eventId);
     data ? setEventExist(true) : setEventExist(false);
     if (data) {
@@ -300,8 +301,7 @@ function EventDetail() {
               <MapTitle>志工活動地圖</MapTitle>
             </MapContainer>
             <Map
-              src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
-    &q=${event.address}`}
+              src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_GOOGLEMAP}&q=${event.address}`}
             ></Map>
           </EventDetailContainer>
 

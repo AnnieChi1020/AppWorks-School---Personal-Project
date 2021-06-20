@@ -1,8 +1,5 @@
 import styled from "styled-components";
 import React from "react";
-// import banner from "../../images/background.jpg";
-// import join from "../../images/join_text_2.png";
-// import banner from "../../images/banner.svg";
 import banner from "../../images/banner_3.png";
 
 import { useHistory } from "react-router-dom";
@@ -13,16 +10,12 @@ const BannerContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
-  /* background: linear-gradient(130deg, #7f7fd5 0%, #86a8e7 50%, #91eae4 100%); */
   background-color: #f6efe6;
   background-image: url(${banner});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  /* filter: brightness(70%); */
   position: relative;
-  /* top: 50px; */
-  /* left: 0; */
   align-items: center;
 
   @media (max-width: 960px) {
@@ -64,14 +57,6 @@ const MainContentContainer = styled.div`
   @media (max-width: 540px) {
     padding: 0px;
   }
-
-  /* display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  @media (max-width: 960px) {
-    flex-direction: column;
-  } */
 `;
 
 const TextContainer = styled.div`
@@ -86,22 +71,6 @@ const TextContainer = styled.div`
     width: 100%;
   }
 `;
-
-// const Slogan = styled.img`
-//   width: auto;
-//   height: 150px;
-//   object-fit: contain;
-//   filter: none;
-//   margin: 0 auto;
-//   margin-top: 0px;
-//   margin-left: 0;
-//   @media (max-width: 960px) {
-//     height: 100px;
-//   }
-//   @media (max-width: 540px) {
-//     height: 80px;
-//   }
-// `;
 
 const TextSubtitle = styled.div`
   width: 100%;
@@ -129,47 +98,12 @@ const TextSubtitle = styled.div`
   }
 `;
 
-// const TextHeader = styled.div`
-//   width: 100%;
-//   font-size: 36px;
-//   font-weight: 600;
-//   line-height: 38px;
-//   padding: 5px 20px;
-//   font-family: "Noto Sans TC", sans-serif;
-//   color: #363636;
-//   @media (max-width: 960px) {
-//     font-size: 30px;
-//     text-align: center;
-//   }
-//   @media (max-width: 540px) {
-//     font-size: 24px;
-//     padding: 0px 20px;
-//   }
-// `;
-
-// const ImageContainer = styled.div`
-//   width: 450px;
-//   height: 450px;
-//   flex-grow: 0;
-//   @media (max-width: 960px) {
-//     order: -1;
-//     margin-bottom: 20px;
-//   }
-//   @media (max-width: 540px) {
-//     width: 100%;
-//     height: 100vw;
-//   }
-//   /* border: 1px solid grey; */
-// `;
-
 const Button = styled.button`
   width: 130px;
-  /* margin-left: 90px; */
   margin-left: 5px;
   margin-top: 50px;
   padding: 5px 10px;
   border-radius: 20px;
-  /* background-color: rgb(87, 188, 144); */
   background-color: inherit;
   background-color: rgb(251, 251, 251, 0.2);
   border: none;
@@ -181,12 +115,10 @@ const Button = styled.button`
 
   :hover {
     background-color: rgb(87, 188, 144);
-    /* box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3); */
     border: 1px solid rgb(87, 188, 144);
   }
   :active {
     background-color: #52a983;
-    /* box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3); */
     border: 1px solid #43886a;
   }
 
@@ -210,9 +142,9 @@ function Banner() {
   const history = useHistory();
 
   const handleButtonClick = () => {
-    setTimeout(function () {
+    // setTimeout(function () {
       history.push("/events");
-    }, 1500);
+    // }, 1500);
   };
 
   return (
@@ -220,15 +152,11 @@ function Banner() {
       <Mask />
       <MainContentContainer className="container-xl">
         <TextContainer>
-          {/* <Slogan src={slogan} /> */}
-          {/* <Slogan src={join} /> */}
-
           <TextSubtitle>加入志工的行列</TextSubtitle>
           <TextSubtitle>一起改變世界</TextSubtitle>
-
-          {/* <TextSubtitle>加入志工的行列，一起改變世界！</TextSubtitle> */}
-
-          <Button onClick={handleButtonClick}>我要報名</Button>
+          <Button onClick={handleButtonClick} data-testid="signUpButton">
+            我要報名
+          </Button>
         </TextContainer>
       </MainContentContainer>
     </BannerContainer>

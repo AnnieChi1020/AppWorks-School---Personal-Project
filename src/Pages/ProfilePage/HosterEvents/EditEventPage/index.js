@@ -298,7 +298,7 @@ function CreateEvent() {
   const getGeopoint = async (address) => {
     let location;
     await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18`
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GOOGLEMAP}`
     )
       .then((res) => res.json())
       .then((result) => {
@@ -613,7 +613,7 @@ function CreateEvent() {
                   <Form.Label>地址</Form.Label>
                   <GooglePlacesAutocomplete
                     placeholder="地址"
-                    apiKey="AIzaSyC9Rq_urtS76m8vtjJzBzCmcYIhYiwPMYQ"
+                    apiKey={process.env.REACT_APP_AUTOCOMPLETE}
                     selectProps={{
                       selectedAddress,
                       onChange: setSelectedAddress,

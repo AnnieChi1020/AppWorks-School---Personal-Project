@@ -4,7 +4,7 @@ import "firebase/firestore";
 import "firebase/auth";
 
 firebase.initializeApp({
-  apiKey: "AIzaSyB3u52FblPOqzBp4GUIASlMLohB5NcyLqs",
+  apiKey: `${process.env.REACT_APP_FIREBASE}`,
   authDomain: "volunteer-c29d0.firebaseapp.com",
   databaseURL: "https://volunteer-c29d0.firebaseio.com",
   projectId: "volunteer-c29d0",

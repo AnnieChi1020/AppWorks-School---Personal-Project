@@ -74,7 +74,7 @@ export const successAlertText = (text) => {
   return (
     <SuccessAlertDiv>
       <FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon>
-      <AlertText>{text}</AlertText>
+      <AlertText data-testid="alertText">{text}</AlertText>
     </SuccessAlertDiv>
   );
 };

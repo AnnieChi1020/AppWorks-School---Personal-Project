@@ -39,6 +39,7 @@
     "react-scripts": "4.0.3",
     "react-select": "^4.3.1",
     "react-system": "^0.17.0",
+    "react-test-renderer": "^17.0.2",
     "react-time-picker": "^4.2.1",
     "react-toastify": "^7.0.4",
     "redux": "^4.1.0",
@@ -70,5 +71,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
   }
 }

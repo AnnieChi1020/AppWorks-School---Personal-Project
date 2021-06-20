@@ -1,7 +1,7 @@
 export const getGeopoint = async (address) => {
   let location;
   await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18`
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GOOGLEMAP}`
   )
     .then((res) => res.json())
     .then((result) => {

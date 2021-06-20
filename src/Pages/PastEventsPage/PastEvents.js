@@ -6,7 +6,6 @@ import {
   getEvents,
   getParticipants,
 } from "../../utils/firebase.js";
-// import { useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import { Modal } from "react-bootstrap";
 
@@ -55,8 +54,6 @@ const Wrapper = styled.div`
   width: 100%;
   margin: 0 auto;
   display: flex;
-  /* grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr; */
   flex-wrap: wrap;
   justify-content: center;
   & ${PastEvent}:nth-of-type(n) {
@@ -171,9 +168,6 @@ const PageButtonsContainer = styled.div`
 `;
 
 const PageButton = styled.div`
-  /* width: 30px;
-  height: 30px; */
-  /* border-radius: 50%; */
   border: 1px solid transparent;
   font-size: 16px;
   font-weight: 600;
@@ -240,6 +234,7 @@ function PastEvents() {
   const [userFeedback, setUserFeedback] = useState([]);
   const [pageNumber, setPageNumber] = useState([]);
   const [showPageNum, setShowPageNum] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getPastEvents = async () => {
     const newEvents = await getEvents(1);
@@ -256,6 +251,7 @@ function PastEvents() {
     });
     eventsArray.slice(0, 9);
     setEvents(eventsArray);
+    setIsLoading(false);
   };
 
   const getDay = (day) => {
@@ -279,8 +275,10 @@ function PastEvents() {
     getPastEvents();
   }, []);
 
+  const PASTEVENTS_LIMIT = 9;
+
   const getTotalPages = (events) => {
-    const totalPages = Math.ceil(events.length / 9);
+    const totalPages = Math.ceil(events.length / PASTEVENTS_LIMIT);
     let pageArray = [];
     for (let i = 0; i < totalPages; i++) {
       pageArray.push(i + 1);
@@ -292,13 +290,10 @@ function PastEvents() {
     getTotalPages(events);
   }, [events]);
 
-  // let history = useHistory();
   const handleEventClick = async (id) => {
-    // setViewEvent(id);
     await getPastEventInfo(id);
     await getUserFeedbacks(id);
     setShow(true);
-    // history.push(`/past-events/${id}`);
   };
 
   const getPastEventInfo = async (id) => {
@@ -345,10 +340,9 @@ function PastEvents() {
     window.scrollTo(0, 0);
   };
 
-  const itemLimit = 9;
   const renderPastEvents = (page) => {
-    const startItem = (page - 1) * itemLimit;
-    const endItem = startItem + itemLimit;
+    const startItem = (page - 1) * PASTEVENTS_LIMIT;
+    const endItem = startItem + PASTEVENTS_LIMIT;
     return (
       <Wrapper>
         {events.slice(startItem, endItem).map((event, index) => (
@@ -432,10 +426,12 @@ function PastEvents() {
 
   return (
     <div>
-      <PastEventsContainer>
-        {renderPastEvents(showPageNum)}
-        {renderPageButton(showPageNum)}
-      </PastEventsContainer>
+      {!isLoading && (
+        <PastEventsContainer>
+          {renderPastEvents(showPageNum)}
+          {renderPageButton(showPageNum)}
+        </PastEventsContainer>
+      )}
 
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
