@@ -119,7 +119,7 @@ function UserEvents() {
       <Title>我報名的活動</Title>
       <Tabs>
         {tabs.map((tab, index) =>
-          tab.selected === false ? (
+          !tab.selected ? (
             <Tab
               key={index}
               id={tab.name}

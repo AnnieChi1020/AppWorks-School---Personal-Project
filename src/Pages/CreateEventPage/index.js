@@ -503,7 +503,7 @@ function CreateEvent() {
                 <Form.Label>活動類型</Form.Label>
                 <Tags>
                   {tags.map((tag, index) =>
-                    tag.select === true ? (
+                    tag.select ? (
                       <OptionSelected
                         id={tag.id}
                         key={index}

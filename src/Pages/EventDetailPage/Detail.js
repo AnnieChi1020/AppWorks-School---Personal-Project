@@ -180,6 +180,8 @@ function EventDetail() {
 
   const [eventExist, setEventExist] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   const [event, setEvent] = useState({
     address: "台灣",
   });
@@ -187,6 +189,7 @@ function EventDetail() {
   const getEventDetail = async () => {
     console.log(process.env);
     const data = await getEventInfo(eventId);
+    setLoading(false);
     data ? setEventExist(true) : setEventExist(false);
     if (data) {
       const hosterInfo = await getUserProfile(data.hosterId);
@@ -252,7 +255,7 @@ function EventDetail() {
 
   return (
     <Styles>
-      {eventExist === true && (
+      {!loading && eventExist && (
         <Container>
           <EventImage src={event.image}></EventImage>
           <EventDetailContainer>
@@ -313,7 +316,7 @@ function EventDetail() {
           </Modal>
         </Container>
       )}
-      {eventExist === false && <NotFound />}
+      {!loading && !eventExist && <NotFound />}
     </Styles>
   );
 }

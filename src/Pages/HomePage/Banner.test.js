@@ -45,7 +45,6 @@ describe("Should render the banner", () => {
   });
 
   test("triggers path change", async () => {
-    // const history = createMemoryHistory();
     const { container, getByTestId } = renderWithRouter(<Banner />);
     expect(container.innerHTML).toMatch("加入志工的行列");
     fireEvent.click(getByTestId("signUpButton"));
