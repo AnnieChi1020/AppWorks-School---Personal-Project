@@ -76,10 +76,7 @@ function App() {
       dispatch({ type: "SIGN_IN", data: true });
       dispatch({ type: "GET_USERID", data: userId });
       dispatch({ type: "GET_USERROLE", data: userProfile.role });
-    } else {
-      // dispatch({ type: "SIGN_IN", data: false });
-      // dispatch({ type: "GET_USERROLE", data: false });
-    }
+    } 
     dispatch({ type: "SET_LOADING", data: false });
     return;
   };

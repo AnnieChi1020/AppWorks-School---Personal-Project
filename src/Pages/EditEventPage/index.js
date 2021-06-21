@@ -221,6 +221,8 @@ function CreateEvent() {
 
   const [eventExist, setEventExist] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   const [submmited, setSubmmited] = useState(false);
 
   useEffect(() => {
@@ -229,7 +231,7 @@ function CreateEvent() {
   }, []);
 
   useEffect(() => {
-    if (eventExist === false) {
+    if (!loading && !eventExist) {
       history.push("/");
     }
     // eslint-disable-next-line
@@ -262,6 +264,7 @@ function CreateEvent() {
 
   const getEventInformation = async () => {
     const eventInfo = await getEventInfo(eventId);
+    setLoading(false);
     eventInfo ? setEventExist(true) : setEventExist(false);
     if (eventInfo) {
       eventInfo.startTime = getReformatedTime(eventInfo.startTime.toDate());
@@ -321,7 +324,7 @@ function CreateEvent() {
   const getSelectedTags = (tags) => {
     let selectedTags = [];
     tags.forEach((tag) => {
-      if (tag.select === true) {
+      if (tag.select) {
         selectedTags.push(tag.name);
       }
     });
@@ -458,7 +461,7 @@ function CreateEvent() {
 
   return (
     <Styles>
-      {eventExist === true && (
+      {!loading && eventExist && (
         <Container
           className="container-xl"
           onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
@@ -466,7 +469,7 @@ function CreateEvent() {
           <Background />
           <Mask />
 
-          {getEventData ? (
+          {getEventData && (
             <CreateEventContainer>
               <Form
                 className="px-0 py-3 p-4"
@@ -591,7 +594,7 @@ function CreateEvent() {
                   <Form.Label>活動類型</Form.Label>
                   <Tags>
                     {tags.map((tag, index) =>
-                      tag.select === true ? (
+                      tag.select ? (
                         <OptionSelected
                           id={tag.id}
                           key={index}
@@ -663,8 +666,6 @@ function CreateEvent() {
                 )}
               </Form>
             </CreateEventContainer>
-          ) : (
-            <div />
           )}
         </Container>
       )}

@@ -10,6 +10,7 @@ import { Col, Card, Modal, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import NoEvent from "../../components/NoEvent.js";
 import Comments from "./Comments.js";
+import { reformatTimestamp } from "../../../../utils/time.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -147,7 +148,6 @@ function UserCompletedEvents() {
     // eslint-disable-next-line
   }, [feedbackCompleted]);
 
-
   const dispatch = useDispatch();
 
   const getCompletedEventIds = async () => {
@@ -186,29 +186,9 @@ function UserCompletedEvents() {
     // eslint-disable-next-line
   }, []);
 
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const reformatedTime = `${year}-${month}-${date} (${day})`;
-    return reformatedTime;
-  };
-
   let history = useHistory();
   const handleEventClick = (e) => {
     history.push(`/events/${e}`);
-  };
-
-  const renderNoEventMessage = () => {
-    if (noEvent) {
-      return <NoEvent></NoEvent>;
-    }
   };
 
   const handleClose = () => dispatch({ type: "SHOW_FEEDBACK", data: false });
@@ -225,7 +205,7 @@ function UserCompletedEvents() {
             {events.map((event, index) => (
               <Col className="p-0" style={styles.cardCol} key={index}>
                 <Card className="h-100 eventCard">
-                  {event.userAttend === false ? (
+                  {!event.userAttend ? (
                     <CurrentStatus>待確認出席</CurrentStatus>
                   ) : (
                     <CurrentStatus>已確認出席</CurrentStatus>
@@ -251,7 +231,7 @@ function UserCompletedEvents() {
                       </Card.Text>
                     </EventInfo>
                     <EventStatus>
-                      {event.userAttend === false ? (
+                      {!event.userAttend ? (
                         <OverlayTrigger
                           placement="right"
                           delay={{ show: 250, hide: 400 }}
@@ -268,14 +248,14 @@ function UserCompletedEvents() {
                       ) : (
                         <div />
                       )}
-                      {event.userAttend === true && event.userRate === 0 ? (
+                      {event.userAttend && event.userRate === 0 ? (
                         <RateButton onClick={() => handleShow(event.eventId)}>
                           評價活動
                         </RateButton>
                       ) : (
                         <div />
                       )}
-                      {event.userAttend === true && event.userRate !== 0 ? (
+                      {event.userAttend && event.userRate !== 0 ? (
                         <RateButton disabled style={{ opacity: ".5" }}>
                           已評價活動
                         </RateButton>
@@ -289,7 +269,7 @@ function UserCompletedEvents() {
             ))}
           </Events>
         )}
-        {renderNoEventMessage()}
+        {noEvent && <NoEvent />}
         <Modal
           show={showFeedbackModal}
           onHide={handleClose}

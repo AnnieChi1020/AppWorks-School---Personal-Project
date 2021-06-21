@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import NoEvent from "../../components/NoEvent.js";
+import { reformatTimestamp } from "../../../../utils/time.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -141,25 +142,6 @@ function UserCancelledEvents() {
 
   useEffect(() => {}, []);
 
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const reformatedTime = `${year}-${month}-${date} (${day})`;
-    return reformatedTime;
-  };
-
-  const renderNoEventMessage = () => {
-    if (noEvent) {
-      return <NoEvent></NoEvent>;
-    }
-  };
 
   return (
     <Styles>
@@ -200,7 +182,7 @@ function UserCancelledEvents() {
             ))}
           </Events>
         )}
-        {renderNoEventMessage()}
+        {noEvent && <NoEvent />}
       </EventsContainer>
     </Styles>
   );

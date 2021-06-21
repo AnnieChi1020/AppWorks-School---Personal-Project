@@ -14,8 +14,9 @@ firebase.initializeApp({
   measurementId: "G-W7VWKB20YX",
 });
 
+const db = firebase.firestore();
+
 export const createNewDoc = () => {
-  const db = firebase.firestore();
   let newEventRef = db.collection("events").doc();
   return newEventRef;
 };
@@ -37,7 +38,6 @@ export const postParticipantInfo = (
   participantId,
   participantInfo
 ) => {
-  const db = firebase.firestore();
   let participantRef = db
     .collection("events")
     .doc(eventId)
@@ -57,7 +57,6 @@ export const getImageURL = (hosterId, file) => {
 };
 
 export const getEventInfo = (eventId) => {
-  const db = firebase.firestore();
   let eventRef = db.collection("events").doc(eventId);
   return eventRef.get().then((doc) => {
     const data = doc.data();
@@ -66,7 +65,6 @@ export const getEventInfo = (eventId) => {
 };
 
 export const getEvents = (status) => {
-  const db = firebase.firestore();
   let events = [];
   return db
     .collection("events")
@@ -82,7 +80,6 @@ export const getEvents = (status) => {
 };
 
 export const updateEvent = (eventId, updateInfo) => {
-  const db = firebase.firestore();
   const eventRef = db.collection("events").doc(eventId);
   return eventRef
     .update(updateInfo)
@@ -94,7 +91,6 @@ export const updateEvent = (eventId, updateInfo) => {
 };
 
 export const getHosterEvents = (hosterId, eventStatus) => {
-  const db = firebase.firestore();
   let events = [];
   return db
     .collection("events")
@@ -111,7 +107,6 @@ export const getHosterEvents = (hosterId, eventStatus) => {
 };
 
 export const getParticipants = (eventId, status) => {
-  const db = firebase.firestore();
   let applications = [];
   return db
     .collection("events")
@@ -129,7 +124,6 @@ export const getParticipants = (eventId, status) => {
 };
 
 export const getParticipantInfo = (eventId, userId) => {
-  const db = firebase.firestore();
   const participantRef = db
     .collection("events")
     .doc(eventId)
@@ -147,7 +141,6 @@ export const getParticipantInfo = (eventId, userId) => {
 };
 
 export const onSnapshotParticipantInfo = (eventId, userId) => {
-  const db = firebase.firestore();
   db.collection("events")
     .doc(eventId)
     .collection("participants")
@@ -158,7 +151,6 @@ export const onSnapshotParticipantInfo = (eventId, userId) => {
 };
 
 export const updateParticipantStatus = (eventId, userId, updateInfo) => {
-  const db = firebase.firestore();
   const participantRef = db
     .collection("events")
     .doc(eventId)
@@ -173,7 +165,6 @@ export const updateParticipantStatus = (eventId, userId, updateInfo) => {
 };
 
 export const getUserProfile = (id) => {
-  const db = firebase.firestore();
   const userRef = db.collection("users").doc(id);
   return userRef
     .get()
@@ -187,7 +178,6 @@ export const getUserProfile = (id) => {
 };
 
 export const getUserEvents = (userId, status) => {
-  const db = firebase.firestore();
   let events = [];
   const userRef = db
     .collectionGroup("participants")
@@ -205,7 +195,6 @@ export const getUserEvents = (userId, status) => {
 };
 
 export const getUserAttendedEvents = (userId) => {
-  const db = firebase.firestore();
   let events = [];
   const userRef = db
     .collectionGroup("participants")
@@ -223,7 +212,6 @@ export const getUserAttendedEvents = (userId) => {
 };
 
 export const getEventsByTagsAndArea = (tag, city) => {
-  const db = firebase.firestore();
   let events = [];
   const eventRef = db
     .collection("events")
@@ -242,7 +230,6 @@ export const getEventsByTagsAndArea = (tag, city) => {
 };
 
 export const getEventsByTags = (tag) => {
-  const db = firebase.firestore();
   let events = [];
   const eventRef = db
     .collection("events")
@@ -260,7 +247,6 @@ export const getEventsByTags = (tag) => {
 };
 
 export const getEventsByArea = (city) => {
-  const db = firebase.firestore();
   let events = [];
   const eventRef = db
     .collection("events")
@@ -308,7 +294,6 @@ export const userSignIn = (email, password) => {
 };
 
 export const addNewUserInfo = (userId, userData) => {
-  const db = firebase.firestore();
   let newUserRef = db.collection("users").doc(userId);
   return newUserRef
     .set(userData)
@@ -354,7 +339,6 @@ export const userSignOut = () => {
 };
 
 export const getAllUsers = () => {
-  const db = firebase.firestore();
   let users = [];
   return db
     .collection("users")
@@ -370,7 +354,6 @@ export const getAllUsers = () => {
 };
 
 export const getParticipantNumber = (eventId) => {
-  const db = firebase.firestore();
   let number = 0;
   return db
     .collection("events")

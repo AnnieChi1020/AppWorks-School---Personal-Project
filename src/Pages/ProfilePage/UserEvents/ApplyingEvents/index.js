@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 import NoEvent from "../../components/NoEvent.js";
 import { toast } from "react-toastify";
 import { successAlertText } from "../../../../components/Alert.js";
+import { reformatTimestamp } from "../../../../utils/time.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -90,14 +91,7 @@ const StyledHeader = styled(Modal.Header)`
   flex-direction: column;
   position: relative;
   border-bottom: 1px solid #ececec;
-  /* background-color: #9dc7d878; */
 `;
-
-// const CancelImg = styled.img`
-//   width: 80px;
-//   height: auto;
-//   object-fit: contain;
-// `;
 
 const CancelText = styled.div`
   width: 100%;
@@ -243,26 +237,6 @@ function UserApplyingEvents() {
     // eslint-disable-next-line
   }, []);
 
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const reformatedTime = `${year}-${month}-${date} (${day})`;
-    return reformatedTime;
-  };
-
-  const renderNoEventMessage = () => {
-    if (noEvent) {
-      return <NoEvent></NoEvent>;
-    }
-  };
-
   const handleClose = () => setShowCancelModal(false);
   const handleShow = (eventId) => {
     setShowCancelModal(true);
@@ -304,7 +278,6 @@ function UserApplyingEvents() {
                       ) : (
                         <CancelButton
                           onClick={(e) => {
-                            // handleCancelClick(event.eventId, userId, e);
                             handleShow(event.eventId);
                           }}
                         >
@@ -318,7 +291,7 @@ function UserApplyingEvents() {
             ))}
           </Events>
         )}
-        {renderNoEventMessage()}
+        {noEvent && <NoEvent />}
       </EventsContainer>
       <Modal
         show={showCancelModal}

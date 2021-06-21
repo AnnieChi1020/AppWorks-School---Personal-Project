@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 import NoEvent from "../../components/NoEvent.js";
 import { toast } from "react-toastify";
 import { successAlertText } from "../../../../components/Alert.js";
+import { reformatTimestamp } from "../../../../utils/time.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -199,20 +200,6 @@ function UserConfirmedEvents() {
     // eslint-disable-next-line
   }, []);
 
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const reformatedTime = `${year}-${month}-${date} (${day})`;
-    return reformatedTime;
-  };
-
   let history = useHistory();
   const handleEventClick = (e) => {
     history.push(`/events/${e}`);
@@ -242,12 +229,6 @@ function UserConfirmedEvents() {
   const handleShow = (eventId) => {
     setShowCancelModal(true);
     setCancelEvent({ ...cancelEvent, eventId: eventId, userId: userId });
-  };
-
-  const renderNoEventMessage = () => {
-    if (noEvent) {
-      return <NoEvent></NoEvent>;
-    }
   };
 
   return (
@@ -299,7 +280,7 @@ function UserConfirmedEvents() {
             ))}
           </Events>
         )}
-        {renderNoEventMessage()}
+        {noEvent && <NoEvent />}
       </EventsContainer>
       <Modal
         show={showCancelModal}

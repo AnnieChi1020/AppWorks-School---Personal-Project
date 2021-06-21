@@ -76,7 +76,7 @@ const EventText = styled.div`
 `;
 
 const ConfirmButton = styled.button`
-  width: 80px;
+  width: 90px;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
@@ -166,7 +166,7 @@ function ParticipantList() {
     const startT = event.startTime.seconds * 1000;
     const currentT = new Date().getTime();
     const eventPassed = startT < currentT;
-    return e.participantAttended === false && eventPassed ? (
+    return !e.participantAttended && eventPassed ? (
       <ConfirmButton
         id={e.participantId}
         onClick={(e) => {
