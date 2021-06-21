@@ -1,9 +1,7 @@
 import styled from "styled-components";
-// import Signup from "./SignUp.js";
 import Detail from "./Detail.js";
 import React, { useEffect } from "react";
-
-// import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   width: 100%;
@@ -13,17 +11,21 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-function EventDetail() {
+function EventDetailPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  const dispatch = useDispatch();
+
   return (
-    <Container className="container-xl">
+    <Container
+      className="container-xl"
+      onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
+    >
       <Detail />
-      {/* <Signup /> */}
     </Container>
   );
 }
 
-export default EventDetail;
+export default EventDetailPage;

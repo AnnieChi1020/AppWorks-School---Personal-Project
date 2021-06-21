@@ -14,10 +14,16 @@ const LeaderBoardContainer = styled.div`
   flex-wrap: wrap;
   margin: 0 auto;
   margin-top: 20px;
+  display: grid;
+  grid-template-rows: 340px 1fr;
+  @media (max-width: 960px) {
+    order: -1;
+  }
 `;
 
 const PlantImageContainer = styled.div`
   width: 100%;
+  height: 290px;
   display: flex;
   align-items: center;
   padding: 5px;
@@ -60,7 +66,6 @@ const Title = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  /* border-bottom: 1px solid #ced4da; ; */
 `;
 
 const Row = styled.div`
@@ -68,11 +73,6 @@ const Row = styled.div`
   display: flex;
   flex-direction: row;
 `;
-
-// const ImageContainer = styled.div`
-//   width: 50px;
-//   flex-grow: 0;
-// `;
 
 const Image = styled.img`
   width: 30px;
@@ -88,6 +88,9 @@ const TextContainer = styled.div`
   flex-grow: 1;
   display: flex;
   align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
 `;
 
 const NumContainer = styled.div`
@@ -95,6 +98,9 @@ const NumContainer = styled.div`
   flex-grow: 0;
   display: flex;
   align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
 `;
 
 const StarContainer = styled.div`
@@ -139,14 +145,13 @@ function LeaderBoard() {
 
   useEffect(() => {
     getCompletedNumber();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    console.log(leaderboard);
     const sortedArray = leaderboard.sort(function (a, b) {
       return a.number > b.number ? -1 : 1;
     });
-    console.log(sortedArray);
     setSortedData(sortedArray.slice(0, 5));
   }, [leaderboard]);
 
