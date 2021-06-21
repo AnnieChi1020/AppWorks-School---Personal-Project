@@ -1,13 +1,10 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-
 import { getParticipantNumber, getEvents } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { Card, Col } from "react-bootstrap";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
-
 import background from "../../images/TP_background_3.png";
 
 const TopEventsContainer = styled.div`
@@ -63,7 +60,6 @@ const EventsContainer = styled.div`
 `;
 
 const StyledCard = styled(Card)`
-  /* border: 1px solid rgba(0, 0, 0, 0.125); */
   cursor: pointer;
   border-radius: 10px 10px 10px 10px !important;
 `;
@@ -118,14 +114,6 @@ const EventText = styled.div`
   }
 `;
 
-const styles = {
-  modalBody: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-};
-
 function TopEvents() {
   const [topEvents, setTopEvents] = useState([]);
 
@@ -166,19 +154,15 @@ function TopEvents() {
         <TopEventsHeader>熱門志工活動</TopEventsHeader>
         <EventsContainer>
           {topEvents.map((event, index) => (
-            <Col className="p-1 h-100" style={styles.cardCol} key={index}>
+            <Col className="p-1 h-100" key={index}>
               <StyledCard
                 className="shadow-sm rounded bg-white h-100"
                 onClick={() => handleEventClick(event.id)}
               >
                 <div className="bg-image hover-overlay hover-zoom">
-                  <CardImg
-                    variant="top"
-                    src={event.image}
-                    style={styles.cardImage}
-                  ></CardImg>
+                  <CardImg variant="top" src={event.image}></CardImg>
                 </div>
-                <CardBody className="py-2 px-3" style={styles.modalBody}>
+                <CardBody className="py-2 px-3">
                   <EventTitle>{event.title}</EventTitle>
                   <EventText>
                     {`${event.number}`}

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -7,14 +6,14 @@ import {
   updateEvent,
   getParticipants,
   updateParticipantStatus,
-} from "../../../utils/firebase.js";
+} from "../../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Col, Card, Modal } from "react-bootstrap";
-import NoEvent from "../components/NoEvent.js";
+import NoEvent from "../../components/NoEvent.js";
 import { toast } from "react-toastify";
-import { successAlertText } from "../../../components/Alert.js";
-import { reformatTimestamp } from "../../../utils/time.js";
+import { successAlertText } from "../../../../components/Alert.js";
+import { reformatTimestamp } from "../../../../utils/time.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -206,6 +205,7 @@ function ActiveEvents() {
 
   useEffect(() => {
     getActiveEvents();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {}, [events]);

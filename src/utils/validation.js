@@ -54,3 +54,13 @@ export const validateEventTime = (eventTime, callback) => {
     return true;
   }
 };
+
+export const validateUploadImages = (files, callback) => {
+  if (files.length < 3) {
+    callback(true);
+    return false;
+  } else {
+    callback(false);
+    return true;
+  }
+};

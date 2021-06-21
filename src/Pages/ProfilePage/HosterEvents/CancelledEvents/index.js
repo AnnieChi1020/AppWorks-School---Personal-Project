@@ -1,11 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getHosterEvents } from "../../../utils/firebase.js";
+import { getHosterEvents } from "../../../../utils/firebase.js";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
-import NoEvent from "../components/NoEvent.js";
+import NoEvent from "../../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -95,6 +94,7 @@ function CancelledEvents() {
 
   useEffect(() => {
     getCancelledEvents();
+    // eslint-disable-next-line
   }, []);
 
   const getDay = (day) => {
@@ -118,7 +118,7 @@ function CancelledEvents() {
 
   const renderNoEventMessage = () => {
     if (noEvent) {
-      return <NoEvent></NoEvent>;
+      return <NoEvent />;
     }
   };
 

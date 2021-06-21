@@ -49,6 +49,9 @@ describe("Should render the banner", () => {
     const { container, getByTestId } = renderWithRouter(<Banner />);
     expect(container.innerHTML).toMatch("加入志工的行列");
     fireEvent.click(getByTestId("signUpButton"));
-    expect(container.innerHTML).toMatch("活動時間");
-  });
+    jest.useFakeTimers();
+    setTimeout(() => {
+      expect(container.innerHTML).toMatch("活動時間");
+    });
+  }, 1500);
 });

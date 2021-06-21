@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  /* margin-top: 50px; */
   display: flex;
   flex-direction: column;
 `;
@@ -18,7 +17,6 @@ function HomePage() {
 
   return (
     <Container
-      // className="container-xl mb-5"
       onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
     >
       <Banner />

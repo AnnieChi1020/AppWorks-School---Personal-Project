@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import React from "react";
 import Login from "./Login";
-// import logo from "../images/logo_3.png";
 import logo from "../images/newLogo.png";
 import menu from "../images/menu.svg";
 import { useDispatch, useSelector } from "react-redux";

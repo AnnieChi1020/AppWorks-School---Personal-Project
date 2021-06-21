@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -227,6 +226,7 @@ function EventDetail() {
 
   useEffect(() => {
     getEventDetail();
+    // eslint-disable-next-line
   }, []);
 
   const handleClose = () => dispatch({ type: "SIGNUP", data: false });

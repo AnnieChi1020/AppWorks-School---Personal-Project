@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -212,6 +211,7 @@ function Profile() {
 
   useEffect(() => {
     getUserData();
+    // eslint-disable-next-line
   }, [userId]);
 
   const getAttendedEventsNumber = async (id) => {
@@ -239,6 +239,7 @@ function Profile() {
         target: { number: levels[3].number, name: levels[3].name },
       });
     }
+    // eslint-disable-next-line
   }, [userData.attendedNum]);
 
   const levelProps = {

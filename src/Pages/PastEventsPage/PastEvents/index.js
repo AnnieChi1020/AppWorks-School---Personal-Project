@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import {
@@ -20,7 +19,6 @@ const PastEventsContainer = styled.div`
 
 const PastEvent = styled.div`
   width: 33%;
-
   display: inline-block;
   margin-top: 20px;
   filter: sepia(50%);

@@ -19,9 +19,9 @@ import CreateEvent from "./Pages/CreateEventPage";
 import EventDetail from "./Pages/EventDetailPage";
 import ProfilePage from "./Pages/ProfilePage";
 import EventsPage from "./Pages/EventsPage";
-import ManageParticipantPage from "./Pages/ProfilePage/HosterEvents/ManageParticipantsPage";
+import ManageParticipantPage from "./Pages/ManageParticipantsPage";
 import PastEvents from "./Pages/PastEventsPage";
-import EditEvent from "./Pages/ProfilePage/HosterEvents/EditEventPage";
+import EditEvent from "./Pages/EditEventPage";
 import NotFound from "./Pages/NotFoundPage";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-// import { getHosterEvents } from "../../../utils/firebase.js";
-// import { useHistory } from "react-router-dom";
-import ActiveEvents from "./ActiveEvents.js";
-import ClosedEvents from "./ClosedEvents.js";
-import CancelledEvents from "./CancelledEvents.js";
+import ActiveEvents from "./ActiveEvents";
+import ClosedEvents from "./ClosedEvents/index.js";
+import CancelledEvents from "./CancelledEvents";
 
 const TabsContainer = styled.div`
   width: 100%;
@@ -14,7 +12,6 @@ const TabsContainer = styled.div`
   background-color: white;
   padding-bottom: 20px;
   border-radius: 10px;
-  /* margin-bottom: 50px; */
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 960px) {

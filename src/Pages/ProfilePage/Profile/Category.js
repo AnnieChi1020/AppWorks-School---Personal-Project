@@ -111,6 +111,7 @@ function Category(props) {
 
   useEffect(() => {
     getCompletedEventsInfo();
+    // eslint-disable-next-line
   }, [props.userId]);
 
   return (

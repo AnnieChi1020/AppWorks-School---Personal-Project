@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import WaitingList from "./WaitingList.js";
-import ParticipantList from "./ParticipantList.js";
-import background from "../../../../images/manageBackground.jpg";
+import WaitingList from "./WaitingList";
+import ParticipantList from "./ParticipantList";
+import background from "../../images/manageBackground.jpg";
 import { useParams } from "react-router-dom";
-import { getEventInfo } from "../../../../utils/firebase.js";
+import { getEventInfo } from "../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 
 const Container = styled.div`

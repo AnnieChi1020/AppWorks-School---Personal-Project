@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Events from "./Events.js";
+import Events from "./Events";
 import React from "react";
 import { useDispatch } from "react-redux";
 
@@ -13,7 +13,6 @@ const Background = styled.div`
   height: 100%;
   width: 100%;
   background-color: #80808012;
-  /* background-color: #fffaee; */
   position: fixed;
   top: 0;
   left: 0;

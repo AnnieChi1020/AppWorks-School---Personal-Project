@@ -142,9 +142,9 @@ function Banner() {
   const history = useHistory();
 
   const handleButtonClick = () => {
-    // setTimeout(function () {
+    setTimeout(function () {
       history.push("/events");
-    // }, 1500);
+    }, 1500);
   };
 
   return (

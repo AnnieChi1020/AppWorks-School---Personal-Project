@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React from "react";
-import {} from "../utils/firebase.js";
 // import logo from "../images/logo.jpg";
 // import logoText from "../images/logo_3.png";
 

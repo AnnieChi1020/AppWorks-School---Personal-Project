@@ -1,13 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getHosterEvents } from "../../../utils/firebase.js";
+import { getHosterEvents } from "../../../../utils/firebase.js";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Col, Card, Modal } from "react-bootstrap";
-import NoEvent from "../components/NoEvent.js";
-import Results from "./EventResultPage/EventResultPage.js";
-import { reformatTimestamp } from "../../../utils/time.js";
+import NoEvent from "../../components/NoEvent.js";
+import EventResult from "./EventResult.js";
+import { reformatTimestamp } from "../../../../utils/time.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -149,6 +148,7 @@ function ClosedEvents() {
       dispatch({ type: "SET_RESULTCOMPLETED", data: false });
       dispatch({ type: "SET_EVENTID", data: "" });
     }
+    // eslint-disable-next-line
   }, [resultCompleted]);
 
   const getClosedEvents = async () => {
@@ -161,6 +161,7 @@ function ClosedEvents() {
 
   useEffect(() => {
     getClosedEvents();
+    // eslint-disable-next-line
   }, []);
 
   let history = useHistory();
@@ -243,7 +244,7 @@ function ClosedEvents() {
         <StyledModal size="md" show={showResultModal} onHide={handleClose}>
           <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
           <Modal.Body style={styles.modalBody}>
-            <Results></Results>
+            <EventResult />
           </Modal.Body>
         </StyledModal>
       </EventsContainer>

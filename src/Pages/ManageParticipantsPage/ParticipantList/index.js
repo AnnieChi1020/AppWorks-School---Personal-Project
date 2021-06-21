@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -6,12 +5,12 @@ import {
   getEventInfo,
   getParticipantInfo,
   updateParticipantStatus,
-} from "../../../../utils/firebase.js";
+} from "../../../utils/firebase.js";
 import { useParams } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
-import noParticipantImage from "../../../../images/noParticipant.png";
+import NoParticipant from "./NoParticipant.js";
 
-const EventsContainer = styled.div`
+const Container = styled.div`
   width: 90%;
   max-width: 800px;
   display: flex;
@@ -23,26 +22,39 @@ const EventsContainer = styled.div`
   margin-top: 20px;
 `;
 
-const Events = styled.div`
+const Participants = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  /* display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 10px; */
   margin: 0 auto;
   padding: 20px 0;
-  /* @media (max-width: 768px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-  } */
 `;
 
-const EventInfo = styled.div`
+const StyledCol = styled(Col)`
+  min-width: 200px !important;
+  flex-grow: 0;
+  justify-content: flex-start;
+  overflow: hidden;
+`;
+
+const StyledCard = styled(Card)`
+  border: 1px solid rgba(0, 0, 0, 0.125);
+`;
+
+const StyledCardTitle = styled(Card.Title)`
+  font-size: 16px;
+`;
+
+const StyledCardBody = styled(Card.Body)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 20px;
+`;
+
+const ParticipantInfo = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -63,48 +75,16 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-// const NoEvent = styled.div`
-//   width: 90%;
-//   margin: 0 auto;
-//   padding: 10px 0;
-//   font-size: 16px;
-//   line-height: 24px;
-//   margin-top: 20px;
-//   text-align: center;
-// `;
-
 const ConfirmButton = styled.button`
-  width: 90px;
+  width: 80px;
   font-size: 14px;
   line-height: 20px;
-  padding: 3px 8px;
-  margin-right: 8px;
+  padding: 3px 5px;
   border: 1px solid #ced4da;
   border-radius: 5px;
   background-color: #619e6f;
   color: white;
 `;
-
-const styles = {
-  cardImage: {
-    objectFit: "cover",
-    width: "100%",
-    height: "150px",
-    cursor: "pointer",
-  },
-  cardBody: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  cardTitle: {
-    fontSize: "16px",
-  },
-  cardCol: {
-    overflow: "hidden",
-    minWidth: "200px",
-  },
-};
 
 const Title = styled.div`
   font-size: 20px;
@@ -117,44 +97,7 @@ const Title = styled.div`
   border-bottom: 3px solid #619e6f;
 `;
 
-const NoResultDiv = styled.div`
-  width: 200px;
-  font-size: 16px;
-  line-height: 20px;
-  padding: 10px 0;
-  color: #949494;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-`;
-
-const NoResultImage = styled.img`
-  width: 200px;
-  height: 200px;
-  object-fit: contain;
-  margin-right: 5px;
-  margin-left: 5px;
-`;
-
-const NoResultText = styled.div`
-  position: absolute;
-  top: 32px;
-  left: 50px;
-  color: #3d3d3d;
-`;
-
-const Styles = styled.div`
-  .eventCard {
-    border: 1px solid rgba(0, 0, 0, 0.125);
-  }
-  .col {
-    min-width: 200px !important;
-    flex-grow: 0;
-    justify-content: flex-start;
-  }
-`;
+const Styles = styled.div``;
 
 function ParticipantList() {
   let { id } = useParams();
@@ -179,6 +122,7 @@ function ParticipantList() {
 
   useEffect(() => {
     getParticipantsData();
+    // eslint-disable-next-line
   }, []);
 
   const [event, setEvent] = useState({
@@ -209,6 +153,7 @@ function ParticipantList() {
       });
     }
     getEventDetail();
+    // eslint-disable-next-line
   }, []);
 
   const handleAttendClick = async (eventId, userId) => {
@@ -244,45 +189,34 @@ function ParticipantList() {
     );
   };
 
-  const renderNoResultMessage = () => {
-    if (noParticipant) {
-      return (
-        <NoResultDiv>
-          <NoResultImage src={noParticipantImage} />
-          <NoResultText>尚無參加者哦</NoResultText>
-        </NoResultDiv>
-      );
-    }
-  };
-
   return (
     <Styles>
-      <EventsContainer>
+      <Container>
         <Title>活動參加名單</Title>
-        <Events>
+        <Participants>
           {participants.map((participant, index) => (
-            <Col className="p-1 col" key={index}>
-              <Card className="h-100 eventCard">
-                <Card.Body style={styles.cardBody}>
-                  <EventInfo>
-                    <Card.Title style={styles.cardTitle}>
+            <StyledCol className="p-1" key={index}>
+              <StyledCard className="h-100 ">
+                <StyledCardBody>
+                  <ParticipantInfo>
+                    <StyledCardTitle>
                       {participant.participantName}
-                    </Card.Title>
+                    </StyledCardTitle>
                     <Card.Text>
                       <EventText>{participant.participantPhone}</EventText>
                       <EventText>{participant.participantEmail}</EventText>
                     </Card.Text>
-                  </EventInfo>
+                  </ParticipantInfo>
                   <ButtonsContainer>
                     {renderButton(participant)}
                   </ButtonsContainer>
-                </Card.Body>
-              </Card>
-            </Col>
+                </StyledCardBody>
+              </StyledCard>
+            </StyledCol>
           ))}
-          {renderNoResultMessage()}
-        </Events>
-      </EventsContainer>
+          {noParticipant && <NoParticipant />}
+        </Participants>
+      </Container>
     </Styles>
   );
 }

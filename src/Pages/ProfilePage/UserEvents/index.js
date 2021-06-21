@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import ApplyingEvents from "./ApplyingEvents.js";
-import ConfirmedEvents from "./ConfirmedEvents.js";
-import CompletedEvents from "./CompletedEvents.js";
-import CancelledEvents from "./CancelledEvents.js";
+import ApplyingEvents from "./ApplyingEvents";
+import ConfirmedEvents from "./ConfirmedEvents";
+import CompletedEvents from "./CompletedEvents";
+import CancelledEvents from "./CancelledEvents";
 
 const TabsContainer = styled.div`
   width: 100%;
@@ -13,7 +13,6 @@ const TabsContainer = styled.div`
   background-color: white;
   padding-bottom: 20px;
   border-radius: 10px;
-  /* margin-bottom: 50px; */
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 960px) {

@@ -194,7 +194,6 @@ const Styles = styled.div`
 `;
 
 function CreateEvent() {
-  // const USER = 0;
   const ORGANIZATION = 1;
 
   const dispatch = useDispatch();
@@ -338,22 +337,21 @@ function CreateEvent() {
     );
     const timeIsValid = validateEventTime(eventTime, setTimeIsInvalid);
 
-    //不要用!去判斷
-    if (!selectedAddress.value) {
-      document.querySelector(".css-yk16xz-control").style.border =
-        "1px solid red";
-    } else {
+    if (selectedAddress.value) {
       document.querySelector(".css-yk16xz-control").style.border =
         "1px solid hsl(0, 0%, 80%)";
+    } else {
+      document.querySelector(".css-yk16xz-control").style.border =
+        "1px solid red";
     }
 
-    if (!inputs.coverImage.files[0]) {
+    if (inputs.coverImage.files[0]) {
+      setImageIsInvalid(false);
+      document.querySelector("#coverImage").style.border = "none";
+    } else {
       setImageIsInvalid(true);
       document.querySelector("#coverImage").style.border = "1px solid red";
       document.querySelector("#coverImage").style.borderRadius = "5px";
-    } else {
-      setImageIsInvalid(false);
-      document.querySelector("#coverImage").style.border = "none";
     }
 
     if (

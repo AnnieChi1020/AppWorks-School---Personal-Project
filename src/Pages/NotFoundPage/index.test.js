@@ -1,7 +1,7 @@
 import React from "react";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { render, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import NotFoundPage from "./index.js";
 
@@ -28,5 +28,5 @@ function renderWithRedux(
 
 test("renders with redux", () => {
   const { getByTestId } = renderWithRedux(<NotFoundPage />);
-  // expect(getByTestId("notFoundImage")).toBeInTheDocument();
+  expect(getByTestId("notFoundImage")).toBeInTheDocument();
 });

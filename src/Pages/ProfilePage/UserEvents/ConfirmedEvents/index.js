@@ -5,12 +5,14 @@ import {
   getUserEvents,
   getEventInfo,
   getParticipantInfo,
-} from "../../../utils/firebase.js";
-import { useDispatch, useSelector } from "react-redux";
-import { Col, Card, Modal, Tooltip, OverlayTrigger } from "react-bootstrap";
+  updateParticipantStatus,
+} from "../../../../utils/firebase.js";
+import { useSelector } from "react-redux";
+import { Col, Card, Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import NoEvent from "../components/NoEvent.js";
-import Comments from "./CommentsPage/CommentsPage.js";
+import NoEvent from "../../components/NoEvent.js";
+import { toast } from "react-toastify";
+import { successAlertText } from "../../../../components/Alert.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -66,8 +68,49 @@ const CurrentStatus = styled.div`
   color: rgb(0, 0, 0, 0.9);
 `;
 
-const RateButton = styled.button`
+const CancelButton = styled.button`
   width: 100px;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 5px;
+  border: 1px solid #9dc7d8;
+  color: #7b9fac;
+  border-radius: 5px;
+  background-color: white;
+  margin: 0 auto;
+`;
+
+const StyledHeader = styled(Modal.Header)`
+  border: none;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 25px 30px 20px 30px;
+  color: #818181;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #ececec;
+  /* background-color: #9dc7d878; */
+`;
+
+const CancelText = styled.div`
+  width: 100%;
+  text-align: center;
+`;
+
+const StyledBody = styled(Modal.Body)`
+  padding: 25px 30px 25px 30px;
+`;
+
+const ButtonsContainer = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+`;
+
+const PrimaryButton = styled.button`
+  width: 100%;
   font-size: 14px;
   line-height: 20px;
   padding: 3px 5px;
@@ -76,6 +119,20 @@ const RateButton = styled.button`
   background-color: #67aeca;
   color: white;
   margin: 0 auto;
+  cursor: pointer;
+`;
+
+const SecondaryButton = styled.button`
+  width: 100%;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px 5px;
+  border: 1px solid #67aeca;
+  border-radius: 5px;
+  background-color: white;
+  color: #67aeca;
+  margin: 0 auto;
+  cursor: pointer;
 `;
 
 const styles = {
@@ -96,80 +153,37 @@ const styles = {
   cardCol: {
     overflow: "hidden",
   },
-  modal: {
-    marginTop: "70px",
-  },
-  modalHeader: {
-    border: "none",
-  },
-  modalBody: {
-    padding: "0 40px 40px 40px",
-  },
 };
 
 const Styles = styled.div`
   .eventCard {
     border: 1px solid rgba(0, 0, 0, 0.125);
   }
-  .rate-tooltip {
-    position: absolute;
-    will-change: transform;
-    top: 0px;
-    left: 0px;
-    transform: translate3d(563px, 60px, 0px);
-  }
 `;
 
-function UserCompletedEvents() {
+function UserConfirmedEvents() {
   const userId = useSelector((state) => state.isLogged.userId);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState("");
   const [noEvent, setNoEvent] = useState(false);
-  const showFeedbackModal = useSelector((state) => state.modal.feedback);
-  const feedbackCompleted = useSelector(
-    (state) => state.modal.feedbackCompleted
-  );
-  const selectedEventId = useSelector((state) => state.modal.eventId);
 
-  useEffect(() => {
-    if (feedbackCompleted) {
-      let currentEventsArray = events;
-      currentEventsArray.map((event) => {
-        if (event.eventId === selectedEventId) {
-          event.userRate = 5;
-          return event;
-        } else {
-          return event;
-        }
-      });
-      setEvents(currentEventsArray);
-      dispatch({ type: "SET_FEEDBACKCOMPLETED", data: false });
-      dispatch({ type: "SET_EVENTID", data: "" });
-    }
-  }, [feedbackCompleted]);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelEvent, setCancelEvent] = useState({
+    eventId: "",
+    userId: "",
+  });
 
-
-  const dispatch = useDispatch();
-
-  const getCompletedEventIds = async () => {
+  const getApplyingEventsId = async () => {
     const applyingEvents = await getUserEvents(userId, 1);
     return applyingEvents;
   };
 
-  const getCompletedEventsInfo = async () => {
-    const eventIdArray = await getCompletedEventIds();
-    if (eventIdArray.length === 0) {
-      setNoEvent(true);
-    }
+  const getApplyingEventsInfo = async () => {
+    const eventIdArray = await getApplyingEventsId();
     let eventInfoArray = [];
     await Promise.all(
       eventIdArray.map(async (id) => {
         const event = await getEventInfo(id);
-        if (event.eventStatus === 1) {
-          const userDetail = await getParticipantInfo(id, userId);
-          const userRate = userDetail.participantInfo.participantRating;
-          const userAttend = userDetail.participantInfo.participantAttended;
-          event.userRate = userRate;
-          event.userAttend = userAttend;
+        if (event.eventStatus === 0) {
           eventInfoArray.push(event);
         }
         setEvents([...eventInfoArray]);
@@ -182,7 +196,7 @@ function UserCompletedEvents() {
   };
 
   useEffect(() => {
-    getCompletedEventsInfo();
+    getApplyingEventsInfo();
   }, []);
 
   const getDay = (day) => {
@@ -204,9 +218,31 @@ function UserCompletedEvents() {
     history.push(`/events/${e}`);
   };
 
-  // const handleCommentClick = (id) => {
-  //   history.push(`profile/comments/${id}`);
-  // };
+  const handleCancelClick = async (eventId, userId) => {
+    let currentStatus = await getParticipantInfo(eventId, userId);
+    currentStatus.participantInfo.participantStatus = 9;
+    updateParticipantStatus(eventId, userId, currentStatus);
+    let newEventsArray = events;
+    newEventsArray.map((event) => {
+      if (event.eventId === eventId) {
+        event.eventStatus = 9;
+        return event;
+      } else {
+        return event;
+      }
+    });
+    setEvents(newEventsArray);
+    toast.success(successAlertText("成功取消報名"), {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    setShowCancelModal(false);
+  };
+
+  const handleClose = () => setShowCancelModal(false);
+  const handleShow = (eventId) => {
+    setShowCancelModal(true);
+    setCancelEvent({ ...cancelEvent, eventId: eventId, userId: userId });
+  };
 
   const renderNoEventMessage = () => {
     if (noEvent) {
@@ -214,25 +250,15 @@ function UserCompletedEvents() {
     }
   };
 
-  const handleClose = () => dispatch({ type: "SHOW_FEEDBACK", data: false });
-  const handleShow = (eventId) => {
-    dispatch({ type: "SHOW_FEEDBACK", data: true });
-    dispatch({ type: "SET_EVENTID", data: eventId });
-  };
-
   return (
     <Styles>
-      <EventsContainer>
+      <EventsContainer className="applying-events">
         {events.length > 0 && (
           <Events>
             {events.map((event, index) => (
               <Col className="p-0" style={styles.cardCol} key={index}>
                 <Card className="h-100 eventCard">
-                  {event.userAttend === false ? (
-                    <CurrentStatus>待確認出席</CurrentStatus>
-                  ) : (
-                    <CurrentStatus>已確認出席</CurrentStatus>
-                  )}
+                  <CurrentStatus>已確認報名</CurrentStatus>
                   <Card.Img
                     variant="top"
                     src={event.eventCoverImage}
@@ -254,36 +280,17 @@ function UserCompletedEvents() {
                       </Card.Text>
                     </EventInfo>
                     <EventStatus>
-                      {event.userAttend === false ? (
-                        <OverlayTrigger
-                          placement="right"
-                          delay={{ show: 250, hide: 400 }}
-                          overlay={
-                            <Tooltip id={`tooltip-top`}>
-                              待確認出席即可評價活動
-                            </Tooltip>
-                          }
+                      {event.eventStatus === 9 ? (
+                        <CancelButton disabled>已取消報名</CancelButton>
+                      ) : (
+                        <CancelButton
+                          onClick={(e) => {
+                            // handleCancelClick(event.eventId, userId, e);
+                            handleShow(event.eventId);
+                          }}
                         >
-                          <RateButton disabled style={{ opacity: ".5" }}>
-                            評價活動
-                          </RateButton>
-                        </OverlayTrigger>
-                      ) : (
-                        <div />
-                      )}
-                      {event.userAttend === true && event.userRate === 0 ? (
-                        <RateButton onClick={() => handleShow(event.eventId)}>
-                          評價活動
-                        </RateButton>
-                      ) : (
-                        <div />
-                      )}
-                      {event.userAttend === true && event.userRate !== 0 ? (
-                        <RateButton disabled style={{ opacity: ".5" }}>
-                          已評價活動
-                        </RateButton>
-                      ) : (
-                        <div />
+                          取消報名
+                        </CancelButton>
                       )}
                     </EventStatus>
                   </Card.Body>
@@ -293,19 +300,34 @@ function UserCompletedEvents() {
           </Events>
         )}
         {renderNoEventMessage()}
-        <Modal
-          show={showFeedbackModal}
-          onHide={handleClose}
-          style={styles.modal}
-        >
-          <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
-          <Modal.Body style={styles.modalBody}>
-            <Comments />
-          </Modal.Body>
-        </Modal>
       </EventsContainer>
+      <Modal
+        show={showCancelModal}
+        onHide={handleClose}
+        centered
+        dialogClassName="cancel-modal"
+        size="sm"
+      >
+        <StyledHeader>
+          <CancelText>確定要取消嗎</CancelText>
+        </StyledHeader>
+        <StyledBody>
+          <ButtonsContainer>
+            <SecondaryButton onClick={() => handleClose()}>
+              再想一下
+            </SecondaryButton>
+            <PrimaryButton
+              onClick={() =>
+                handleCancelClick(cancelEvent.eventId, cancelEvent.userId)
+              }
+            >
+              取消報名
+            </PrimaryButton>
+          </ButtonsContainer>
+        </StyledBody>
+      </Modal>
     </Styles>
   );
 }
 
-export default UserCompletedEvents;
+export default UserConfirmedEvents;

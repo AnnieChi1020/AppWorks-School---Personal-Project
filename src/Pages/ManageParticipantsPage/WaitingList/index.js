@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -6,10 +5,10 @@ import {
   getEventInfo,
   getParticipantInfo,
   updateParticipantStatus,
-} from "../../../../utils/firebase.js";
+} from "../../../utils/firebase.js";
 import { useParams } from "react-router-dom";
 import { Col, Card } from "react-bootstrap";
-import noApplicantImage from "../../../../images/noApplicant.png";
+import NoApplicant from "./NoApplicant.js";
 
 const Container = styled.div`
   width: 90%;
@@ -63,6 +62,7 @@ const StyledCardBody = styled(Card.Body)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 24px 20px;
 `;
 
 const EventInfo = styled.div`
@@ -73,11 +73,11 @@ const EventInfo = styled.div`
 
 const ButtonsContainer = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
   margin-top: 10px;
   padding-top: 15px;
-  justify-content: flex-start;
 `;
 
 const EventText = styled.div`
@@ -86,54 +86,20 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-const RejectButton = styled.button`
-  width: 75px;
-  font-size: 14px;
-  line-height: 20px;
-  padding: 3px 8px;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
-  background-color: #ebedef66;
-`;
-
 const ConfirmButton = styled.button`
-  width: 75px;
+  width: 100%;
   font-size: 14px;
   line-height: 20px;
-  padding: 3px 8px;
-  margin-right: 8px;
+  padding: 3px 5px;
   border: 1px solid #ced4da;
   border-radius: 5px;
   background-color: #1190cb;
   color: white;
 `;
 
-const NoResultDiv = styled.div`
-  width: 200px;
-  font-size: 16px;
-  line-height: 20px;
-  padding: 10px 0;
-  color: #949494;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-`;
-
-const NoResultImage = styled.img`
-  width: 200px;
-  height: 200px;
-  object-fit: contain;
-  margin-right: 5px;
-  margin-left: 5px;
-`;
-
-const NoResultText = styled.div`
-  position: absolute;
-  top: 28px;
-  left: 35px;
-  color: #3d3d3d;
+const RejectButton = styled(ConfirmButton)`
+  background-color: #ebedef66;
+  color: #3e3e3e;
 `;
 
 const Styles = styled.div``;
@@ -166,6 +132,7 @@ function WaitingList() {
 
   useEffect(() => {
     getApplicantsData();
+    // eslint-disable-next-line
   }, []);
 
   const [event, setEvent] = useState({
@@ -196,6 +163,7 @@ function WaitingList() {
       });
     }
     getEventDetail();
+    // eslint-disable-next-line
   }, []);
 
   const handleConfirmClick = async (eventId, userId) => {
@@ -268,17 +236,6 @@ function WaitingList() {
     setApplicants([...updatedApplicants]);
   };
 
-  const renderNoFeedbackMessage = () => {
-    if (noApplicant) {
-      return (
-        <NoResultDiv>
-          <NoResultImage src={noApplicantImage} />
-          <NoResultText>目前沒有申請</NoResultText>
-        </NoResultDiv>
-      );
-    }
-  };
-
   return (
     <Styles>
       <Container>
@@ -305,7 +262,7 @@ function WaitingList() {
               </StyledCard>
             </StyledCol>
           ))}
-          {renderNoFeedbackMessage()}
+          {noApplicant && <NoApplicant />}
         </Events>
       </Container>
     </Styles>

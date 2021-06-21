@@ -7,7 +7,6 @@ import {
   faExclamationCircle,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
-// import { useHistory } from "react-router";
 
 const AlertDiv = styled.div`
   width: 100%;

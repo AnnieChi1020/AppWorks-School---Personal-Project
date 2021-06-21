@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import Profile from "./Profile";
-import HosterEvents from "./HosterEvents/HosterEvents.js";
-import UserEvents from "./UserEvents/UserEvents.js";
+import HosterEvents from "./HosterEvents";
+import UserEvents from "./UserEvents";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 

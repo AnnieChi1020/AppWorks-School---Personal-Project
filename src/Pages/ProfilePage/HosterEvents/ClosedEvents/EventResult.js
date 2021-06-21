@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -8,13 +7,16 @@ import {
 } from "../../../../utils/firebase.js";
 import { Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-
 import { toast } from "react-toastify";
 import {
   successAlertText,
   errorAlertText,
 } from "../../../../components/Alert.js";
 import { reformatDateAndTime } from "../../../../utils/time.js";
+import {
+  validateInput,
+  validateUploadImages,
+} from "../../../../utils/validation.js";
 
 const CreateEventContainer = styled.div`
   width: 100%;
@@ -66,6 +68,10 @@ const EventImage = styled.img`
   margin-bottom: 20px;
 `;
 
+const StyledFormControlFeedback = styled(Form.Control.Feedback)`
+  position: inherit !important;
+`;
+
 const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -86,6 +92,11 @@ const Button = styled.button`
   @media (max-width: 540px) {
     width: 100%;
   }
+`;
+
+const DisabledButton = styled(Button)`
+  cursor: inherit;
+  opacity: 0.6;
 `;
 
 const Styles = styled.div`
@@ -117,6 +128,7 @@ function EventResult() {
 
   const [resultIsInvalid, setResultIsInvalid] = useState(false);
   const [filesIsInvalid, setFilesIsInvalid] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const [eventInfo, setEventInfo] = useState({
     id: "",
@@ -144,6 +156,7 @@ function EventResult() {
 
   useEffect(() => {
     getEventDetail();
+    // eslint-disable-next-line
   }, []);
 
   const uploadImage = async (files) => {
@@ -156,35 +169,37 @@ function EventResult() {
     return imageArray;
   };
 
+  const uploadEventResult = async (inputs) => {
+    const eventData = await getEventInfo(eventId);
+    const imageUrl = await uploadImage(inputs.images.files);
+    eventData.resultContent = inputs.result.value;
+    eventData.resultImage = imageUrl;
+    await updateEvent(eventId, eventData);
+    toast.success(successAlertText("已上傳活動成果"), {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    dispatch({ type: "SHOW_RESULT", data: false });
+    dispatch({ type: "SET_RESULTCOMPLETED", data: true });
+  };
+
   const handleSubmit = async (event) => {
     const inputs = event.currentTarget;
 
     event.preventDefault();
     event.stopPropagation();
 
-    if (inputs.result.value) {
-      setResultIsInvalid(false);
-    } else {
-      setResultIsInvalid(true);
-    }
+    const resultIsValid = validateInput(
+      inputs.result.value,
+      setResultIsInvalid
+    );
+    const imagesIsValid = validateUploadImages(
+      inputs.images.files,
+      setFilesIsInvalid
+    );
 
-    if (inputs.images.files.length < 3) {
-      setFilesIsInvalid(true);
-    } else {
-      setFilesIsInvalid(false);
-    }
-
-    if (inputs.result.value && inputs.images.files.length > 2) {
-      const eventData = await getEventInfo(eventId);
-      const imageUrl = await uploadImage(inputs.images.files);
-      eventData.resultContent = inputs.result.value;
-      eventData.resultImage = imageUrl;
-      await updateEvent(eventId, eventData);
-      toast.success(successAlertText("已上傳活動成果"), {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      dispatch({ type: "SHOW_RESULT", data: false });
-      dispatch({ type: "SET_RESULTCOMPLETED", data: true });
+    if (resultIsValid && imagesIsValid) {
+      setSubmitted(true);
+      await uploadEventResult(inputs);
     } else {
       toast.error(errorAlertText("請提供完整資訊"), {
         position: toast.POSITION.TOP_CENTER,
@@ -201,27 +216,20 @@ function EventResult() {
           <EventInfo>{`${eventInfo.startTime} - ${eventInfo.endTime}`}</EventInfo>
           <EventInfo>{eventInfo.address}</EventInfo>
         </Event>
-        <Form
-          noValidate
-          // validated={validated}
-          onSubmit={handleSubmit}
-        >
+        <Form noValidate onSubmit={handleSubmit}>
           <Form.Group controlId="result">
             <Form.Label>活動成果說明</Form.Label>
             <Form.Control
               as="textarea"
               type="text"
               required
-              className="mb-1"
               rows={3}
               isInvalid={resultIsInvalid}
+              className="mb-1"
             />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請填寫活動成果
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group controlId="images">
             <Form.Label>上傳活動圖片 (至少3張)</Form.Label>
@@ -231,15 +239,16 @@ function EventResult() {
               required
               isInvalid={filesIsInvalid}
             ></Form.Control>
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <StyledFormControlFeedback type="invalid">
               請選擇至少3張活動照片
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <ButtonContainer>
-            <Button type="submit">送出成果資料</Button>
+            {submitted ? (
+              <DisabledButton disabled>送出成果資料</DisabledButton>
+            ) : (
+              <Button type="submit">送出成果資料</Button>
+            )}
           </ButtonContainer>
         </Form>
       </CreateEventContainer>

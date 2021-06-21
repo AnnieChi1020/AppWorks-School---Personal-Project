@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -6,13 +5,13 @@ import {
   getEventInfo,
   getParticipantInfo,
   updateParticipantStatus,
-} from "../../../utils/firebase.js";
+} from "../../../../utils/firebase.js";
 import { useSelector } from "react-redux";
 import { Col, Card, Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import NoEvent from "../components/NoEvent.js";
+import NoEvent from "../../components/NoEvent.js";
 import { toast } from "react-toastify";
-import { successAlertText } from "../../../components/Alert.js";
+import { successAlertText } from "../../../../components/Alert.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -89,9 +88,16 @@ const StyledHeader = styled(Modal.Header)`
   color: #818181;
   display: flex;
   flex-direction: column;
+  position: relative;
   border-bottom: 1px solid #ececec;
   /* background-color: #9dc7d878; */
 `;
+
+// const CancelImg = styled.img`
+//   width: 80px;
+//   height: auto;
+//   object-fit: contain;
+// `;
 
 const CancelText = styled.div`
   width: 100%;
@@ -161,9 +167,8 @@ const Styles = styled.div`
   }
 `;
 
-function UserConfirmedEvents() {
-  const userId = useSelector((state) => state.isLogged.userId);
-  const [events, setEvents] = useState("");
+function UserApplyingEvents() {
+  const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -172,8 +177,17 @@ function UserConfirmedEvents() {
     userId: "",
   });
 
+  const userId = useSelector((state) => state.isLogged.userId);
+
+  const checkEventPassed = (event) => {
+    const startT = event.startTime.seconds * 1000;
+    const currentT = new Date().getTime();
+    const eventPassed = startT < currentT;
+    return eventPassed;
+  };
+
   const getApplyingEventsId = async () => {
-    const applyingEvents = await getUserEvents(userId, 1);
+    const applyingEvents = await getUserEvents(userId, 0);
     return applyingEvents;
   };
 
@@ -183,34 +197,20 @@ function UserConfirmedEvents() {
     await Promise.all(
       eventIdArray.map(async (id) => {
         const event = await getEventInfo(id);
-        if (event.eventStatus === 0) {
+        const eventPassed = checkEventPassed(event);
+
+        if (!eventPassed) {
           eventInfoArray.push(event);
+          setEvents([...eventInfoArray]);
         }
-        setEvents([...eventInfoArray]);
         return eventInfoArray;
       })
     );
     if (eventInfoArray.length === 0) {
       setNoEvent(true);
     }
-  };
 
-  useEffect(() => {
-    getApplyingEventsInfo();
-  }, []);
-
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const reformatedTime = `${year}-${month}-${date} (${day})`;
-    return reformatedTime;
+    return eventInfoArray;
   };
 
   let history = useHistory();
@@ -238,10 +238,23 @@ function UserConfirmedEvents() {
     setShowCancelModal(false);
   };
 
-  const handleClose = () => setShowCancelModal(false);
-  const handleShow = (eventId) => {
-    setShowCancelModal(true);
-    setCancelEvent({ ...cancelEvent, eventId: eventId, userId: userId });
+  useEffect(() => {
+    getApplyingEventsInfo();
+    // eslint-disable-next-line
+  }, []);
+
+  const getDay = (day) => {
+    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
+    return dayArray[day];
+  };
+
+  const reformatTimestamp = (timestamp) => {
+    const year = timestamp.toDate().getFullYear();
+    const month = timestamp.toDate().getMonth() + 1;
+    const date = timestamp.toDate().getDate();
+    const day = getDay(timestamp.toDate().getDay());
+    const reformatedTime = `${year}-${month}-${date} (${day})`;
+    return reformatedTime;
   };
 
   const renderNoEventMessage = () => {
@@ -250,15 +263,21 @@ function UserConfirmedEvents() {
     }
   };
 
+  const handleClose = () => setShowCancelModal(false);
+  const handleShow = (eventId) => {
+    setShowCancelModal(true);
+    setCancelEvent({ ...cancelEvent, eventId: eventId, userId: userId });
+  };
+
   return (
     <Styles>
-      <EventsContainer className="applying-events">
+      <EventsContainer>
         {events.length > 0 && (
           <Events>
             {events.map((event, index) => (
               <Col className="p-0" style={styles.cardCol} key={index}>
                 <Card className="h-100 eventCard">
-                  <CurrentStatus>已確認報名</CurrentStatus>
+                  <CurrentStatus>等待確認</CurrentStatus>
                   <Card.Img
                     variant="top"
                     src={event.eventCoverImage}
@@ -310,6 +329,7 @@ function UserConfirmedEvents() {
       >
         <StyledHeader>
           <CancelText>確定要取消嗎</CancelText>
+          {/* <CancelImg src={sadDog} /> */}
         </StyledHeader>
         <StyledBody>
           <ButtonsContainer>
@@ -330,4 +350,4 @@ function UserConfirmedEvents() {
   );
 }
 
-export default UserConfirmedEvents;
+export default UserApplyingEvents;

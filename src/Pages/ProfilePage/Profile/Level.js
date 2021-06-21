@@ -98,6 +98,7 @@ function Level(props) {
         target: { number: levels[3].number, name: levels[3].name },
       });
     }
+    // eslint-disable-next-line
   }, [props.userData.attendedNum]);
 
   return (

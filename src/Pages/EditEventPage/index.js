@@ -3,29 +3,20 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 import { useHistory, useParams } from "react-router-dom";
-import photo from "../../../../images/photo.jpg";
+import photo from "../../images/photo.jpg";
 import { Form, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import background from "../../../../images/manageBackground.jpg";
-import {
-  getReformatedLocalTime,
-  getTomorrowDate,
-} from "../../../../utils/time.js";
-import {
-  validateInput,
-  validateEventTime,
-} from "../../../../utils/validation.js";
+import background from "../../images/manageBackground.jpg";
+import { getReformatedLocalTime, getTomorrowDate } from "../../utils/time.js";
+import { validateInput, validateEventTime } from "../../utils/validation.js";
 import {
   getImageURL,
   getEventInfo,
   updateEvent,
-} from "../../../../utils/firebase.js";
+} from "../../utils/firebase.js";
 import { toast } from "react-toastify";
-import {
-  successAlertText,
-  errorAlertText,
-} from "../../../../components/Alert.js";
+import { successAlertText, errorAlertText } from "../../components/Alert.js";
 
 const Background = styled.div`
   width: 100%;

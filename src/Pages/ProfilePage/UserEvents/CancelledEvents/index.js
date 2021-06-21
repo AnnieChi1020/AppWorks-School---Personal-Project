@@ -1,11 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getUserEvents, getEventInfo } from "../../../utils/firebase.js";
+import { getUserEvents, getEventInfo } from "../../../../utils/firebase.js";
 import { useSelector } from "react-redux";
 import { Col, Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import NoEvent from "../components/NoEvent.js";
+import NoEvent from "../../components/NoEvent.js";
 
 const EventsContainer = styled.div`
   width: 90%;
@@ -35,30 +34,11 @@ const EventInfo = styled.div`
   flex-direction: column;
 `;
 
-// const EventStatus = styled.div`
-//   width: 100%;
-//   display: flex;
-//   flex-direction: row;
-//   margin-top: 10px;
-//   padding-top: 15px;
-//   justify-content: flex-end;
-// `;
-
 const EventText = styled.div`
   font-size: 12px;
   line-height: 20px;
   margin-top: 5px;
 `;
-
-// const NoEvent = styled.div`
-//   width: 90%;
-//   margin: 0 auto;
-//   padding: 10px 0;
-//   font-size: 16px;
-//   line-height: 24px;
-//   margin-top: 20px;
-//   text-align: center;
-// `;
 
 const CurrentStatus = styled.div`
   font-size: 14px;
@@ -156,6 +136,7 @@ function UserCancelledEvents() {
 
   useEffect(() => {
     getApplyingEventsInfo();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {}, []);
@@ -213,16 +194,6 @@ function UserCancelledEvents() {
                         </EventText>
                       </Card.Text>
                     </EventInfo>
-                    {/* <EventStatus>
-                  <CancelButton
-                    onClick={(e) => {
-                      handleCancelClick(event.eventId, userId);
-                      e.target.textContent = "已取消";
-                    }}
-                  >
-                    取消報名
-                  </CancelButton>
-                </EventStatus> */}
                   </Card.Body>
                 </Card>
               </Col>
