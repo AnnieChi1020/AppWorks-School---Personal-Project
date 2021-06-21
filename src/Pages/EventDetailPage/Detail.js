@@ -189,7 +189,7 @@ function EventDetail() {
   const getEventDetail = async () => {
     console.log(process.env);
     const data = await getEventInfo(eventId);
-    setLoading(false);
+
     data ? setEventExist(true) : setEventExist(false);
     if (data) {
       const hosterInfo = await getUserProfile(data.hosterId);
@@ -207,7 +207,6 @@ function EventDetail() {
         hour: "2-digit",
         minute: "2-digit",
       });
-
       setEvent({
         ...event,
         id: data.eventId,
@@ -224,6 +223,7 @@ function EventDetail() {
         passed: passed,
         status: data.eventStatus,
       });
+      setLoading(false);
     }
   };
 
@@ -252,6 +252,10 @@ function EventDetail() {
       </Button>
     );
   };
+
+  useEffect(() => {
+    console.log(event.status);
+  }, [event]);
 
   return (
     <Styles>
