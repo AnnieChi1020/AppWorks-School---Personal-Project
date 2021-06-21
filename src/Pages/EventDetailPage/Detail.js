@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -15,6 +14,8 @@ import EventSignUp from "./SignUp.js";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { warningAlertText } from "../../components/Alert.js";
+import NotFound from "../../components/NotFound.js";
+import { checkEventPassed, reformatTimestamp2 } from "../../utils/time.js";
 
 const Container = styled.div`
   width: 90%;
@@ -26,51 +27,6 @@ const EventImage = styled.img`
   width: 100%;
   height: 25vw;
   object-fit: cover;
-`;
-
-const EventDetailContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  /* width: calc(100% - 270px); */
-  width: 100%;
-  position: relative;
-`;
-
-const EventMainContianer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-`;
-
-const SubtitleContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  margin-top: 15px;
-  align-items: flex-start;
-`;
-
-const Subtitle = styled.div`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 700;
-  margin-bottom: 5px;
-  @media (max-width: 540px) {
-    font-size: 14px;
-    line-height: 20px;
-  }
-`;
-
-const SubtitleIconContainer = styled.div`
-  width: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-`;
-
-const SubtitleTextContainer = styled.div`
-  width: calc(100% - 30px);
 `;
 
 const EventTitle = styled.h2`
@@ -85,6 +41,53 @@ const EventTitle = styled.h2`
     line-height: 28px;
     margin-top: 20px;
     margin-bottom: 10px;
+  }
+`;
+
+const EventDetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+`;
+
+const SubtitleContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  align-items: flex-start;
+`;
+
+const IconContainer = styled.div`
+  width: 25px;
+  margin-right: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+  text-align: left;
+  margin-top: 2px;
+  color: #6c757d;
+  display: flex;
+  justify-content: flex-start;
+`;
+
+const TextContainer = styled.div`
+  width: calc(100% - 25px);
+`;
+
+const Subtitle = styled.div`
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  @media (max-width: 540px) {
+    font-size: 14px;
+    line-height: 20px;
   }
 `;
 
@@ -144,15 +147,6 @@ const Button = styled.button`
 `;
 
 const styles = {
-  subtitleIcon: {
-    textAlign: "left",
-    width: "25px",
-    marginRight: "5px",
-    marginTop: "2px",
-    color: "#6c757d",
-    display: "flex",
-    justifyContent: "flex-start",
-  },
   modal: {
     top: "10%",
   },
@@ -174,82 +168,69 @@ const styles = {
   },
 };
 
+const Styles = styled.div``;
+
 function EventDetail() {
   let { id } = useParams();
   let eventId = id;
   const logStatus = useSelector((state) => state.isLogged);
   const signupModal = useSelector((state) => state.modal.signup);
 
-  console.log(signupModal);
-
   const dispatch = useDispatch();
 
+  const [eventExist, setEventExist] = useState("");
+
   const [event, setEvent] = useState({
-    id: "",
-    image: "",
-    title: "",
-    content: "",
     address: "台灣",
-    location: {},
-    startTime: "",
-    endTime: "",
-    orgName: "",
-    orgEmail: "",
-    orgContact: "",
   });
 
-  const checkEventPassed = (event) => {
-    const startT = event.startTime.seconds * 1000;
-    const currentT = new Date().getTime();
-    const eventPassed = startT < currentT;
-    return eventPassed;
-  };
-
   const getEventDetail = async () => {
+    console.log(process.env);
     const data = await getEventInfo(eventId);
-    const hosterInfo = await getUserProfile(data.hosterId);
-    console.log(hosterInfo);
-    const passed = checkEventPassed(data);
-    console.log(passed);
-    const address = data.eventAddress.formatted_address;
-    const startDate = data.startTime.toDate().toLocaleDateString();
-    const startTime = data.startTime.toDate().toLocaleTimeString("en-US", {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const endDate = data.endTime.toDate().toLocaleDateString();
-    const endTime = data.endTime.toDate().toLocaleTimeString("en-US", {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    data ? setEventExist(true) : setEventExist(false);
+    if (data) {
+      const hosterInfo = await getUserProfile(data.hosterId);
+      const passed = checkEventPassed(data);
+      const address = data.eventAddress.formatted_address;
+      const startDate = reformatTimestamp2(data.startTime);
+      const startTime = data.startTime.toDate().toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const endDate = reformatTimestamp2(data.endTime);
+      const endTime = data.endTime.toDate().toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
 
-    setEvent({
-      ...event,
-      id: data.eventId,
-      image: data.eventCoverImage,
-      title: data.eventTitle,
-      content: data.eventContent,
-      address: address,
-      location: data.eventLocation,
-      startTime: `${startDate} ${startTime}`,
-      endTime: `${endDate} ${endTime}`,
-      orgName: hosterInfo.orgName,
-      orgEmail: hosterInfo.orgEmail,
-      orgContact: hosterInfo.orgContact,
-      passed: passed,
-      status: data.eventStatus,
-    });
+      setEvent({
+        ...event,
+        id: data.eventId,
+        image: data.eventCoverImage,
+        title: data.eventTitle,
+        content: data.eventContent,
+        address: address,
+        location: data.eventLocation,
+        startTime: `${startDate} ${startTime}`,
+        endTime: `${endDate} ${endTime}`,
+        orgName: hosterInfo.orgName,
+        orgEmail: hosterInfo.orgEmail,
+        orgContact: hosterInfo.orgContact,
+        passed: passed,
+        status: data.eventStatus,
+      });
+    }
   };
 
   useEffect(() => {
     getEventDetail();
+    // eslint-disable-next-line
   }, []);
 
   const handleClose = () => dispatch({ type: "SIGNUP", data: false });
   const handleShow = () => {
-    console.log(logStatus);
     if (logStatus.userRole === 0) {
       dispatch({ type: "SIGNUP", data: true });
     } else {
@@ -259,12 +240,8 @@ function EventDetail() {
     }
   };
 
-  useEffect(() => {
-    dispatch({ type: "ADD_USERID", data: logStatus.userId });
-  }, []);
-
-  const renderButton = (e) => {
-    return e.status === 0 ? (
+  const renderButton = (status) => {
+    return status === 0 ? (
       <Button onClick={handleShow}>我要報名</Button>
     ) : (
       <Button disabled style={{ opacity: ".6" }}>
@@ -274,72 +251,70 @@ function EventDetail() {
   };
 
   return (
-    <Container>
-      <EventImage src={event.image}></EventImage>
-      <EventMainContianer>
-        <EventDetailContainer>
-          <EventTitle>{event.title}</EventTitle>
+    <Styles>
+      {eventExist === true && (
+        <Container>
+          <EventImage src={event.image}></EventImage>
+          <EventDetailContainer>
+            <EventTitle>{event.title}</EventTitle>
+            <SubtitleContainer>
+              <IconContainer>
+                <Icon icon={faClock} />
+              </IconContainer>
+              <TextContainer>
+                <Subtitle>活動時間</Subtitle>
+                <EventText>
+                  {event.startTime} - {event.endTime}
+                </EventText>
+              </TextContainer>
+            </SubtitleContainer>
+            <SubtitleContainer>
+              <IconContainer>
+                <Icon icon={faMapMarker} />
+              </IconContainer>
+              <TextContainer>
+                <Subtitle>活動地址</Subtitle>
+                <EventText>{event.address}</EventText>
+              </TextContainer>
+            </SubtitleContainer>
+            <SubtitleContainer>
+              <IconContainer>
+                <Icon icon={faStickyNote} />
+              </IconContainer>
+              <TextContainer>
+                <Subtitle>工作內容</Subtitle>
+                <EventText>{event.content}</EventText>
+              </TextContainer>
+            </SubtitleContainer>
+            <SubtitleContainer>
+              <IconContainer>
+                <Icon icon={faHome} />
+              </IconContainer>
+              <TextContainer>
+                <Subtitle>活動單位</Subtitle>
+                <EventText>{event.orgName}</EventText>
+                <EventText>{event.orgContact}</EventText>
+              </TextContainer>
+            </SubtitleContainer>
+            {renderButton(event.status)}
+            <MapContainer>
+              <MapTitle>志工活動地圖</MapTitle>
+            </MapContainer>
+            <Map
+              src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_GOOGLEMAP}&q=${event.address}`}
+            ></Map>
+          </EventDetailContainer>
 
-          <SubtitleContainer>
-            <SubtitleIconContainer>
-              <FontAwesomeIcon icon={faClock} style={styles.subtitleIcon} />
-            </SubtitleIconContainer>
-            <SubtitleTextContainer>
-              <Subtitle>活動時間</Subtitle>
-              <EventText>
-                {event.startTime} - {event.endTime}
-              </EventText>
-            </SubtitleTextContainer>
-          </SubtitleContainer>
-          <SubtitleContainer>
-            <SubtitleIconContainer>
-              <FontAwesomeIcon icon={faMapMarker} style={styles.subtitleIcon} />
-            </SubtitleIconContainer>
-            <SubtitleTextContainer>
-              <Subtitle>活動地址</Subtitle>
-              <EventText>{event.address}</EventText>
-            </SubtitleTextContainer>
-          </SubtitleContainer>
-          <SubtitleContainer>
-            <SubtitleIconContainer>
-              <FontAwesomeIcon
-                icon={faStickyNote}
-                style={styles.subtitleIcon}
-              />
-            </SubtitleIconContainer>
-            <SubtitleTextContainer>
-              <Subtitle>工作內容</Subtitle>
-              <EventText>{event.content}</EventText>
-            </SubtitleTextContainer>
-          </SubtitleContainer>
-          <SubtitleContainer>
-            <SubtitleIconContainer>
-              <FontAwesomeIcon icon={faHome} style={styles.subtitleIcon} />
-            </SubtitleIconContainer>
-            <SubtitleTextContainer>
-              <Subtitle>活動單位</Subtitle>
-              <EventText>{event.orgName}</EventText>
-              <EventText>{event.orgContact}</EventText>
-            </SubtitleTextContainer>
-          </SubtitleContainer>
-          {renderButton(event)}
-          <MapContainer>
-            <MapTitle>志工活動地圖</MapTitle>
-          </MapContainer>
-          <Map
-            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
-    &q=${event.address}`}
-          ></Map>
-        </EventDetailContainer>
-      </EventMainContianer>
-
-      <Modal show={signupModal} onHide={handleClose} style={styles.modal}>
-        <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
-        <Modal.Body style={styles.modalBody} className="pb-5 px-5">
-          <EventSignUp></EventSignUp>
-        </Modal.Body>
-      </Modal>
-    </Container>
+          <Modal show={signupModal} onHide={handleClose} style={styles.modal}>
+            <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
+            <Modal.Body style={styles.modalBody} className="pb-5 px-5">
+              <EventSignUp></EventSignUp>
+            </Modal.Body>
+          </Modal>
+        </Container>
+      )}
+      {eventExist === false && <NotFound />}
+    </Styles>
   );
 }
 

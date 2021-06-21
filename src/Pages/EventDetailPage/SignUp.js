@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -6,14 +5,29 @@ import { postParticipantInfo } from "../../utils/firebase.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Form, Col } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
-import { successAlertText, errorAlertText } from "../../components/Alert.js";
+import { errorAlertText, signUpAlertText } from "../../components/Alert.js";
+import {
+  validateInput,
+  validateEmail,
+  validatePhoneNum,
+} from "../../utils/validation.js";
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
   margin: 0 auto;
   flex-direction: column;
+`;
+
+const StyledFormControlFeedback = styled(Form.Control.Feedback)`
+  position: inherit !important;
+`;
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  text-align: center;
 `;
 
 const Button = styled.button`
@@ -25,18 +39,14 @@ const Button = styled.button`
   font-size: 16px;
   padding: 5px 10px;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 50px;
 
   @media (max-width: 540px) {
     width: 90%;
   }
 `;
 
-const Styles = styled.div`
-  .invalid-feedback {
-    margin-top: 5px;
-  }
-`;
+const Styles = styled.div``;
 
 function EventSignUp() {
   const { id } = useParams();
@@ -47,55 +57,40 @@ function EventSignUp() {
   const [nameIsInvalid, setNameIsInvalid] = useState(false);
   const [phoneIsInvalid, setPhoneIsInvalid] = useState(false);
 
+  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch({ type: "ADD_USERID", data: userId });
     dispatch({ type: "ADD_EVENTID", data: eventId });
+    // eslint-disable-next-line
   }, []);
+
+  const redirectToProfile = () => {
+    history.push("/profile");
+  };
 
   const postParticipantDetail = async (signupData) => {
     await postParticipantInfo(eventId, userId, signupData);
-    toast.success(successAlertText("已送出報名資訊"), {
+    toast.success(signUpAlertText("已送出報名資訊", redirectToProfile), {
       position: toast.POSITION.TOP_CENTER,
     });
   };
 
-  // const [validated, setValidated] = useState(false);
-
   const handleSubmit = async (event) => {
-    const inputs = event.currentTarget;
-
-    if (!inputs.name.value) {
-      setNameIsInvalid(true);
-    } else {
-      setNameIsInvalid(false);
-    }
-
-    const validRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (!inputs.email.value.match(validRegex)) {
-      setEmailIsInvalid(true);
-    } else {
-      setEmailIsInvalid(false);
-    }
-
-    const phoneno = /^\d{10}$/;
-    if (!inputs.phone.value.match(phoneno)) {
-      setPhoneIsInvalid(true);
-    } else {
-      setPhoneIsInvalid(false);
-    }
-
     event.preventDefault();
     event.stopPropagation();
-    // setValidated(true);
-    if (
-      inputs.checkValidity() === true &&
-      inputs.name.value &&
-      inputs.email.value.match(validRegex) &&
-      inputs.phone.value.match(phoneno)
-    ) {
+
+    const inputs = event.currentTarget;
+
+    const nameIsValid = validateInput(inputs.name.value, setNameIsInvalid);
+    const emailIsValid = validateEmail(inputs.email.value, setEmailIsInvalid);
+    const phoneIsValid = validatePhoneNum(
+      inputs.phone.value,
+      setPhoneIsInvalid
+    );
+
+    if (nameIsValid && emailIsValid && phoneIsValid) {
       const signupData = {
         eventId: eventId,
         participantId: userId,
@@ -116,69 +111,34 @@ function EventSignUp() {
     }
   };
 
-  useEffect(() => {
-    console.log(nameIsInvalid);
-  }, [nameIsInvalid]);
-
   return (
     <Wrapper>
       <Styles>
-        <Form
-          noValidate
-          // validated={validated}
-          onSubmit={handleSubmit}
-        >
+        <Form noValidate onSubmit={handleSubmit}>
           <Form.Group as={Col} controlId="name">
             <Form.Label>參加者姓名</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              className="mb-0"
-              isInvalid={nameIsInvalid}
-            />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <Form.Control required type="text" isInvalid={nameIsInvalid} />
+            <StyledFormControlFeedback type="invalid">
               請輸入參加者姓名
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group as={Col} controlId="phone">
             <Form.Label>連絡電話</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              className="mb-0"
-              isInvalid={phoneIsInvalid}
-            />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
-              請輸入連絡電話
-            </Form.Control.Feedback>
+            <Form.Control required type="text" isInvalid={phoneIsInvalid} />
+            <StyledFormControlFeedback type="invalid">
+              請輸入正確的連絡電話
+            </StyledFormControlFeedback>
           </Form.Group>
           <Form.Group as={Col} controlId="email">
             <Form.Label>Email</Form.Label>
-            <Form.Control
-              required
-              type="email"
-              className="mb-0"
-              isInvalid={emailIsInvalid}
-            />
-            <Form.Control.Feedback
-              type="invalid"
-              style={{ position: "inherit" }}
-            >
+            <Form.Control required type="email" isInvalid={emailIsInvalid} />
+            <StyledFormControlFeedback type="invalid">
               請輸入正確的email
-            </Form.Control.Feedback>
+            </StyledFormControlFeedback>
           </Form.Group>
-          <Button
-            type="submit"
-            style={{ margin: "0 auto", display: "block", marginTop: "50px" }}
-          >
-            送出報名資料
-          </Button>
+          <ButtonContainer>
+            <Button type="submit">送出報名資料</Button>
+          </ButtonContainer>
         </Form>
       </Styles>
     </Wrapper>

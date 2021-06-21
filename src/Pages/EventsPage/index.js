@@ -1,20 +1,18 @@
 import styled from "styled-components";
-import Events from "./Events.js";
-// import { useSelector, useDispatch } from "react-redux";
-// import { getAuthStateChange } from "../../utils/firebase.js";
-import { useEffect } from "react";
+import Events from "./Events";
+import React from "react";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: calc(100vh - 67px);
 `;
 
 const Background = styled.div`
   height: 100%;
   width: 100%;
   background-color: #80808012;
-  /* background-color: #fffaee; */
   position: fixed;
   top: 0;
   left: 0;
@@ -22,24 +20,13 @@ const Background = styled.div`
 `;
 
 function EventsPage() {
-  // const logStatus = useSelector((state) => state.isLogged);
-  // const dispatch = useDispatch();
-
-  const checkLogingStatus = async () => {
-    // const userId = await getAuthStateChange();
-    // if (userId) {
-    //   dispatch({ type: "SIGN_IN", data: true });
-    //   dispatch({ type: "GET_USERID", data: userId });
-    // } else {
-    // }
-  };
-
-  useEffect(() => {
-    checkLogingStatus();
-  }, []);
+  const dispatch = useDispatch();
 
   return (
-    <Container className="container-xl mb-5">
+    <Container
+      className="container-xl"
+      onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
+    >
       <Background />
       <Events />
     </Container>

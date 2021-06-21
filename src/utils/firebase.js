@@ -4,7 +4,7 @@ import "firebase/firestore";
 import "firebase/auth";
 
 firebase.initializeApp({
-  apiKey: "AIzaSyB3u52FblPOqzBp4GUIASlMLohB5NcyLqs",
+  apiKey: `${process.env.REACT_APP_FIREBASE}`,
   authDomain: "volunteer-c29d0.firebaseapp.com",
   databaseURL: "https://volunteer-c29d0.firebaseio.com",
   projectId: "volunteer-c29d0",
@@ -24,10 +24,11 @@ export const postEventInfo = (newEventRef, eventDetail) => {
   return newEventRef
     .set(eventDetail)
     .then(() => {
-      return newEventRef.id;
+      return true;
     })
     .catch((error) => {
       console.error("Error writing document: ", error);
+      return false;
     });
 };
 
@@ -145,6 +146,17 @@ export const getParticipantInfo = (eventId, userId) => {
     .catch((error) => {});
 };
 
+export const onSnapshotParticipantInfo = (eventId, userId) => {
+  const db = firebase.firestore();
+  db.collection("events")
+    .doc(eventId)
+    .collection("participants")
+    .doc(userId)
+    .onSnapshot((doc) => {
+      console.log("New Data", doc.data());
+    });
+};
+
 export const updateParticipantStatus = (eventId, userId, updateInfo) => {
   const db = firebase.firestore();
   const participantRef = db
@@ -167,7 +179,6 @@ export const getUserProfile = (id) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        console.log(doc.data());
         return doc.data();
       } else {
       }
@@ -203,9 +214,7 @@ export const getUserAttendedEvents = (userId) => {
   return userRef
     .get()
     .then((querySnapshot) => {
-      // console.log(userId);
       querySnapshot.forEach((doc) => {
-        // console.log(doc.data().participantInfo.eventId);
         events.push(doc.data().participantInfo.eventId);
       });
       return events;
@@ -325,8 +334,6 @@ export const checkAuthStatus = async () => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         let userId = user.uid;
-        let email = user.email;
-        console.log(userId, email);
         resolve(userId);
       } else {
         resolve(false);

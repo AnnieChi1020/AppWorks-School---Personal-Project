@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import React, { useState, useEffect, createRef } from "react";
-import Login from "./Login.js";
-// import logo from "../images/logo_3.png";
+import React from "react";
+import Login from "./Login";
 import logo from "../images/newLogo.png";
 import menu from "../images/menu.svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,10 +12,6 @@ import { Navbar, Nav } from "react-bootstrap";
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  /* position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 5; */
 `;
 
 const LogoContainer = styled.div`
@@ -33,36 +28,38 @@ const LogoImage = styled.img`
   cursor: pointer;
 `;
 
+const StyledNavLink = styled(Nav.Link)`
+  padding: 8px 15px !important;
+  :hover {
+    color: #57bc90 !important;
+    font-weight: 600;
+  }
+  @media (max-width: 991px) {
+    padding: 15px 15px !important;
+  }
+`;
+
+const StyledLoginButton = styled(Nav.Link)`
+  background-color: #57bc90;
+  color: white !important;
+  padding: 5px 15px !important;
+  border-radius: 20px;
+  @media (max-width: 991px) {
+    background-color: inherit;
+    color: rgba(0, 0, 0, 0.55) !important;
+    padding: 15px 15px !important;
+    :hover {
+      color: #57bc90 !important;
+      font-weight: 600;
+    }
+  }
+`;
+
 const Styles = styled.div`
   .navbar-toggler-icon {
     background-image: url(${menu});
     width: 20px;
     height: 20px;
-  }
-  .nav-items {
-    padding: 8px 15px !important;
-    :hover {
-      color: #57bc90 !important;
-      font-weight: 600;
-    }
-    @media (max-width: 991px) {
-      padding: 15px 15px !important;
-    }
-  }
-  .loginBtn {
-    background-color: #57bc90;
-    color: white !important;
-    padding: 5px 15px !important;
-    border-radius: 20px;
-    @media (max-width: 991px) {
-      background-color: inherit;
-      color: rgba(0, 0, 0, 0.55) !important;
-      padding: 15px 15px !important;
-      :hover {
-        color: #57bc90 !important;
-        font-weight: 600;
-      }
-    }
   }
 `;
 
@@ -70,51 +67,53 @@ function Header() {
   const isLogged = useSelector((state) => state.isLogged.isLogged);
   const userRole = useSelector((state) => state.isLogged.userRole);
   const loginModal = useSelector((state) => state.modal.login);
-
-  const [expanded, setExpanded] = useState("false");
+  const expanded = useSelector((state) => state.expanded.collapseNav);
 
   const dispatch = useDispatch();
 
   const history = useHistory();
 
+  const switchPage = (page) => {
+    dispatch({ type: "SHOW_NAV", data: false });
+    setTimeout(function () {
+      history.push(`${page}`);
+    }, 1000);
+  };
+
   const handleLogoClick = () => {
-    history.push("/");
-    setExpanded(false);
+    switchPage("/");
   };
 
   const handleEventsClick = () => {
-    setExpanded(false);
-    history.push("/events");
+    switchPage("/events");
+  };
+
+  const handlePastEventsClick = () => {
+    switchPage("/pastEvents");
   };
 
   const handleCreateEventClick = () => {
-    setExpanded(false);
+    dispatch({ type: "SHOW_NAV", data: false });
     userRole === 1
-      ? history.push("/createEvent")
+      ? setTimeout(function () {
+          history.push("/createEvent");
+        }, 1000)
       : toast.warning(warningAlertText("請先登入機構帳號"), {
           position: toast.POSITION.TOP_CENTER,
         });
   };
 
-  const handlePastEventsClick = () => {
-    setExpanded(false);
-    history.push("/pastEvents");
-  };
-
   const handleProfileClick = () => {
-    setExpanded(false);
-    history.push("/profile");
+    switchPage("/profile");
   };
 
   const handleLoginClick = () => {
-    setExpanded(false);
-    loginModal === false
-      ? dispatch({ type: "LOGIN", data: true })
-      : dispatch({ type: "LOGIN", data: false });
+    dispatch({ type: "SHOW_NAV", data: false });
+    dispatch({ type: "LOGIN", data: !loginModal });
   };
 
-  const renderLoginModal = () => {
-    return loginModal ? <Login></Login> : <div />;
+  const handleToggleClick = () => {
+    dispatch({ type: "SHOW_NAV", data: !expanded });
   };
 
   return (
@@ -127,69 +126,56 @@ function Header() {
           variant="light"
           fixed="top"
           expanded={expanded}
-          // onToggle={ setExpanded(expanded ? false : true)}
         >
-          <Navbar.Brand eventKey="0">
+          <Navbar.Brand eventkey="0">
             <LogoContainer className="ml-3">
-              <LogoImage src={logo} eventKey="0" onClick={handleLogoClick} />
+              <LogoImage src={logo} eventkey="0" onClick={handleLogoClick} />
             </LogoContainer>
           </Navbar.Brand>
           <Navbar.Toggle
             aria-controls="responsive-navbar-nav"
-            onClick={() => setExpanded(expanded ? false : true)}
+            onClick={handleToggleClick}
           />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Item>
-                <Nav.Link
-                  className="nav-items"
-                  eventKey="1"
-                  onClick={handleEventsClick}
-                >
+                <StyledNavLink eventkey="1" onClick={handleEventsClick}>
                   我要當志工
-                </Nav.Link>
+                </StyledNavLink>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link
-                  className="nav-items"
-                  eventKey="2"
-                  onClick={handleCreateEventClick}
-                >
+                <StyledNavLink eventkey="2" onClick={handleCreateEventClick}>
                   招募志工
-                </Nav.Link>
+                </StyledNavLink>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link
-                  className="nav-items"
-                  eventKey="3"
-                  onClick={handlePastEventsClick}
-                >
+                <StyledNavLink eventkey="3" onClick={handlePastEventsClick}>
                   活動成果
-                </Nav.Link>
+                </StyledNavLink>
               </Nav.Item>
             </Nav>
+
             <Nav>
-              {isLogged === true ? (
-                <Nav.Link
+              {isLogged ? (
+                <StyledLoginButton
                   onClick={handleProfileClick}
-                  eventKey="4"
-                  className="mr-3 loginBtn"
+                  eventkey="4"
+                  className="mr-3"
                 >
                   我的活動
-                </Nav.Link>
+                </StyledLoginButton>
               ) : (
-                <Nav.Link
+                <StyledLoginButton
                   onClick={() => handleLoginClick()}
-                  className="mr-3 loginBtn"
+                  className="mr-3"
                 >
                   登入 / 註冊
-                </Nav.Link>
+                </StyledLoginButton>
               )}
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-
-        {renderLoginModal()}
+        {loginModal ? <Login></Login> : <div />}
       </Styles>
     </Container>
   );
