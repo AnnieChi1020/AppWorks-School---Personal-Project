@@ -116,6 +116,11 @@ const Button = styled.button`
   margin-bottom: 20px;
 `;
 
+const DisabledButton = styled(Button)`
+  opacity: 0.6;
+  cursor: inherit;
+`;
+
 const ImagePreviewDiv = styled.div`
   width: 100%;
   height: 200px;
@@ -210,6 +215,8 @@ function CreateEvent() {
     value: { place_id: TAIWAN_PLACEID },
   });
   const [uploadImage, setUploadImage] = useState(photo);
+
+  const [submmited, setSubmmited] = useState(false);
 
   const history = useHistory();
   useEffect(() => {
@@ -361,7 +368,8 @@ function CreateEvent() {
       selectedAddress.value &&
       inputs.coverImage.files[0]
     ) {
-      createEvent(inputs);
+      setSubmmited(true);
+      await createEvent(inputs);
     } else {
       toast.error(errorAlertText("請確認活動資料"));
     }
@@ -561,7 +569,11 @@ function CreateEvent() {
                 </Form.Control.Feedback>
                 <Form></Form>
               </Form.Group>
-              <Button type="submit">創建活動</Button>
+              {submmited ? (
+                <DisabledButton disabled>創建活動</DisabledButton>
+              ) : (
+                <Button type="submit">創建活動</Button>
+              )}
             </Form>
           </CreateEventContainer>
         </Container>

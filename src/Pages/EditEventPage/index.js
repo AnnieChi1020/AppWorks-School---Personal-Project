@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
@@ -116,6 +115,11 @@ const Button = styled.button`
   margin-bottom: 20px;
 `;
 
+const DisabledButton = styled(Button)`
+  opacity: 0.6;
+  cursor: inherit;
+`;
+
 const ImagePreviewDiv = styled.div`
   width: 100%;
   height: 200px;
@@ -217,14 +221,18 @@ function CreateEvent() {
 
   const [eventExist, setEventExist] = useState("");
 
+  const [submmited, setSubmmited] = useState(false);
+
   useEffect(() => {
     setSelectedAddress({ ...selectedAddress, label: "台灣" });
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if (eventExist === false) {
       history.push("/");
     }
+    // eslint-disable-next-line
   }, [eventExist]);
 
   const getReformatedTime = (time) => {
@@ -284,6 +292,7 @@ function CreateEvent() {
 
   useEffect(() => {
     getEventInformation();
+    // eslint-disable-next-line
   }, []);
 
   const getGeopoint = async (address) => {
@@ -322,6 +331,7 @@ function CreateEvent() {
   useEffect(() => {
     const selectedTags = getSelectedTags(tags);
     dispatch({ type: "ADD_TAGS", data: selectedTags });
+    // eslint-disable-next-line
   }, [tags]);
 
   const constructEventData = async (inputs) => {
@@ -439,6 +449,7 @@ function CreateEvent() {
       selectedAddress.label &&
       (uploadImage === eventInfo.eventCoverImage || inputs.coverImage.files[0])
     ) {
+      setSubmmited(true);
       updateEventInfo(inputs);
     } else {
       toast.error(errorAlertText("請確認活動資料"));
@@ -645,7 +656,11 @@ function CreateEvent() {
                     請選擇封面圖片
                   </Form.Control.Feedback>
                 </Form.Group>
-                <Button type="submit">儲存變更</Button>
+                {submmited ? (
+                  <DisabledButton disabled>儲存活動</DisabledButton>
+                ) : (
+                  <Button type="submit">儲存活動</Button>
+                )}
               </Form>
             </CreateEventContainer>
           ) : (

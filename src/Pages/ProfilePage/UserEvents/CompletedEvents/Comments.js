@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ReactStars from "react-rating-stars-component";
@@ -9,58 +8,12 @@ import {
 } from "../../../../utils/firebase.js";
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-
 import { toast } from "react-toastify";
 import {
   successAlertText,
   errorAlertText,
 } from "../../../../components/Alert.js";
-
-// const Background = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   background-image: url(${background});
-//   background-position: center;
-//   background-repeat: no-repeat;
-//   background-size: cover;
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   z-index: -1;
-// `;
-
-// const Mask = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   background-color: rgb(0, 0, 0, 0.5);
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   z-index: -1;
-// `;
-
-// const Container = styled.div`
-//   width: 100%;
-//   margin: 0 auto;
-//   margin-top: 0px;
-//   min-height: calc(100vh - 200px);
-// `;
-
-// const CommentContainer = styled.div`
-//   width: 80%;
-//   display: flex;
-//   margin: 0 auto;
-//   margin-top: 120px;
-//   margin-bottom: 100px;
-//   flex-direction: column;
-//   padding: 20px 30px;
-//   background-color: white;
-//   border-radius: 8px;
-//   border: solid 1px #979797;
-//   @media (max-width: 760px) {
-//     width: 95%;
-//   }
-// `;
+import { reformatDateAndTime } from "../../../../utils/time.js";
 
 const CommentContainer = styled.div`
   width: 100%;
@@ -121,34 +74,21 @@ const SubmitButton = styled.button`
   color: white;
 `;
 
-function Comments() {
-  // const { id } = useParams();
+const DisabledButton = styled(SubmitButton)`
+  opacity: 0.6;
+  cursor: inherit;
+`;
 
+function Comments() {
   const dispatch = useDispatch();
 
   const participantId = useSelector((state) => state.isLogged.userId);
   const eventId = useSelector((state) => state.modal.eventId);
 
-  // const [rateIsInvalid, setRateIsInvalid] = useState(false);
+  const [submmited, setSubmmited] = useState(false);
 
-  // const eventId = id;
   let rating = 0;
   let comment = "";
-
-  const getDay = (day) => {
-    const dayArray = ["日", "一", "二", "三", "四", "五", "六"];
-    return dayArray[day];
-  };
-
-  const reformatTimestamp = (timestamp) => {
-    const year = timestamp.toDate().getFullYear();
-    const month = timestamp.toDate().getMonth() + 1;
-    const date = timestamp.toDate().getDate();
-    const day = getDay(timestamp.toDate().getDay());
-    const time = timestamp.toDate().toTimeString().slice(0, 5);
-    const reformatedTime = `${year}-${month}-${date}(${day}) ${time}`;
-    return reformatedTime;
-  };
 
   const [eventInfo, setEventInfo] = useState({
     id: "",
@@ -165,8 +105,8 @@ function Comments() {
       ...eventInfo,
       id: event.eventId,
       title: event.eventTitle,
-      startTime: reformatTimestamp(event.startTime),
-      endTime: reformatTimestamp(event.endTime),
+      startTime: reformatDateAndTime(event.startTime),
+      endTime: reformatDateAndTime(event.endTime),
       address: event.eventAddress.formatted_address,
       content: event.eventContent,
     });
@@ -174,6 +114,7 @@ function Comments() {
 
   useEffect(() => {
     getEventDetail();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {}, [eventInfo]);
@@ -198,6 +139,7 @@ function Comments() {
         position: toast.POSITION.TOP_CENTER,
       });
     } else {
+      setSubmmited(true);
       const currentStatus = await getParticipantInfo(
         eventInfo.id,
         participantId
@@ -241,7 +183,11 @@ function Comments() {
         </Form.Group>
       </Form>
       <ButtonContainer>
-        <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
+        {submmited ? (
+          <DisabledButton disabled>儲存活動</DisabledButton>
+        ) : (
+          <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
+        )}
       </ButtonContainer>
     </CommentContainer>
   );
