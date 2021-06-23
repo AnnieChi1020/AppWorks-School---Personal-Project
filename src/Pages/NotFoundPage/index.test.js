@@ -27,6 +27,6 @@ function renderWithRedux(
 }
 
 test("renders with redux", () => {
-  // const { getByTestId } = renderWithRedux(<NotFoundPage />);
-  // expect(getByTestId("notFoundImage")).toBeInTheDocument();
+  const { getByTestId } = renderWithRedux(<NotFoundPage />);
+  expect(getByTestId("notFoundImage")).toBeInTheDocument();
 });
