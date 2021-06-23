@@ -16,10 +16,10 @@ function NotFoundPage() {
   return (
     <Container
       className="container-xl mb-5"
-      data-testid="container" 
+      data-testid="container"
       onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
     >
-      <NotFound data-testid="notFoundImage" />
+      <NotFound />
     </Container>
   );
 }
