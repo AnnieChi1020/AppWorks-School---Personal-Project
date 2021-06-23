@@ -155,7 +155,7 @@ function Banner() {
           <TextSubtitle>加入志工的行列</TextSubtitle>
           <TextSubtitle>一起改變世界</TextSubtitle>
           <Button onClick={handleButtonClick} data-testid="signUpButton">
-            我要報名啦！！
+            我要報名
           </Button>
         </TextContainer>
       </MainContentContainer>

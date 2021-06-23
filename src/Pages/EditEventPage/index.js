@@ -634,8 +634,7 @@ function CreateEvent() {
                 </Form.Group>
                 <Form.Group>
                   <Map
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
-    &q=${selectedAddress.label}`}
+                    src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_GOOGLEMAP}&q=${selectedAddress.label}`}
                   ></Map>
                 </Form.Group>
                 <Form.Group controlId="coverImage">

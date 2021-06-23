@@ -543,7 +543,7 @@ function CreateEvent() {
               </Form.Group>
               <Form.Group>
                 <Map
-                  src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBSxAwCKVnvEIIRw8tk4y0KAjaUjn3Zn18
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_GOOGLEMAP}
     &q=place_id:${selectedAddress.value.place_id}`}
                 ></Map>
               </Form.Group>
