@@ -36,7 +36,7 @@ function UserLogin(props) {
       <Form.Group controlId="email">
         <Form.Control
           type="email"
-          placeholder="jennie@gmail.com"
+          placeholder="volunteer@gmail.com"
           required
           isInvalid={props.emailValid}
           onKeyPress={(e) => {

@@ -45,7 +45,7 @@ function OrgLogin(props) {
       <Form.Group controlId="email">
         <Form.Control
           type="email"
-          placeholder="doggy_place@gmail.com"
+          placeholder="organization@gmail.com"
           required
           isInvalid={props.emailValid}
           onKeyPress={(e) => {
