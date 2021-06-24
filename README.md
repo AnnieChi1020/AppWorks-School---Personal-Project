@@ -1,6 +1,7 @@
-# Volunteer
+# [Volunteer](https://volunteer-c29d0.web.app)
 
-> Together We Can Make A Difference!
+
+> *Together We Can Make A Difference!*
 
 - A volunteer events platform that lets users to join events and provide feedbacks easily
 - Registered organizations are allowed to create their own events and manage participants instantly
