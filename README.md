@@ -8,10 +8,6 @@
 
 ## Demo
 
-<img src="./README/HomePage.gif" width="100%" alt="Main Page" title="Main Page">
-
-### Demo Link
-
 - https://volunteer-c29d0.web.app
 
 ### Test Account
@@ -49,14 +45,19 @@
 - react-loading
 - react-minimal-pie-chart
 
+## Flow Chart
+
 ## Features
 
-### HomePage
+### User Login
 
-<img src="./README/homepage-view.gif" width="100%" alt="Main Page" title="Main Page">
+![image](./README/login.gif)
 
+### Sign Up for Volunteer Events
 
+![image](./README/signup.gif)
 
+### Create Volunteer Events
 
 
 ## Future Features

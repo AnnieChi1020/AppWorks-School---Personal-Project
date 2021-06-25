@@ -289,6 +289,9 @@ function CreateEvent() {
   };
 
   const handleTimeChange = (input, value) => {
+    console.log(process.env.REACT_APP_AUTOCOMPLETE);
+    console.log(process.env.REACT_APP_AUTOCOMPLETE);
+
     const inputType = input;
     switch (inputType) {
       case "startDate":
@@ -543,8 +546,7 @@ function CreateEvent() {
               </Form.Group>
               <Form.Group>
                 <Map
-                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_GOOGLEMAP}
-    &q=place_id:${selectedAddress.value.place_id}`}
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_GOOGLEMAP}&q=place_id:${selectedAddress.value.place_id}`}
                 ></Map>
               </Form.Group>
               <Form.Group controlId="coverImage">
