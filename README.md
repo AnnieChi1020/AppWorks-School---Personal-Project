@@ -77,6 +77,8 @@
 
 ### Past Events Page
 
+![image](./README/past-events.gif)
+
 - View past events and participants' feedbacks
 
 ## Future Features
