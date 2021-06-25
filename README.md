@@ -50,21 +50,36 @@
 
 ## Features
 
-### User Login
+- User login
 
 ![image](./README/login.gif)
 
-### \[ User \] Sign Up for Volunteer Events
+### Events Page
 
 ![image](./README/signup.gif)
 
-### \[ Organization \] Create Volunteer Events
+- Explore volunteer events
+- Sign up for volunteer events
+
+### Create Event Page
 
 ![image](./README/create-event.gif)
 
-### \[ Organization \] Manage Event Applicants / Participants
+- Create new events with tags and accurate location
+
+### Profile Page (Organization)
 
 ![image](./README/management.gif)
+
+- Manage applicants and participants
+- Edit / Cancel volunteer events
+- Upload event results
+
+### Past Events Page
+
+![image](./README/past-events.gif)
+
+- View past events and participants' feedbacks
 
 ## Future Features
 
