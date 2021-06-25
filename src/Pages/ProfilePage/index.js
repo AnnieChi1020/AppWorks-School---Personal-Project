@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Profile from "./Profile";
 import HosterEvents from "./HosterEvents";
@@ -40,6 +40,10 @@ function ProfilePage() {
   const history = useHistory();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const renderEventsData = () => {
     if (role === USER) {

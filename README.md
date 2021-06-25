@@ -8,10 +8,6 @@
 
 ## Demo
 
-<img src="./README/HomePage.gif" width="90%" alt="Main Page" title="Main Page">
-
-### Demo Link
-
 - https://volunteer-c29d0.web.app
 
 ### Test Account
@@ -19,8 +15,53 @@
 - User: volunteer@gmail.com / Password: 000000
 - Organization: organization@gmail.com / Password: 000000
 
+## Technologies
+
+### Front-End Fundamentals
+
+- HTML/CSS/JavaScript
+- RWD
+
+### Front-End Frameworks and Libraries
+
+- React (Hook)
+- React Router
+- Redux
+- styled-components
+- React-Bootstrap
+
+### Cloud Service
+
+- Firebase Authentication
+- Firebase Firestore
+- Firebase Storage
+
+### Other
+
+- react-datepicker
+- react-toastify
+- react-google-places-autocomplete
+- react-dropdown
+- react-loading
+- react-minimal-pie-chart
+
+## Flow Chart
+
 ## Features
+
+### User Login
+
+![image](./README/login.gif)
+
+### Sign Up for Volunteer Events
+
+![image](./README/signup.gif)
+
+### Create Volunteer Events
+
 
 ## Future Features
 
 ## Contact
+
+email: anniechi1020@gmail.com
