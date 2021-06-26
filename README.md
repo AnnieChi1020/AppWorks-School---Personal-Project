@@ -26,14 +26,17 @@
 - React (Hook)
 - React Router
 - Redux
-- styled-components
-- React-Bootstrap
 
 ### Cloud Service
 
 - Firebase Authentication
 - Firebase Firestore
 - Firebase Storage
+
+### User Interface
+
+- styled-components
+- React-Bootstrap
 
 ### Other
 
