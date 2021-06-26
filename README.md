@@ -3,7 +3,7 @@
 > _Together We Can Make A Difference!_
 
 - A volunteer events platform that lets users to join events and provide feedbacks easily
-- Registered organizations are allowed to create their own events and manage participants instantly
+- Registered organizations are allowed to create their own events and manage participants
 
 ## Demo
 
