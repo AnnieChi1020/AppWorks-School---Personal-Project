@@ -10,10 +10,11 @@ const Container = styled.div`
   width: 100%;
   margin: 0 auto;
   margin-top: 80px;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh);
   display: grid;
   grid-template-columns: 300px 1fr;
   grid-gap: 20px;
+  padding-bottom: 50px;
 
   @media (max-width: 960px) {
     display: flex;
