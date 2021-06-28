@@ -64,7 +64,7 @@
 - Explore volunteer events
 - Sign up for volunteer events
 
-### Create Event Page
+### Create Event Page (Organization)
 
 ![image](./README/create-event.gif)
 
