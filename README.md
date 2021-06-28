@@ -80,7 +80,7 @@
 
 ### Profile Page (User)
 
-![image](./README/comments.gif)
+![image](./README/comment.gif)
 
 - Manage personal events
 - Provide feedbacks
