@@ -78,6 +78,13 @@
 - Edit / Cancel volunteer events
 - Upload event results
 
+### Profile Page (User)
+
+![image](./README/comments.gif)
+
+- Manage personal events
+- Provide feedbacks
+
 ### Past Events Page
 
 ![image](./README/past-events.gif)
