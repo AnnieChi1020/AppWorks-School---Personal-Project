@@ -184,7 +184,7 @@ function Comments() {
       </Form>
       <ButtonContainer>
         {submmited ? (
-          <DisabledButton disabled>儲存活動</DisabledButton>
+          <DisabledButton disabled>送出評價</DisabledButton>
         ) : (
           <SubmitButton onClick={handelClickSubmit}>送出評價</SubmitButton>
         )}
