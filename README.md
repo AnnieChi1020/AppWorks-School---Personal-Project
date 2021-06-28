@@ -82,7 +82,7 @@
 
 ![image](./README/comment.gif)
 
-- Manage personal events
+- Manage my volunteer events
 - Provide feedbacks
 
 ### Past Events Page
