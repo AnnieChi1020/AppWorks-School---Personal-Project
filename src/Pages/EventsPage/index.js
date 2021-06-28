@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Events from "./Events";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 const Container = styled.div`
@@ -21,6 +21,10 @@ const Background = styled.div`
 
 function EventsPage() {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Container
