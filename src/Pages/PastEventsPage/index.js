@@ -2,7 +2,7 @@ import styled from "styled-components";
 import PastEvents from "./PastEvents";
 import LeaderBoard from "./LeaderBoard.js";
 import whiteWall from "../../images/white_wall.jpg";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 const Container = styled.div`
@@ -34,6 +34,10 @@ const MainContent = styled.div`
 
 function PastEventsPage() {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Container
