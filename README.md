@@ -68,7 +68,7 @@
 
 ![image](./README/create-event.gif)
 
-- Create new events with tags and accurate location
+- Create new events with tags and the accurate location
 
 ### Profile Page (Organization)
 
