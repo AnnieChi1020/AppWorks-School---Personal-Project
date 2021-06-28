@@ -242,6 +242,10 @@ function CreateEvent() {
     { name: "生態保護", id: "生態保護", select: false },
   ]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleTagClick = (tag) => {
     const selectedTagId = tag.target.id;
     setTags(
