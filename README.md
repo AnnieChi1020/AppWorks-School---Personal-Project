@@ -94,7 +94,8 @@
 ## Future Features
 
 - Send notification emails to confirmed participants
-- Allow organizations to reactivate the cancelled events
+- Reactivate the canceled events
+- Edit the event result/feedback after submitting
 
 ## Contact
 
