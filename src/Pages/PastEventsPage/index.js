@@ -25,10 +25,14 @@ const Background = styled.div`
 
 const MainContent = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
+  /* display: flex;
+  flex-direction: row; */
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  grid-gap: 20px;
   @media (max-width: 960px) {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    grid-gap: 0;
   }
 `;
 

@@ -10,7 +10,7 @@ import { reformatDateAndTime } from "../../../utils/time.js";
 import EventModal from "./EventModal.js";
 
 const PastEventsContainer = styled.div`
-  width: calc(100% - 20px);
+  width: 100%;
   margin-top: 20px;
   margin-right: 20px;
   padding: 20px 20px;
