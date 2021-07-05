@@ -67,7 +67,6 @@ const Styles = styled.div`
 
 function App() {
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.isLogged.loading);
 
   const checkLoginStatus = async () => {
     const userId = await checkAuthStatus();
@@ -107,7 +106,6 @@ function App() {
           width: "100%",
         }}
       >
-        {/* {!isLoading && ( */}
         <Styles>
           <Header />
           <Switch>
@@ -141,7 +139,6 @@ function App() {
             limit={1}
           ></ToastContainer>
         </Styles>
-        {/* )} */}
       </div>
     </Router>
   );
