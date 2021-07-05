@@ -117,8 +117,6 @@ function Comments() {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {}, [eventInfo]);
-
   const ratingChanged = (newRating) => {
     rating = newRating;
     return rating;

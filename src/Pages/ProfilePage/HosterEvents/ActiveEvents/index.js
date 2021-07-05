@@ -208,8 +208,6 @@ function ActiveEvents() {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {}, [events]);
-
   const handleParticipantClick = (id) => {
     history.push(`profile/manage-participants/${id}`);
   };

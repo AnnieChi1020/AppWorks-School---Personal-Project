@@ -76,7 +76,7 @@ function App() {
       dispatch({ type: "SIGN_IN", data: true });
       dispatch({ type: "GET_USERID", data: userId });
       dispatch({ type: "GET_USERROLE", data: userProfile.role });
-    } 
+    }
     dispatch({ type: "SET_LOADING", data: false });
     return;
   };
@@ -107,45 +107,41 @@ function App() {
           width: "100%",
         }}
       >
-        {!isLoading && (
-          <Styles>
-            <Header />
-            <Switch>
-              <Route exact path="/" component={HomePage} />
-              <Route exact path="/createEvent" component={CreateEvent} />
-              <Route exact path="/events" component={EventsPage} />
-              <Route exact path="/events/:id" component={EventDetail} />
-              <Route exact path="/profile" component={ProfilePage} />
-              <Route
-                exact
-                path="/profile/manage-participants/:id"
-                component={ManageParticipantPage}
-              />
-              <Route
-                exact
-                path="/profile/edit-event/:id"
-                component={EditEvent}
-              />
-              <Route exact path="/pastEvents" component={PastEvents} />
-              <Route component={NotFound} />
-            </Switch>
-            {/* <Footer /> */}
+        {/* {!isLoading && ( */}
+        <Styles>
+          <Header />
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/createEvent" component={CreateEvent} />
+            <Route exact path="/events" component={EventsPage} />
+            <Route exact path="/events/:id" component={EventDetail} />
+            <Route exact path="/profile" component={ProfilePage} />
+            <Route
+              exact
+              path="/profile/manage-participants/:id"
+              component={ManageParticipantPage}
+            />
+            <Route exact path="/profile/edit-event/:id" component={EditEvent} />
+            <Route exact path="/pastEvents" component={PastEvents} />
+            <Route component={NotFound} />
+          </Switch>
+          {/* <Footer /> */}
 
-            <ToastContainer
-              position="top-center"
-              autoClose={3000}
-              hideProgressBar
-              newestOnTop={false}
-              closeOnClick={false}
-              rtl={false}
-              pauseOnFocusLoss={false}
-              draggable={false}
-              pauseOnHover={true}
-              closeButton={false}
-              limit={1}
-            ></ToastContainer>
-          </Styles>
-        )}
+          <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover={true}
+            closeButton={false}
+            limit={1}
+          ></ToastContainer>
+        </Styles>
+        {/* )} */}
       </div>
     </Router>
   );
