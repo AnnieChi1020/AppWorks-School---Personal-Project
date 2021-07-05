@@ -140,9 +140,6 @@ function UserCancelledEvents() {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {}, []);
-
-
   return (
     <Styles>
       <EventsContainer className="applying-events">

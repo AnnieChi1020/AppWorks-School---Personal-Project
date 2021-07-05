@@ -141,8 +141,6 @@ function TopEvents() {
     getEventParticipants();
   }, []);
 
-  useEffect(() => {}, [topEvents]);
-
   let history = useHistory();
   const handleEventClick = (id) => {
     history.push(`/events/${id}`);
