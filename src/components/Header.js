@@ -129,12 +129,7 @@ function Header() {
         >
           <Navbar.Brand eventkey="0">
             <LogoContainer className="ml-3">
-              <LogoImage
-                src={logo}
-                eventkey="0"
-                alt="logo"
-                onClick={handleLogoClick}
-              />
+              <LogoImage src={logo} eventkey="0" onClick={handleLogoClick} />
             </LogoContainer>
           </Navbar.Brand>
           <Navbar.Toggle

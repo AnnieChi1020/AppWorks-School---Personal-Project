@@ -242,7 +242,6 @@ function UserConfirmedEvents() {
                   <CardImage
                     variant="top"
                     src={event.eventCoverImage}
-                    alt="eventCoverImage"
                     onClick={() => handleEventClick(event.eventId)}
                   />
                   <CardBody>

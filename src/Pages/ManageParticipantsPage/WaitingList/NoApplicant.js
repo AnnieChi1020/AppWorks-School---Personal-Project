@@ -32,7 +32,7 @@ const NoResultText = styled.div`
 function NoApplicant() {
   return (
     <NoResultDiv>
-      <NoResultImage src={noApplicantImage} alt="noApplicantImage" />
+      <NoResultImage src={noApplicantImage} />
       <NoResultText>目前沒有申請</NoResultText>
     </NoResultDiv>
   );

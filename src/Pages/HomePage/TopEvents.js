@@ -158,11 +158,7 @@ function TopEvents() {
                 onClick={() => handleEventClick(event.id)}
               >
                 <div className="bg-image hover-overlay hover-zoom">
-                  <CardImg
-                    variant="top"
-                    src={event.image}
-                    alt="eventCoverImage"
-                  ></CardImg>
+                  <CardImg variant="top" src={event.image}></CardImg>
                 </div>
                 <CardBody className="py-2 px-3">
                   <EventTitle>{event.title}</EventTitle>

@@ -254,7 +254,6 @@ function UserApplyingEvents() {
                   <CardImage
                     variant="top"
                     src={event.eventCoverImage}
-                    alt="eventCoverImage"
                     onClick={() => handleEventClick(event.eventId)}
                   />
                   <CardBody>
@@ -299,6 +298,7 @@ function UserApplyingEvents() {
       >
         <StyledHeader>
           <CancelText>確定要取消嗎</CancelText>
+          {/* <CancelImg src={sadDog} /> */}
         </StyledHeader>
         <StyledBody>
           <ButtonsContainer>
