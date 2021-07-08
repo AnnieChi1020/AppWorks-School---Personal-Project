@@ -66,7 +66,7 @@
 
 ### Create Event Page (Organization)
 
-![image](https://ibb.co/8DNtrcp)
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/QALvHmW" data-context="false" ><a href="//imgur.com/a/QALvHmW">create-event</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 
 - Create new events with tags and the accurate location
 
