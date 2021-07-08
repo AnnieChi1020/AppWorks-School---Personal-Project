@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import userImg from "../../images/user-100.svg";
-import plant from "../../images/plant.png";
+import plant from "../../images/plant-min.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { getAllUsers, getUserAttendedEvents } from "../../utils/firebase.js";
