@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import noEventImage from "../../../images/noEvent.png";
+import noEventImage from "../../../images/noEvent-min.png";
 
 const Container = styled.div`
   width: 100%;

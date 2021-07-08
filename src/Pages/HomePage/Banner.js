@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React from "react";
-import banner from "../../images/banner_3.png";
+import banner from "../../images/banner_3.jpg";
 
 import { useHistory } from "react-router-dom";
 
