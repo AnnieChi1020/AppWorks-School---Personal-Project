@@ -34,7 +34,6 @@
   - react-datepicker
   - react-toastify
   - react-google-places-autocomplete
-  - react-dropdown
   - react-loading
   - react-minimal-pie-chart
 
