@@ -14,37 +14,33 @@
 - User: volunteer@gmail.com / Password: 000000
 - Organization: organization@gmail.com / Password: 000000
 
-## Technologies
+## TechnologiesCancel changes
 
 - Front-End Fundamentals
   - HTML/CSS/JavaScript
   - RWD
 
-### Front-End Frameworks and Libraries
+- Front-End Frameworks and Libraries
+  - React (Hook)
+  - React Router
+  - Redux
 
-- React (Hook)
-- React Router
-- Redux
+- Cloud Service
+  - Firebase Authentication
+  - Firebase Firestore
+  - Firebase Storage
 
-### Cloud Service
+- User Interface
+  - styled-components
+  - React-Bootstrap
 
-- Firebase Authentication
-- Firebase Firestore
-- Firebase Storage
-
-### User Interface
-
-- styled-components
-- React-Bootstrap
-
-### Other
-
-- react-datepicker
-- react-toastify
-- react-google-places-autocomplete
-- react-dropdown
-- react-loading
-- react-minimal-pie-chart
+- Other
+  - react-datepicker
+  - react-toastify
+  - react-google-places-autocomplete
+  - react-dropdown
+  - react-loading
+  - react-minimal-pie-chart
 
 ## Flow Chart
 
