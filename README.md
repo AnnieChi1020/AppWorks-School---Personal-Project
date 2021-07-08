@@ -17,9 +17,8 @@
 ## Technologies
 
 - Front-End Fundamentals
-
--- HTML/CSS/JavaScript
--- RWD
+  - HTML/CSS/JavaScript
+  - RWD
 
 ### Front-End Frameworks and Libraries
 
