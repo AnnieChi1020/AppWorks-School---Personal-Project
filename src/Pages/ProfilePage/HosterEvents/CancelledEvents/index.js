@@ -51,35 +51,34 @@ const EventText = styled.div`
   margin-top: 5px;
 `;
 
-const styles = {
-  cardImage: {
-    objectFit: "cover",
-    width: "100%",
-    height: "150px",
-    cursor: "pointer",
-  },
-  cardBody: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  cardTitle: {
-    fontSize: "16px",
-  },
-  cardCol: {
-    overflow: "hidden",
-  },
-};
-
-const Styles = styled.div`
-  .eventCard {
-    border: 1px solid rgba(0, 0, 0, 0.125);
-  }
+const CardImage = styled(Card.Img)`
+  object-fit: cover;
+  width: 100%;
+  height: 150px;
+  cursor: pointer;
 `;
 
-function CancelledEvents() {
-  const EVENT_CANCELLED = 9;
+const CardBody = styled(Card.Body)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
+const CardTitle = styled(Card.Title)`
+  font-size: 16px;
+`;
+
+const CardCol = styled(Col)`
+  overflow: hidden;
+`;
+
+const StyledCard = styled(Card)`
+  border: 1px solid rgba(0, 0, 0, 0.125);
+`;
+
+const EVENT_CANCELLED = 9;
+
+function CancelledEvents() {
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
@@ -123,43 +122,38 @@ function CancelledEvents() {
   };
 
   return (
-    <Styles>
-      <EventsContainer>
-        {events.length > 0 && (
-          <Events>
-            {events.map((event, index) => (
-              <Col className="p-0" style={styles.cardCol} key={index}>
-                <Card className="h-100 eventCard">
-                  <CurrentStatus>已取消</CurrentStatus>
-                  <Card.Img
-                    variant="top"
-                    src={event.eventCoverImage}
-                    style={styles.cardImage}
-                    onClick={() => handleEventClick(event.eventId)}
-                  />
-                  <Card.Body style={styles.cardBody}>
-                    <EventInfo>
-                      <Card.Title style={styles.cardTitle}>
-                        {event.eventTitle}
-                      </Card.Title>
-                      <Card.Text>
-                        <EventText>{`${reformatTimestamp(
-                          event.startTime
-                        )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
-                        <EventText>
-                          {event.eventAddress.formatted_address}
-                        </EventText>
-                      </Card.Text>
-                    </EventInfo>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Events>
-        )}
-        {renderNoEventMessage()}
-      </EventsContainer>
-    </Styles>
+    <EventsContainer>
+      {events.length > 0 && (
+        <Events>
+          {events.map((event, index) => (
+            <CardCol className="p-0" key={index}>
+              <StyledCard className="h-100 eventCard">
+                <CurrentStatus>已取消</CurrentStatus>
+                <CardImage
+                  variant="top"
+                  src={event.eventCoverImage}
+                  onClick={() => handleEventClick(event.eventId)}
+                />
+                <CardBody>
+                  <EventInfo>
+                    <CardTitle>{event.eventTitle}</CardTitle>
+                    <Card.Text>
+                      <EventText>{`${reformatTimestamp(
+                        event.startTime
+                      )} ~ ${reformatTimestamp(event.endTime)}`}</EventText>
+                      <EventText>
+                        {event.eventAddress.formatted_address}
+                      </EventText>
+                    </Card.Text>
+                  </EventInfo>
+                </CardBody>
+              </StyledCard>
+            </CardCol>
+          ))}
+        </Events>
+      )}
+      {renderNoEventMessage()}
+    </EventsContainer>
   );
 }
 
