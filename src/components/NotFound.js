@@ -19,7 +19,7 @@ const NotFoundImage = styled.img`
 function NotFound() {
   return (
     <NotFoundDiv data-testid="notFoundImage">
-      <NotFoundImage src={notFoundImage} alt="notFoundImage" />
+      <NotFoundImage src={notFoundImage} />
     </NotFoundDiv>
   );
 }

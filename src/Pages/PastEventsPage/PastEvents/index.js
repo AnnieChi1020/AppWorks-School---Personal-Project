@@ -208,7 +208,6 @@ function PastEvents() {
             <Polaroid>
               <PolaroidImage
                 src={event.image}
-                alt="eventCoverImage"
                 onClick={() => handleEventClick(event.id)}
               />
               <PolaroidCaption>{event.title}</PolaroidCaption>
