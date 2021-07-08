@@ -66,7 +66,7 @@
 
 ### Create Event Page (Organization)
 
-![image](./README/create-event.gif)
+![image](https://ibb.co/8DNtrcp)
 
 - Create new events with tags and the accurate location
 
