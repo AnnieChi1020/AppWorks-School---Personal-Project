@@ -59,7 +59,7 @@
 
 ### Events Page
 
-![image](./README/signup.gif)
+<img src="https://ibb.co/8DNtrcp">
 
 - Explore volunteer opportunities
 - Sign up for volunteer events
