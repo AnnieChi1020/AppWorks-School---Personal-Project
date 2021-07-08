@@ -85,9 +85,9 @@ function EventModal(props) {
   const renderNoFeedbackMessage = () => {
     return (
       <NoResultDiv>
-        <NoResultImage src={sadFace} />
+        <NoResultImage src={sadFace} alt="sadFace" />
         <div>尚未收到參加者回饋</div>
-        <NoResultImage src={sadFace} />
+        <NoResultImage src={sadFace} alt="sadFace" />
       </NoResultDiv>
     );
   };
@@ -99,9 +99,9 @@ function EventModal(props) {
       </Modal.Header>
       <Modal.Body>
         <PastEventImages>
-          <PastEventImage src={props.eventResult.coverImage} />
+          <PastEventImage src={props.eventResult.coverImage} alt="eventImage" />
           {props.eventResult.resultImages.map((image, index) => (
-            <PastEventImage src={image} key={index} />
+            <PastEventImage src={image} key={index} alt="eventImage" />
           ))}
         </PastEventImages>
 
@@ -123,7 +123,7 @@ function EventModal(props) {
           {props.eventResult.eventResult ? props.eventResult.eventResult : null}
         </PastEventResult>
       </Modal.Body>
-      
+
       <Modal.Footer>
         <UserFeedbacks className="pl-2">
           {props.feedbacks.length !== 0
