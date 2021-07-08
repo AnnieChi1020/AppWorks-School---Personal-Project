@@ -211,7 +211,7 @@ function EventResult() {
     <Styles>
       <CreateEventContainer>
         <Event>
-          <EventImage src={eventInfo.image}></EventImage>
+          <EventImage src={eventInfo.image} alt="eventCoverImage"></EventImage>
           <EventTitle>{eventInfo.title}</EventTitle>
           <EventInfo>{`${eventInfo.startTime} - ${eventInfo.endTime}`}</EventInfo>
           <EventInfo>{eventInfo.address}</EventInfo>

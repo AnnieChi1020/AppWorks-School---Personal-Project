@@ -37,7 +37,7 @@ function NoEvent() {
   return (
     <Container>
       <NoEventContainer>
-        <NoEventImage src={noEventImage} />
+        <NoEventImage src={noEventImage} alt="noEventImage" />
         <NoEventText>目前沒有活動哦</NoEventText>
       </NoEventContainer>
     </Container>

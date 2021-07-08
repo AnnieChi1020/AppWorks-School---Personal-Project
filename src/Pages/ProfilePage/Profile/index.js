@@ -257,7 +257,7 @@ function Profile() {
           {role === 0 ? <UserProfileHeader /> : <OrgProfileHeader />}
           <MainContent>
             <ProfileSubContainer>
-              <ProfileImg src={user} />
+              <ProfileImg src={user} alt="userIcon" />
             </ProfileSubContainer>
             <ProfileSubContainer>
               <ProfileName>{`哈囉，${userData.name}`}</ProfileName>

@@ -109,19 +109,19 @@ function Category() {
         <CategoryHeader>探索志工機會</CategoryHeader>
         <Categories>
           <CategoryDiv onClick={() => handleCategoryClick("生態保護")}>
-            <CategoryImage src={animal} />
+            <CategoryImage src={animal} alt="animalIcon" />
             <CategoryText>生態保護</CategoryText>
           </CategoryDiv>
           <CategoryDiv onClick={() => handleCategoryClick("社會福利")}>
-            <CategoryImage src={welfare} />
+            <CategoryImage src={welfare} alt="welfareIcon" />
             <CategoryText>社會福利</CategoryText>
           </CategoryDiv>
           <CategoryDiv onClick={() => handleCategoryClick("文化教育")}>
-            <CategoryImage src={education} />
+            <CategoryImage src={education} alt="eductionIcon" />
             <CategoryText>文化教育</CategoryText>
           </CategoryDiv>
           <CategoryDiv onClick={() => handleCategoryClick("環境保護")}>
-            <CategoryImage src={environment} />
+            <CategoryImage src={environment} alt="environmentIcon" />
             <CategoryText>環境保護</CategoryText>
           </CategoryDiv>
         </Categories>

@@ -28,7 +28,7 @@ const NoEventText = styled.div`
 function NoEvent() {
   return (
     <Container>
-      <NoEventImage src={noEventImage} />
+      <NoEventImage src={noEventImage} alt="noEventImage" />
       <NoEventText>目前沒有活動哦</NoEventText>
     </Container>
   );
