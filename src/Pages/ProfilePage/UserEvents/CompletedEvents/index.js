@@ -78,39 +78,44 @@ const RateButton = styled.button`
   margin: 0 auto;
 `;
 
-const styles = {
-  cardImage: {
-    objectFit: "cover",
-    width: "100%",
-    height: "150px",
-    cursor: "pointer",
-  },
-  cardBody: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  cardTitle: {
-    fontSize: "16px",
-  },
-  cardCol: {
-    overflow: "hidden",
-  },
-  modal: {
-    marginTop: "70px",
-  },
-  modalHeader: {
-    border: "none",
-  },
-  modalBody: {
-    padding: "0 40px 40px 40px",
-  },
-};
+const CardImage = styled(Card.Img)`
+  object-fit: cover;
+  width: 100%;
+  height: 150px;
+  cursor: pointer;
+`;
+
+const CardBody = styled(Card.Body)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const CardTitle = styled(Card.Title)`
+  font-size: 16px;
+`;
+
+const CardCol = styled(Col)`
+  overflow: hidden;
+`;
+
+const StyledCard = styled(Card)`
+  border: 1px solid rgba(0, 0, 0, 0.125);
+`;
+
+const StyledModal = styled(Modal)`
+  margin-top: 70px;
+`;
+
+const ModalHeader = styled(Modal.Header)`
+  border: none;
+`;
+
+const ModalBody = styled(Modal.Body)`
+  padding: 0 40px 40px 40px;
+`;
 
 const Styles = styled.div`
-  .eventCard {
-    border: 1px solid rgba(0, 0, 0, 0.125);
-  }
   .rate-tooltip {
     position: absolute;
     will-change: transform;
@@ -203,24 +208,21 @@ function UserCompletedEvents() {
         {events.length > 0 && (
           <Events>
             {events.map((event, index) => (
-              <Col className="p-0" style={styles.cardCol} key={index}>
-                <Card className="h-100 eventCard">
+              <CardCol className="p-0" key={index}>
+                <StyledCard className="h-100 ">
                   {!event.userAttend ? (
                     <CurrentStatus>待確認出席</CurrentStatus>
                   ) : (
                     <CurrentStatus>已確認出席</CurrentStatus>
                   )}
-                  <Card.Img
+                  <CardImage
                     variant="top"
                     src={event.eventCoverImage}
-                    style={styles.cardImage}
                     onClick={() => handleEventClick(event.eventId)}
                   />
-                  <Card.Body style={styles.cardBody}>
+                  <CardBody>
                     <EventInfo>
-                      <Card.Title style={styles.cardTitle}>
-                        {event.eventTitle}
-                      </Card.Title>
+                      <CardTitle>{event.eventTitle}</CardTitle>
                       <Card.Text>
                         <EventText>{`${reformatTimestamp(
                           event.startTime
@@ -231,7 +233,7 @@ function UserCompletedEvents() {
                       </Card.Text>
                     </EventInfo>
                     <EventStatus>
-                      {!event.userAttend ? (
+                      {!event.userAttend && (
                         <OverlayTrigger
                           placement="right"
                           delay={{ show: 250, hide: 400 }}
@@ -245,15 +247,11 @@ function UserCompletedEvents() {
                             評價活動
                           </RateButton>
                         </OverlayTrigger>
-                      ) : (
-                        <div />
                       )}
-                      {event.userAttend && event.userRate === 0 ? (
+                      {event.userAttend && event.userRate === 0 && (
                         <RateButton onClick={() => handleShow(event.eventId)}>
                           評價活動
                         </RateButton>
-                      ) : (
-                        <div />
                       )}
                       {event.userAttend && event.userRate !== 0 ? (
                         <RateButton disabled style={{ opacity: ".5" }}>
@@ -263,23 +261,19 @@ function UserCompletedEvents() {
                         <div />
                       )}
                     </EventStatus>
-                  </Card.Body>
-                </Card>
-              </Col>
+                  </CardBody>
+                </StyledCard>
+              </CardCol>
             ))}
           </Events>
         )}
         {noEvent && <NoEvent />}
-        <Modal
-          show={showFeedbackModal}
-          onHide={handleClose}
-          style={styles.modal}
-        >
-          <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
-          <Modal.Body style={styles.modalBody}>
+        <StyledModal show={showFeedbackModal} onHide={handleClose}>
+          <ModalHeader closeButton></ModalHeader>
+          <ModalBody>
             <Comments />
-          </Modal.Body>
-        </Modal>
+          </ModalBody>
+        </StyledModal>
       </EventsContainer>
     </Styles>
   );

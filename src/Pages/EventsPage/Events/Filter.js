@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Dropdown from "react-dropdown";
 import { useSelector, useDispatch } from "react-redux";
 
-
 const FilterContainer = styled.div`
   width: 100%;
   margin: 0 auto;
@@ -156,7 +155,6 @@ const Styles = styled.div`
 `;
 
 function Filter() {
-
   const cityArray = [
     "台北市",
     "新北市",
@@ -176,7 +174,7 @@ function Filter() {
     "台東縣",
   ];
 
-  const tagArray = ["社會福利", "文化教育", "環境保護", "生態保護"];
+  const tagArray = ["生態保護", "社會福利", "文化教育", "環境保護"];
 
   let selectedTag = useSelector((state) => state.filter.tag);
   const dispatch = useDispatch();
