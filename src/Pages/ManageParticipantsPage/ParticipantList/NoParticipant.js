@@ -32,7 +32,7 @@ const NoResultText = styled.div`
 function NoParticipant() {
   return (
     <NoResultDiv>
-      <NoResultImage src={noParticipantImage} />
+      <NoResultImage src={noParticipantImage} alt="noParticipantImage" />
       <NoResultText>尚無參加者哦</NoResultText>
     </NoResultDiv>
   );

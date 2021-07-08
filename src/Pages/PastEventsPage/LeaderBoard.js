@@ -162,14 +162,14 @@ function LeaderBoard() {
   return (
     <LeaderBoardContainer>
       <PlantImageContainer>
-        <PlantImage src={plant} />
+        <PlantImage src={plant} alt="plant" />
       </PlantImageContainer>
       <LeaderBoardDiv>
         <Title>志工達人榜</Title>
         <MainContent>
           {sortedData.map((user, index) => (
             <Row key={index}>
-              <Image src={userImg} />
+              <Image src={userImg} alt="userIcon" />
               <TextContainer>{user.name}</TextContainer>
               <NumContainer>{user.number}</NumContainer>
               <StarContainer>
