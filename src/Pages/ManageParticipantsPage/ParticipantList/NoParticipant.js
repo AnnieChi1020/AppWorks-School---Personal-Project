@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import noParticipantImage from "../../../images/noParticipant.png";
+import noParticipantImage from "../../../images/noParticipant-min.png";
 
 const NoResultDiv = styled.div`
   width: 200px;

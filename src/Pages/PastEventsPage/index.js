@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import PastEvents from "./PastEvents";
 import LeaderBoard from "./LeaderBoard.js";
-import whiteWall from "../../images/white_wall.jpg";
+import whiteWall from "../../images/white_wall-min.jpg";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 

@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { Card, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
-import background from "../../images/TP_background_3.png";
+import background from "../../images/TP_background_3-min.png";
 
 const TopEventsContainer = styled.div`
   width: 100%;
