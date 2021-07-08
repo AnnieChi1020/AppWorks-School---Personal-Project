@@ -104,6 +104,7 @@ const EventTagContianer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  flex-wrap: wrap;
 `;
 
 const EventTag = styled.div`
@@ -114,6 +115,7 @@ const EventTag = styled.div`
   border-radius: 20px;
   margin-right: 5px;
   color: #4f4f4f;
+  margin-top: 5px;
 
   @media (max-width: 1024px) {
     font-size: 12px;
