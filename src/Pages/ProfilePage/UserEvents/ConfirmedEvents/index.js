@@ -160,10 +160,6 @@ const StyledCard = styled(Card)`
   border: 1px solid rgba(0, 0, 0, 0.125);
 `;
 
-const StyledModal = styled(Modal)`
-  margin-top: 70px;
-`;
-
 function UserConfirmedEvents() {
   const userId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState("");
