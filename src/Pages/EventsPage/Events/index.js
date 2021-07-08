@@ -274,6 +274,7 @@ function AllEvents() {
                           <Card.Img
                             variant="top"
                             src={event.eventCoverImage}
+                            alt="eventCoverImage"
                             className="cardImage"
                           ></Card.Img>
                         </div>
