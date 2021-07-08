@@ -59,14 +59,14 @@
 
 ### Events Page
 
-<img src="https://scontent.ftpe9-1.fna.fbcdn.net/v/t1.6435-9/199762953_4514752821876964_538717387568984468_n.jpg?_nc_cat=107&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=lj_VhzQ39mIAX_1Td7z&tn=w3IzOitbEQANvfNQ&_nc_ht=scontent.ftpe9-1.fna&oh=6a83aa804e420794295bcf3fbb655c76&oe=60EBBBAB">
+![image](./README/signup.gif)
 
 - Explore volunteer opportunities
 - Sign up for volunteer events
 
 ### Create Event Page (Organization)
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/QALvHmW" data-context="false" ><a href="//imgur.com/a/QALvHmW">create-event</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+![image](./README/create-event.gif)
 
 - Create new events with tags and the accurate location
 
