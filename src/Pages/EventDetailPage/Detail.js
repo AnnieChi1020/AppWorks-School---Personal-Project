@@ -146,29 +146,17 @@ const Button = styled.button`
   }
 `;
 
-const styles = {
-  modal: {
-    top: "10%",
-  },
-  modalHeader: {
-    border: "none",
-  },
-  modalTitle: {
-    margin: "0 auto",
-  },
-  button: {
-    marginBottom: "30px",
-    width: "200px",
-  },
-  modalBody: {
-    padding: "20px 20px 20px 20px",
-  },
-  modalFooter: {
-    border: "none",
-  },
-};
+const StyledModal = styled(Modal)`
+  top: 10%;
+`;
 
-const Styles = styled.div``;
+const ModalHeader = styled(Modal.Header)`
+  border: none;
+`;
+
+const ModalBody = styled(Modal.Body)`
+  padding: 20px 20px 20px 20px;
+`;
 
 function EventDetail() {
   let { id } = useParams();
@@ -187,11 +175,9 @@ function EventDetail() {
   });
 
   const getEventDetail = async () => {
-    console.log(process.env);
     const data = await getEventInfo(eventId);
-
-    data ? setEventExist(true) : setEventExist(false);
     if (data) {
+      setEventExist(true);
       const hosterInfo = await getUserProfile(data.hosterId);
       const passed = checkEventPassed(data);
       const address = data.eventAddress.formatted_address;
@@ -224,6 +210,9 @@ function EventDetail() {
         status: data.eventStatus,
       });
       setLoading(false);
+    } else {
+      setEventExist(false);
+      setLoading(false);
     }
   };
 
@@ -243,22 +232,8 @@ function EventDetail() {
     }
   };
 
-  const renderButton = (status) => {
-    return status === 0 ? (
-      <Button onClick={handleShow}>我要報名</Button>
-    ) : (
-      <Button disabled style={{ opacity: ".6" }}>
-        報名已截止
-      </Button>
-    );
-  };
-
-  useEffect(() => {
-    console.log(event.status);
-  }, [event]);
-
   return (
-    <Styles>
+    <div>
       {!loading && eventExist && (
         <Container>
           <EventImage src={event.image}></EventImage>
@@ -303,7 +278,13 @@ function EventDetail() {
                 <EventText>{event.orgContact}</EventText>
               </TextContainer>
             </SubtitleContainer>
-            {renderButton(event.status)}
+            {event.status === 0 ? (
+              <Button onClick={handleShow}>我要報名</Button>
+            ) : (
+              <Button disabled style={{ opacity: ".6" }}>
+                報名已截止
+              </Button>
+            )}
             <MapContainer>
               <MapTitle>志工活動地圖</MapTitle>
             </MapContainer>
@@ -312,16 +293,16 @@ function EventDetail() {
             ></Map>
           </EventDetailContainer>
 
-          <Modal show={signupModal} onHide={handleClose} style={styles.modal}>
-            <Modal.Header style={styles.modalHeader} closeButton></Modal.Header>
-            <Modal.Body style={styles.modalBody} className="pb-5 px-5">
+          <StyledModal show={signupModal} onHide={handleClose}>
+            <ModalHeader closeButton></ModalHeader>
+            <ModalBody className="pb-5 px-5">
               <EventSignUp></EventSignUp>
-            </Modal.Body>
-          </Modal>
+            </ModalBody>
+          </StyledModal>
         </Container>
       )}
       {!loading && !eventExist && <NotFound />}
-    </Styles>
+    </div>
   );
 }
 

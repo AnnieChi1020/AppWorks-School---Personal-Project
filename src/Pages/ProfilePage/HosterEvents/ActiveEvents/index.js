@@ -74,7 +74,7 @@ const PrimaryButton = styled.button`
   flex-grow: 1;
   font-size: 14px;
   line-height: 20px;
-  padding: 3px 5px;
+  padding: 3px 0;
   border: 1px solid #ced4da;
   border-radius: 5px;
   background-color: #80ae7f;
@@ -82,8 +82,8 @@ const PrimaryButton = styled.button`
 `;
 
 const SecondaryButton = styled(PrimaryButton)`
-  width: 75px;
-  margin-left: 5px;
+  width: 73px;
+  margin-left: 4px;
   border-color: #89b485;
   background-color: white;
   color: #719b6d;
@@ -152,39 +152,38 @@ const ModalSecondaryButton = styled(ModalPrimaryButton)`
   color: #719b6d;
 `;
 
-const styles = {
-  cardImage: {
-    objectFit: "cover",
-    width: "100%",
-    height: "150px",
-    cursor: "pointer",
-  },
-  cardBody: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  cardTitle: {
-    fontSize: "16px",
-  },
-  cardCol: {
-    overflow: "hidden",
-  },
-};
-
-const Styles = styled.div`
-  .eventCard {
-    border: 1px solid rgba(0, 0, 0, 0.125);
-  }
+const CardImage = styled(Card.Img)`
+  object-fit: cover;
+  width: 100%;
+  height: 150px;
+  cursor: pointer;
 `;
 
-function ActiveEvents() {
-  const USER_APPLYING = 0;
-  const USER_CONFIRMED = 1;
-  const USER_CANCELLED = 9;
-  const EVENT_ACTIVE = 0;
-  const EVENT_CANCELLED = 9;
+const CardBody = styled(Card.Body)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
+const CardTitle = styled(Card.Title)`
+  font-size: 16px;
+`;
+
+const CardCol = styled(Col)`
+  overflow: hidden;
+`;
+
+const StyledCard = styled(Card)`
+  border: 1px solid rgba(0, 0, 0, 0.125);
+`;
+
+const USER_APPLYING = 0;
+const USER_CONFIRMED = 1;
+const USER_CANCELLED = 9;
+const EVENT_ACTIVE = 0;
+const EVENT_CANCELLED = 9;
+
+function ActiveEvents() {
   const hosterId = useSelector((state) => state.isLogged.userId);
   const [events, setEvents] = useState([]);
   const [noEvent, setNoEvent] = useState(false);
@@ -277,25 +276,22 @@ function ActiveEvents() {
   };
 
   return (
-    <Styles>
+    <div>
       <EventsContainer>
         {events.length > 0 && (
           <Events>
             {events.map((event, index) => (
-              <Col className="p-0" style={styles.cardCol} key={index}>
-                <Card className="h-100 eventCard">
+              <CardCol className="p-0" key={index}>
+                <StyledCard className="h-100">
                   <CurrentStatus>招募中</CurrentStatus>
-                  <Card.Img
+                  <CardImage
                     variant="top"
                     src={event.eventCoverImage}
-                    style={styles.cardImage}
                     onClick={() => handleEventClick(event.eventId)}
                   />
-                  <Card.Body style={styles.cardBody}>
+                  <CardBody>
                     <EventInfo>
-                      <Card.Title style={styles.cardTitle}>
-                        {event.eventTitle}
-                      </Card.Title>
+                      <CardTitle>{event.eventTitle}</CardTitle>
                       <Card.Text>
                         <EventText>{`${reformatTimestamp(
                           event.startTime
@@ -330,9 +326,9 @@ function ActiveEvents() {
                         </SecondaryButton>
                       )}
                     </ButtonsContainer>
-                  </Card.Body>
-                </Card>
-              </Col>
+                  </CardBody>
+                </StyledCard>
+              </CardCol>
             ))}
           </Events>
         )}
@@ -363,7 +359,7 @@ function ActiveEvents() {
           </ModalButtonsContainer>
         </StyledBody>
       </Modal>
-    </Styles>
+    </div>
   );
 }
 

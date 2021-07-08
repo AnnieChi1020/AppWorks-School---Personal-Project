@@ -38,6 +38,7 @@ function ProfilePage() {
   const ORGANIZATION = 1;
 
   const role = useSelector((state) => state.isLogged.userRole);
+  const loading = useSelector((state) => state.isLogged.loading);
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -46,24 +47,22 @@ function ProfilePage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const renderEventsData = () => {
-    if (role === USER) {
-      return <UserEvents />;
-    } else if (role === ORGANIZATION) {
-      return <HosterEvents />;
-    } else {
+  useEffect(() => {
+    if (!loading && role !== 0 && role !== 1) {
       history.push("/");
     }
-  };
+    // eslint-disable-next-line
+  }, [loading]);
 
   return (
     <Container
       className="container-xl"
       onClick={() => dispatch({ type: "SHOW_NAV", data: false })}
     >
-      <Background></Background>
+      <Background />
       <Profile />
-      {renderEventsData()}
+      {role === USER && <UserEvents />}
+      {role === ORGANIZATION && <HosterEvents />}
     </Container>
   );
 }

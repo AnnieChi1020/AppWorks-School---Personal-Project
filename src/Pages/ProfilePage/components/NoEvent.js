@@ -12,8 +12,8 @@ const Container = styled.div`
 const NoEventContainer = styled.div`
   width: 100%;
   margin: 0 auto;
-  margin-top: 50px;
-  padding: 20px 0;
+  margin-top: 20px;
+  padding: 50px 0;
   text-align: center;
 `;
 
