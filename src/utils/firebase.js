@@ -28,7 +28,7 @@ export const postEventInfo = (newEventRef, eventDetail) => {
       return true;
     })
     .catch((error) => {
-      console.error("Error writing document: ", error);
+      // console.error("Error writing document: ", error);
       return false;
     });
 };
@@ -76,7 +76,10 @@ export const getEvents = (status) => {
       });
       return events;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting document: ", error);
+      return false;
+    });
 };
 
 export const updateEvent = (eventId, updateInfo) => {
@@ -85,8 +88,8 @@ export const updateEvent = (eventId, updateInfo) => {
     .update(updateInfo)
     .then(() => {})
     .catch((error) => {
-      // The document probably doesn't exist.
-      console.error("Error updating document: ", error);
+      // console.error("Error updating document: ", error);
+      return false;
     });
 };
 
@@ -103,7 +106,10 @@ export const getHosterEvents = (hosterId, eventStatus) => {
       });
       return events;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting document: ", error);
+      return false;
+    });
 };
 
 export const getParticipants = (eventId, status) => {
@@ -120,7 +126,10 @@ export const getParticipants = (eventId, status) => {
       });
       return applications;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting document: ", error);
+      return false;
+    });
 };
 
 export const getParticipantInfo = (eventId, userId) => {
@@ -134,19 +143,11 @@ export const getParticipantInfo = (eventId, userId) => {
     .then((doc) => {
       if (doc.exists) {
         return doc.data();
-      } else {
       }
     })
-    .catch((error) => {});
-};
-
-export const onSnapshotParticipantInfo = (eventId, userId) => {
-  db.collection("events")
-    .doc(eventId)
-    .collection("participants")
-    .doc(userId)
-    .onSnapshot((doc) => {
-      console.log("New Data", doc.data());
+    .catch((error) => {
+      // console.error("Error getting document: ", error);
+      return false;
     });
 };
 
@@ -160,7 +161,7 @@ export const updateParticipantStatus = (eventId, userId, updateInfo) => {
     .update(updateInfo)
     .then(() => {})
     .catch((error) => {
-      console.error("Error updating document: ", error);
+      // console.error("Error updating document: ", error);
     });
 };
 
@@ -174,7 +175,10 @@ export const getUserProfile = (id) => {
       } else {
       }
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting document: ", error);
+      return false;
+    });
 };
 
 export const getUserEvents = (userId, status) => {
@@ -191,7 +195,10 @@ export const getUserEvents = (userId, status) => {
       });
       return events;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting documents: ", error);
+      return false;
+    });
 };
 
 export const getUserAttendedEvents = (userId) => {
@@ -208,7 +215,10 @@ export const getUserAttendedEvents = (userId) => {
       });
       return events;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting documents: ", error);
+      return false;
+    });
 };
 
 export const getEventsByTagsAndArea = (tag, city) => {
@@ -226,7 +236,10 @@ export const getEventsByTagsAndArea = (tag, city) => {
       });
       return events;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting documents: ", error);
+      return false;
+    });
 };
 
 export const getEventsByTags = (tag) => {
@@ -243,7 +256,10 @@ export const getEventsByTags = (tag) => {
       });
       return events;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting documents: ", error);
+      return false;
+    });
 };
 
 export const getEventsByArea = (city) => {
@@ -260,7 +276,10 @@ export const getEventsByArea = (city) => {
       });
       return events;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting document: ", error);
+      return false;
+    });
 };
 
 export const createUserAuth = (email, password) => {
@@ -301,7 +320,8 @@ export const addNewUserInfo = (userId, userData) => {
       return;
     })
     .catch((error) => {
-      console.error("Error writing document: ", error);
+      // console.error("Error writing document: ", error);
+      return false;
     });
 };
 
@@ -350,7 +370,10 @@ export const getAllUsers = () => {
       });
       return users;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting documents: ", error);
+      return false;
+    });
 };
 
 export const getParticipantNumber = (eventId) => {
@@ -367,5 +390,8 @@ export const getParticipantNumber = (eventId) => {
       });
       return number;
     })
-    .catch((error) => {});
+    .catch((error) => {
+      // console.error("Error getting documents: ", error);
+      return false;
+    });
 };

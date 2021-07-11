@@ -293,9 +293,6 @@ function CreateEvent() {
   };
 
   const handleTimeChange = (input, value) => {
-    console.log(process.env.REACT_APP_AUTOCOMPLETE);
-    console.log(process.env.REACT_APP_AUTOCOMPLETE);
-
     const inputType = input;
     switch (inputType) {
       case "startDate":
