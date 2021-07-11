@@ -80,8 +80,6 @@ const NoResultImage = styled.img`
 `;
 
 function EventModal(props) {
-  console.log();
-
   const renderNoFeedbackMessage = () => {
     return (
       <NoResultDiv>
