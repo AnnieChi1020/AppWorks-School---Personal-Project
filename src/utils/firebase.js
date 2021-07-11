@@ -140,16 +140,6 @@ export const getParticipantInfo = (eventId, userId) => {
     .catch((error) => {});
 };
 
-export const onSnapshotParticipantInfo = (eventId, userId) => {
-  db.collection("events")
-    .doc(eventId)
-    .collection("participants")
-    .doc(userId)
-    .onSnapshot((doc) => {
-      console.log("New Data", doc.data());
-    });
-};
-
 export const updateParticipantStatus = (eventId, userId, updateInfo) => {
   const participantRef = db
     .collection("events")
