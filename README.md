@@ -49,7 +49,7 @@
 
 ### Events Page
 
-<img src="https://s6.gifyu.com/images/signup.gif">
+<img src="https://s6.gifyu.com/images/signup.gif" width="700">
 
 - Explore volunteer opportunities
 - Sign up for volunteer events
